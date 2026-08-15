@@ -80,19 +80,19 @@ export default function ProductCarousel({ id, eyebrow, title, subtitle, items, d
   const arrowBase =
     "flex h-10 w-10 items-center justify-center rounded-full border transition disabled:cursor-not-allowed disabled:opacity-25";
   const arrowTone = dark
-    ? "border-white/30 text-white hover:bg-white hover:text-black"
+    ? "border-white/30 text-white hover:bg-white hover:text-accent"
     : "border-line text-foreground hover:bg-accent hover:text-white";
 
   return (
     <section
       id={id}
-      className={`scroll-mt-20 py-20 sm:py-28 ${dark ? "bg-neutral-900 text-white" : "bg-background text-foreground"}`}
+      className={`scroll-mt-20 py-20 sm:py-28 ${dark ? "bg-accent text-white" : "bg-background text-foreground"}`}
     >
       {/* 섹션 헤더 + 화살표 (뷰포트 진입 시 페이드업) */}
       <Reveal className="mx-auto mb-10 flex max-w-7xl items-end justify-between gap-6 px-6 sm:px-10">
         <div>
           <p className={`eyebrow ${dark ? "text-white/60!" : ""}`}>{eyebrow}</p>
-          <h2 className="mt-3 text-2xl font-light tracking-tight sm:text-4xl">{title}</h2>
+          <h2 className="serif mt-3 text-2xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
           <p className={`mt-3 text-[11px] tracking-[0.25em] uppercase ${dark ? "text-white/50" : "text-muted"}`}>
             {subtitle}
           </p>

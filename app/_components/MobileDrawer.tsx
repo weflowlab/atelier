@@ -1,7 +1,7 @@
 "use client";
-// 우측 슬라이드 드로어 — NAV 전체(하위 메뉴 아코디언 포함)를 표시. 모바일/데스크톱 MENU 버튼 공용.
+// 우측 슬라이드 드로어(웜 베이지 팔레트) — 상단 전화/카카오톡 버튼, NAV 아코디언, 하단 대표번호·운영시간. 모바일/데스크톱 MENU 버튼 공용.
 import { useEffect, useState } from "react";
-import { NAV, type NavItem } from "../_lib/data";
+import { NAV, SITE, type NavItem } from "../_lib/data";
 
 type Props = { open: boolean; onClose: () => void };
 
@@ -34,19 +34,14 @@ export default function MobileDrawer({ open, onClose }: Props) {
   };
 
   return (
-    <div
-      className={`fixed inset-0 z-[60] ${open ? "" : "pointer-events-none"}`}
-      aria-hidden={!open}
-    >
+    <div className={`fixed inset-0 z-[60] ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
       {/* 배경 딤 — 클릭 시 닫힘 */}
       <button
         type="button"
         aria-label="메뉴 닫기"
         tabIndex={-1}
         onClick={close}
-        className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
-          open ? "opacity-100" : "opacity-0"
-        }`}
+        className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
       />
 
       {/* 드로어 패널 — translate-x 로 슬라이드 인/아웃 (300ms) */}
@@ -54,16 +49,16 @@ export default function MobileDrawer({ open, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="전체 메뉴"
-        className={`absolute right-0 top-0 flex h-full w-[82vw] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 ease-out ${
+        className={`absolute right-0 top-0 flex h-full w-[82vw] max-w-sm flex-col bg-surface text-foreground shadow-2xl transition-transform duration-300 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* 상단: 로그인/마이페이지 링크 + 닫기 버튼 */}
+        {/* 상단: 워드마크 + 닫기 버튼 */}
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
-          <div className="flex items-center gap-3 text-xs text-muted">
-            <a href="#" className="hover:text-foreground">로그인</a>
-            <span aria-hidden className="h-3 w-px bg-line" />
-            <a href="#" className="hover:text-foreground">마이페이지</a>
+          <div className="flex items-center gap-2.5">
+            <span className="text-base font-medium tracking-tight">{SITE.nameKo}</span>
+            <span aria-hidden className="h-5 w-px bg-line" />
+            <span className="script text-2xl leading-none">{SITE.nameEn}</span>
           </div>
           <button
             type="button"
@@ -75,6 +70,32 @@ export default function MobileDrawer({ open, onClose }: Props) {
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
+        </div>
+
+        {/* 빠른 문의 — 전화 상담 / 카카오톡 문의 큰 버튼 2개 */}
+        <div className="grid grid-cols-2 gap-2 border-b border-line px-5 py-4">
+          <a
+            href={SITE.telHref}
+            onClick={close}
+            className="flex h-12 items-center justify-center gap-2 rounded-md bg-accent text-sm font-medium text-white transition-colors hover:bg-brown"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6.2 6.2l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />
+            </svg>
+            전화 상담
+          </a>
+          <a
+            href={SITE.kakaoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={close}
+            className="flex h-12 items-center justify-center gap-2 rounded-md bg-[#FEE500] text-sm font-medium text-[#191919] transition-colors hover:bg-[#f5dc00]"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M12 3C6.5 3 2 6.5 2 10.8c0 2.7 1.8 5.1 4.5 6.5l-1 3.7c-.1.3.3.6.6.4l4.4-2.9c.5.1 1 .1 1.5.1 5.5 0 10-3.5 10-7.8S17.5 3 12 3z" />
+            </svg>
+            카카오톡 문의
+          </a>
         </div>
 
         {/* 메뉴 목록 — children 있으면 아코디언, 없으면 단순 링크 */}
@@ -93,7 +114,7 @@ export default function MobileDrawer({ open, onClose }: Props) {
                   <a
                     href={item.href}
                     onClick={close}
-                    className="block px-5 py-4 text-sm font-medium tracking-wide hover:bg-neutral-50"
+                    className="block px-5 py-4 text-sm font-medium tracking-wide hover:bg-background"
                   >
                     {item.label}
                   </a>
@@ -103,9 +124,13 @@ export default function MobileDrawer({ open, onClose }: Props) {
           </ul>
         </nav>
 
-        {/* 하단 연락처 안내 (선택) */}
-        <div className="border-t border-line px-5 py-4 text-[11px] tracking-widest text-muted">
-          CURTAIN &amp; BLIND
+        {/* 하단: 대표번호 + 운영시간 */}
+        <div className="border-t border-line px-5 py-4">
+          <p className="eyebrow">{SITE.tagline}</p>
+          <a href={SITE.telHref} className="mt-1 block text-xl font-medium tracking-tight hover:text-brown">
+            {SITE.tels[0]}
+          </a>
+          <p className="mt-1 text-[11px] tracking-wider text-muted">{SITE.hours}</p>
         </div>
       </aside>
     </div>
@@ -130,7 +155,7 @@ function AccordionItem({
         type="button"
         aria-expanded={expanded}
         onClick={onToggle}
-        className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium tracking-wide hover:bg-neutral-50"
+        className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium tracking-wide hover:bg-background"
       >
         {item.label}
         <svg
@@ -152,7 +177,7 @@ function AccordionItem({
           expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
-        <ul className="overflow-hidden bg-neutral-50">
+        <ul className="overflow-hidden bg-background">
           {item.children?.map((c) => (
             <li key={c.label}>
               <a

@@ -1,30 +1,39 @@
 @import "tailwindcss";
 
-/* ── 디자인 토큰 ─────────────────────────────── */
+/* ── 디자인 토큰 (웜 베이지 / 브라운 무드) ─────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --muted: #737373;
-  --line: #e5e5e5;
-  --accent: #1c1c1c; /* 버튼/강조 (참고 사이트는 블랙 톤) */
-  --header-h: 80px;   /* 헤더 높이 — 스크롤 시 축소 */
+  --background: #f4efe7;   /* 페이지 기본 배경 (베이지) */
+  --surface: #faf7f2;      /* 카드/밝은 면 */
+  --foreground: #2b2521;   /* 본문 텍스트 (다크 브라운) */
+  --muted: #7d7168;        /* 보조 텍스트 */
+  --line: #e3dbcf;         /* 구분선 */
+  --accent: #5b4636;       /* 강조/버튼 (딥 브라운) */
+  --brown: #8a6d55;        /* CTA 브라운 */
+  --olive: #4a4a3b;        /* CTA 올리브 */
+  --gold: #b8976b;         /* 포인트 골드 */
+  --header-h: 88px;        /* 헤더 높이 — 스크롤 시 축소 */
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-accent: var(--accent);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brown: var(--brown);
+  --color-olive: var(--olive);
+  --color-gold: var(--gold);
+  --font-sans: var(--font-noto-sans);
+  --font-serif: var(--font-noto-serif);   /* 한글 세리프 (헤드라인) */
+  --font-script: var(--font-script);      /* 영문 필기체 (Atelier 로고) */
 }
 
 html { scroll-behavior: smooth; }
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font-family: var(--font-sans), "Apple SD Gothic Neo", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -43,8 +52,12 @@ body {
 }
 
 /* ── 공통 유틸 ───────────────────────────────── */
-/* 섹션 영문 소제목 (예: "CURTAIN") */
+/* 섹션 영문 소제목 (예: "CURTAIN & BLIND") */
 .eyebrow { @apply text-[11px] tracking-[0.35em] uppercase text-muted; }
+/* 스크립트 로고 텍스트 (Atelier) */
+.script { font-family: var(--font-script), cursive; }
+/* 세리프 헤드라인 */
+.serif { font-family: var(--font-serif), serif; }
 /* 스크롤바 숨김 (가로 캐러셀) */
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
