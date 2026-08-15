@@ -24,16 +24,12 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* 브랜드 밴드 — 좌: 워드마크 + 상호 + 대표/연락처/주소 / 우: 저작권. 모바일 하단 퀵바 높이만큼 pb 보정 */}
+      {/* 브랜드 밴드 — 좌: 워드마크 + 상호 + 대표/연락처/주소 / 우: 저작권. */}
       <div className="border-t border-line bg-background">
-        <div className="pb-16 md:pb-0">
+        <div>
           <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-12 md:flex-row md:items-end md:justify-between md:px-8">
             <div>
-              <p className="flex items-center gap-3">
-                <span className="text-2xl font-medium tracking-tight md:text-3xl">{SITE.nameKo}</span>
-                <span aria-hidden className="h-6 w-px bg-line" />
-                <span className="script text-4xl leading-none md:text-5xl">{SITE.nameEn}</span>
-              </p>
+              <p className="script text-4xl leading-none md:text-5xl">{SITE.nameEn}</p>
               <p className="mt-3 text-sm font-medium">{SITE.bizName}</p>
               <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs leading-relaxed text-muted">
                 <span>대표 {SITE.owner}</span>
@@ -41,8 +37,6 @@ export default function Footer() {
                 <span>Tel {SITE.tels.join(" / ")}</span>
                 <span aria-hidden>|</span>
                 <span>주소 {SITE.address}</span>
-                <span aria-hidden>|</span>
-                <span>사업자주소 {SITE.bizAddress}</span>
               </p>
               {/* 2행: 사업자등록번호 · 서비스 지역 (신뢰 정보 + 지역 키워드) */}
               <p className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs leading-relaxed text-muted">

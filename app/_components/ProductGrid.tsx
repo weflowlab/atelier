@@ -9,8 +9,8 @@ export default function ProductGrid() {
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         {/* 섹션 헤더 */}
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="eyebrow mb-4">PRODUCT</p>
-          <h2 className="serif text-2xl font-semibold leading-snug md:text-4xl">주요 제품</h2>
+          <p className="eyebrow mb-4">FEATURES</p>
+          <h2 className="serif text-2xl font-semibold leading-snug md:text-4xl">주요 제품 안내</h2>
           <span aria-hidden className="mx-auto mt-6 block h-px w-12 bg-gold" />
         </Reveal>
 
@@ -23,17 +23,17 @@ export default function ProductGrid() {
                 className="group block overflow-hidden rounded-2xl border border-line bg-background transition hover:shadow-md"
               >
                 {/* 이미지: 호버 시 내부만 확대 (바깥 overflow-hidden 으로 잘림) */}
-                <div className="aspect-[4/3] overflow-hidden">
+                <div className="aspect-square overflow-hidden">
                   <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105">
                     <Placeholder label={item.en} className="border-0" />
                   </div>
                 </div>
                 {/* 캡션 */}
-                <div className="flex flex-col items-center px-5 py-6 text-center">
+                <div className="flex flex-col items-center px-5 py-4 text-center">
                   <p className="text-xs tracking-widest text-muted">{item.en}</p>
-                  <p className="mt-1.5 text-base font-medium">{item.ko}</p>
-                  {/* 호버 시 나타나는 "자세히 보기" */}
-                  <span className="mt-3 inline-flex items-center gap-1 text-xs text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <p className="mt-1 text-base font-medium">{item.ko}</p>
+                  {/* 호버 시 아래에 나타나는 "자세히 보기" */}
+                  <span className="mt-2 inline-flex items-center gap-1 text-xs text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     자세히 보기
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
                       <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />

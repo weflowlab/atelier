@@ -1,5 +1,5 @@
 "use client";
-// 진행 절차(#process) + 자주 묻는 질문(#faq) 섹션. FAQ 는 한 번에 하나만 열리는 아코디언.
+// ⑦ 진행 절차 + FAQ 섹션 (#process / #faq) — 5단계 절차 + 신청 CTA, 그 아래 FAQ 아코디언(한 번에 하나만 열림) + 전화/카카오톡 CTA.
 import { useState } from "react";
 import { FAQ, PROCESS, SITE } from "../_lib/data";
 import Reveal from "./Reveal";
@@ -13,13 +13,13 @@ export default function ProcessFaq() {
   return (
     <section id="process" className="scroll-mt-20 bg-background py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-5">
-        {/* ── Part A: 진행 절차 ─────────────────────── */}
-        <Reveal className="text-center">
-          <p className="eyebrow">PROCESS</p>
-          <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">이렇게 진행됩니다</h2>
-          <p className="mt-3 text-sm text-muted">상담 신청부터 시공·A/S 까지 5단계</p>
-        </Reveal>
-
+        {/* ── Part A: 진행 절차 ── */}
+        <div>
+          <Reveal className="text-center">
+            <p className="eyebrow">PROCESS & FAQ</p>
+            <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">진행 절차</h2>
+            <p className="mt-3 text-sm text-muted">상담 신청부터 시공·A/S 까지 5단계</p>
+          </Reveal>
         {/* 5단계: lg 이상 가로 한 줄(사이 연결선 + 쉐브론), 미만 2열 그리드 */}
         <ol className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 lg:flex lg:items-start lg:gap-0">
           {PROCESS.map((p, i) => (
@@ -30,7 +30,7 @@ export default function ProcessFaq() {
                   {p.step}
                 </span>
                 <h3 className="mt-4 text-base font-semibold">{p.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted">{p.desc}</p>
+                <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-muted">{p.desc}</p>
               </div>
               {/* 단계 사이 연결 쉐브론 (lg 이상, 마지막 제외) */}
               {i < PROCESS.length - 1 && (
@@ -46,12 +46,13 @@ export default function ProcessFaq() {
             </Reveal>
           ))}
         </ol>
+        </div>
 
-        {/* ── Part B: FAQ ───────────────────────────── */}
+        {/* ── Part B: FAQ ── */}
         <div id="faq" className="mx-auto mt-24 max-w-3xl scroll-mt-20">
           <Reveal className="text-center">
-            <p className="eyebrow">FAQ</p>
-            <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">자주 묻는 질문</h2>
+            <h2 className="serif text-3xl font-medium tracking-tight md:text-4xl">자주 묻는 질문</h2>
+            <p className="mt-3 text-sm text-muted">궁금한 점을 확인하세요</p>
           </Reveal>
 
           {/* 아코디언 — 한 번에 하나만 열림, grid-rows 0fr↔1fr 로 높이 애니메이션 */}
@@ -99,23 +100,23 @@ export default function ProcessFaq() {
           </Reveal>
 
           {/* FAQ 하단 CTA — 전화 / 카카오톡 */}
-          <Reveal delay={150} className="mt-10 text-center">
-            <p className="text-sm text-muted">더 궁금한 점은 전화 또는 카카오톡으로 편하게 문의하세요.</p>
-            <div className="mt-4 flex justify-center gap-2">
+          <Reveal delay={150} className="mt-12 text-center">
+            <p className="text-base text-muted md:text-lg">더 궁금한 점은 전화 또는 카카오톡으로 편하게 문의하세요.</p>
+            <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
               <a
                 href={SITE.telHref}
-                className="inline-flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brown"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-white px-8 py-4 text-base font-semibold text-foreground transition hover:bg-surface"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.8" className="text-emerald-600">
                   <path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z" strokeLinejoin="round" />
                 </svg>
                 전화 상담
               </a>
               <a
                 href={SITE.kakaoUrl}
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#FEE500] px-5 py-2.5 text-sm font-medium text-[#191919] transition-opacity hover:opacity-85"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FEE500] px-8 py-4 text-base font-semibold text-[#191919] transition-opacity hover:opacity-85"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7L5.7 21.6c-.1.3.3.6.6.4l4.4-2.9c.4 0 .9.1 1.3.1 5.5 0 10-3.6 10-8.1S17.5 3 12 3z" />
                 </svg>
                 카카오톡 문의

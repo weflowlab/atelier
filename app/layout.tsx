@@ -11,8 +11,8 @@ const notoSerif = Noto_Serif_KR({ variable: "--font-noto-serif", subsets: ["lati
 const script = Great_Vibes({ variable: "--font-script", subsets: ["latin"], weight: "400" });
 
 // 파워링크 키워드와 일치하도록 지역/상품 키워드를 title/description 에 포함
-const TITLE = `남양주 커튼·블라인드 | ${SITE.bizName} — 무료 방문실측 · 맞춤 제작 · 직접 시공`;
-const DESC = `${SITE.serviceAreaLabel} 커튼·블라인드 전문. 암막커튼, 쉬폰커튼, 린넨커튼, 로만쉐이드, 허니콤·우드블라인드 무료 방문실측 후 맞춤 제작·직접 시공. ${SITE.careerYears}년 경력 커튼장인.`;
+const TITLE = `남양주 커튼·블라인드 | ${SITE.bizName} — 무료 방문 실측 · 맞춤 제작 · 직접 시공`;
+const DESC = `${SITE.serviceAreaLabel} 커튼·블라인드 전문. 암막커튼, 쉬폰커튼, 린넨커튼, 로만쉐이드, 허니콤·우드블라인드 무료 방문 실측 후 맞춤 제작·직접 시공. ${SITE.careerYears}년 경력 커튼장인.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.siteUrl),

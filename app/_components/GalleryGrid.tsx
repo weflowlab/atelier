@@ -1,12 +1,16 @@
 "use client";
 // 시공 사례 포트폴리오 섹션 (#gallery) — 지역별 · 공간별 2단 필터(AND) + 사진 클린 그리드.
+// 그리드는 필터 결과 중 최신 MAX_TILES 장만 표시, 타일 클릭 시 라이트박스에서 필터 결과 "전체"를 넘겨봄.
 // 필터 전환 시 페이드아웃 → 필터 교체 → @starting-style 페이드인. 아이템은 항상 마운트, hidden 토글.
 import { useEffect, useRef, useState } from "react";
 import { GALLERY } from "../_lib/data";
 import Placeholder from "./Placeholder";
 import Reveal from "./Reveal";
+import GalleryLightbox from "./GalleryLightbox";
+import type { GalleryItem } from "../_lib/data";
 
 const ALL = "전체";
+const MAX_TILES = 13; // 그리드에 보여줄 최대 장수 (나머지는 라이트박스에서)
 // 필터 옵션 — 데이터에서 중복 제거한 지역/공간 목록 (앞에 "전체")
 const REGION_TABS = [ALL, ...Array.from(new Set(GALLERY.map((g) => g.region)))];
 const SPACE_TABS = [ALL, ...Array.from(new Set(GALLERY.map((g) => g.space)))];
@@ -25,7 +29,7 @@ function FilterRow({
 }) {
   return (
     <div className="flex flex-wrap items-baseline justify-center gap-x-5 gap-y-2">
-      <span className="mr-1 text-[11px] tracking-[0.25em] text-muted">{label}</span>
+      <span className="mr-1 text-sm tracking-[0.25em] text-muted">{label}</span>
       {tabs.map((t) => {
         const active = t === value;
         return (
@@ -34,7 +38,7 @@ function FilterRow({
             type="button"
             onClick={() => onChange(t)}
             aria-pressed={active}
-            className={`group relative pb-1.5 text-sm transition-colors ${
+            className={`group relative pb-1.5 text-base transition-colors ${
               active ? "text-foreground" : "text-muted hover:text-foreground"
             }`}
           >
@@ -72,32 +76,41 @@ export default function GalleryGrid() {
     if (timer.current) clearTimeout(timer.current);
   }, []);
 
-  // 두 필터 AND 적용 — 첫 번째 보이는 아이템(2×2 스팬) 은 필터링된 목록 기준으로 계산
-  const visibleIds = GALLERY.filter(
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null); // 라이트박스 시작 인덱스 (null=닫힘)
+
+  // 두 필터 AND 적용 → 전체 결과(filtered)는 라이트박스용, 그리드에는 앞 MAX_TILES 장만
+  const filtered: GalleryItem[] = GALLERY.filter(
     (g) => (region === ALL || g.region === region) && (space === ALL || g.space === space),
-  ).map((g) => g.id);
+  );
+  const visibleIds = filtered.slice(0, MAX_TILES).map((g) => g.id);
   const firstVisible = visibleIds[0];
+  const filterLabel = [region, space].filter((v) => v !== ALL).join(" · ") || "전체";
 
   return (
     <section id="gallery" className="scroll-mt-20 bg-background py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-5">
         {/* 섹션 헤더 + 지역 키워드 캡션 (SEO) */}
         <Reveal className="text-center">
-          <p className="eyebrow">PORTFOLIO</p>
-          <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">남양주 · 구리 시공 사례</h2>
+          <p className="eyebrow">GALLERY</p>
+          <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">실제 시공 · 작업 포트폴리오</h2>
           <p className="mt-3 text-sm text-muted">지역별 · 공간별로 확인하세요</p>
           {/* 사진은 실제 시공사진으로 교체 예정 */}
-          <p className="mx-auto mt-2 max-w-2xl text-xs leading-relaxed text-muted">
-            다산 · 별내 · 마석 · 화도읍 · 구리 아파트, 전원주택, 상가 등 실제 시공 사진입니다.
-          </p>
         </Reveal>
 
         {/* 필터 2줄 (지역 / 공간) + 결과 건수 */}
         <Reveal delay={100} className="mt-10 space-y-3">
           <FilterRow label="지역" tabs={REGION_TABS} value={region} onChange={(v) => change("region", v)} />
           <FilterRow label="공간" tabs={SPACE_TABS} value={space} onChange={(v) => change("space", v)} />
-          <p className="pt-1 text-center text-xs text-muted" aria-live="polite">
-            <span className="font-medium text-foreground">{visibleIds.length}</span>건
+          <p className="inline-flex w-full items-center justify-center gap-1.5 pt-1 text-center text-sm text-muted" aria-live="polite">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3M11 8v6M8 11h6" />
+            </svg>
+            <span>
+              총 <span className="font-medium text-foreground">{filtered.length}</span>건
+              {filtered.length > visibleIds.length
+                ? ` · ${visibleIds.length}건 표시, 사진을 클릭해 전체 시공 사례를 넘겨 보세요`
+                : " · 사진을 클릭해 시공 사례를 넘겨 보세요"}
+            </span>
           </p>
         </Reveal>
 
@@ -116,9 +129,12 @@ export default function GalleryGrid() {
                   }`}
                 >
                   {/* 타일: 호버 시 이미지 살짝 확대 + 어두운 오버레이 위로 제목/지역·공간·상품 슬라이드업 */}
-                  <a
-                    href="#gallery"
-                    className="group relative block h-full w-full overflow-hidden rounded-xl bg-surface"
+                  {/* 타일 클릭 → 라이트박스 (현재 필터 결과 전체를 해당 사진부터) */}
+                  <button
+                    type="button"
+                    onClick={() => setLightboxIdx(filtered.findIndex((g) => g.id === item.id))}
+                    aria-label={`${item.title} 크게 보기`}
+                    className="group relative block h-full w-full overflow-hidden rounded-xl bg-surface text-left"
                   >
                     <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105">
                       <Placeholder label={item.title} />
@@ -140,23 +156,16 @@ export default function GalleryGrid() {
                         {`${item.region} · ${item.space} · ${item.product}`}
                       </p>
                     </div>
-                  </a>
+                  </button>
                 </li>
               );
             })}
           </ul>
         </Reveal>
-
-        {/* 더보기 — 아웃라인 버튼 */}
-        <Reveal delay={100} className="mt-12 text-center">
-          <a
-            href="#"
-            className="inline-block rounded-full border border-accent px-10 py-3 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-white"
-          >
-            더보기
-          </a>
-        </Reveal>
       </div>
+
+      {/* 라이트박스 — 필터 결과 전체 */}
+      <GalleryLightbox key={lightboxIdx ?? "closed"} items={filtered} startIndex={lightboxIdx} onClose={() => setLightboxIdx(null)} filterLabel={filterLabel} />
     </section>
   );
 }

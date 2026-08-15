@@ -1,5 +1,5 @@
-// 랜딩페이지 조립 파일 — 8섹션 + 가격 안내 + 지역별 안내 (파워링크 유입 최적화).
-// 헤더 → ①메인 → ②문제제기 → ③브랜드강점 → ④주요제품(+가격) → ⑤시공포트폴리오 → 지역별 → ⑥고객후기 → ⑦절차/FAQ → ⑧신청폼 → 푸터
+// 랜딩페이지 조립 파일 — 8섹션 + 가격 안내 (파워링크 유입 최적화).
+// 헤더 → ①메인 → ②문제제기 → ③브랜드강점 → ④주요제품(+가격) → ⑤시공포트폴리오 → ⑥고객후기 → ⑦절차/FAQ → ⑧신청폼 → 푸터
 import Header from "./_components/Header";
 import HeroSlider from "./_components/HeroSlider";
 import PainPoint from "./_components/PainPoint";
@@ -8,7 +8,6 @@ import ProductGrid from "./_components/ProductGrid";
 import ProductCarousel from "./_components/ProductCarousel";
 import PriceGuide from "./_components/PriceGuide";
 import GalleryGrid from "./_components/GalleryGrid";
-import RegionSection from "./_components/RegionSection";
 import Reviews from "./_components/Reviews";
 import ProcessFaq from "./_components/ProcessFaq";
 import EstimateForm from "./_components/EstimateForm";
@@ -24,13 +23,13 @@ export default function Home() {
       <Header />
 
       <main id="top" className="flex-1">
-        {/* ① 메인 — 핵심 문구(무료 방문실측·맞춤 제작·직접 시공) + 큰 CTA. ?kw= 유입 키워드로 헤드라인 매칭 */}
+        {/* ① 메인 — 핵심 문구(무료 방문 실측·맞춤 제작·직접 시공) + 큰 CTA. ?kw= 유입 키워드로 헤드라인 매칭 */}
         <HeroSlider />
 
         {/* ② 문제 제기 & 공감 */}
         <PainPoint />
 
-        {/* ③ 브랜드 강점 — 아이콘 강조 (무료 방문실측 / 100% 맞춤 제작) */}
+        {/* ③ 브랜드 강점 — 신뢰 통계 + 강점 5개 */}
         <Strengths />
 
         {/* ④ 주요 제품 — 대표 4카드 + 커튼/블라인드 캐러셀 + 가격·견적 기준 */}
@@ -42,10 +41,7 @@ export default function Home() {
         {/* ⑤ 시공 포트폴리오 — 지역별·공간별 필터 그리드 */}
         <GalleryGrid />
 
-        {/* 지역별 콘텐츠 — 남양주/마석/화도읍/다산/별내/구리 (파워링크 지역 키워드) */}
-        <RegionSection />
-
-        {/* ⑥ 고객 후기 & 신뢰 요소 (경력·누적 시공·사업자 정보) */}
+        {/* ⑥ 고객 후기 캐러셀 */}
         <Reviews />
 
         {/* ⑦ 진행 절차 + FAQ */}
@@ -58,7 +54,7 @@ export default function Home() {
       {/* CS CENTER / 사업자 정보 / 저작권 */}
       <Footer />
 
-      {/* 고정 퀵메뉴: 카카오톡 / 전화 / 무료 방문실측 (모바일 하단 3버튼) + TOP */}
+      {/* 고정 퀵메뉴: 카카오톡 / 전화 / 무료 방문 실측 (모바일 하단 3버튼) + TOP */}
       <QuickMenu />
       <ScrollTopButton />
     </>

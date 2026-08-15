@@ -11,6 +11,6 @@ export function matchKeyword(kw?: string | null): KeywordMatch {
   // 긴 키워드 우선 매칭 (예: "암막커튼" 이 "커튼" 보다 먼저)
   const product = [...PRODUCT_KEYWORDS].sort((a, b) => b.length - a.length).find((p) => k.includes(p));
   if (!region && !product) return {};
-  const headline = `${region ? `${region} ` : ""}${product ?? "커튼 · 블라인드"}\n무료 방문실측 · 맞춤 제작 · 직접 시공`;
+  const headline = `${region ? `${region} ` : ""}${product ?? "커튼 · 블라인드"}\n무료 방문 실측 · 맞춤 제작 · 직접 시공`;
   return { region, product, headline };
 }

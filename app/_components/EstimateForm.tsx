@@ -1,11 +1,12 @@
 "use client";
-// 무료 방문실측 신청 폼 섹션 (#estimate) — DB 수집: 성함/연락처/설치지역(필수) + 원하는 상품/문의내용(선택).
+// 무료 방문 실측 신청 폼 섹션 (#estimate) — DB 수집: 성함/연락처/설치지역(필수) + 원하는 상품/문의내용(선택).
 // 유입 키워드로 지역·상품 프리필 → 검증 → submitLead 서버 액션 → 성공 패널 + 전환 이벤트(track) 전송.
 import { useEffect, useState, useTransition, type FormEvent, type ReactNode } from "react";
 import { FORM_SUCCESS, PRODUCT_OPTIONS, REGION_OPTIONS, SITE } from "../_lib/data";
 import { submitLead } from "../_actions/submitLead";
 import { getAttribution, getEntryKeyword } from "../_lib/attribution";
 import { matchKeyword } from "../_lib/keywords";
+import { PRESELECT_EVENT, matchProductOption } from "../_lib/formEvents";
 import { EVENTS, track } from "../_lib/analytics";
 import Reveal from "./Reveal";
 
@@ -35,10 +36,10 @@ type Errors = Partial<Record<"name" | "phone" | "region" | "agree", string>>;
 
 // 소프트 라운드 인풋 공통 클래스
 const inputCls =
-  "w-full rounded-lg border border-line bg-surface px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted/70 focus:border-accent aria-[invalid=true]:border-red-400";
+  "w-full rounded-lg border border-line bg-surface px-4 py-3.5 text-base outline-none transition-colors placeholder:text-muted/70 focus:border-accent aria-[invalid=true]:border-red-400";
 // 선택 pill 공통 클래스 (선택 여부에 따라 반전)
 const pillCls = (on: boolean) =>
-  `cursor-pointer rounded-full border px-3.5 py-1.5 text-xs transition-colors select-none ${
+  `cursor-pointer rounded-full border px-4 py-2 text-sm transition-colors select-none ${
     on ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent hover:text-foreground"
   }`;
 
@@ -55,12 +56,28 @@ export default function EstimateForm() {
     const kw = getEntryKeyword() ?? new URLSearchParams(window.location.search).get("kw");
     const m = matchKeyword(kw);
     if (!m.region && !m.product) return;
+    // URL/sessionStorage(외부 상태) → 클라이언트 전용 프리필
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setForm((f) => {
       const region = m.region && REGION_OPTIONS.includes(m.region) ? m.region : f.region;
       const product = m.product ? PRODUCT_OPTIONS.find((p) => p.includes(m.product!)) : undefined;
       const products = product && !f.products.includes(product) ? [...f.products, product] : f.products;
       return { ...f, region, products };
     });
+  }, []);
+
+  // 라이트박스 "이 제품으로 신청" → 해당 상품 자동 체크 (커스텀 이벤트 수신)
+  useEffect(() => {
+    const onPreselect = (e: Event) => {
+      const product = (e as CustomEvent<{ product: string }>).detail?.product;
+      if (!product) return;
+      const opt = matchProductOption(product, PRODUCT_OPTIONS);
+      if (!opt) return;
+      setDone(false); // 접수 완료 화면이었다면 폼으로 복귀
+      setForm((f) => (f.products.includes(opt) ? f : { ...f, products: [...f.products, opt] }));
+    };
+    window.addEventListener(PRESELECT_EVENT, onPreselect);
+    return () => window.removeEventListener(PRESELECT_EVENT, onPreselect);
   }, []);
 
   // 필드 단건 업데이트 헬퍼
@@ -130,9 +147,9 @@ export default function EstimateForm() {
           <div className="rounded-2xl border border-line bg-background p-6 shadow-[0_20px_60px_-30px_rgba(43,37,33,0.35)] md:p-10">
             {/* 카드 헤더 */}
             <div className="text-center">
-              <p className="eyebrow">FREE ESTIMATE</p>
-              <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">무료 방문실측 신청</h2>
-              <p className="mt-3 text-sm text-muted">이름 · 연락처 · 지역만 남겨주시면 확인 후 빠르게 연락드립니다.</p>
+              <p className="eyebrow">CALL TO ACTION</p>
+              <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">무료 방문 실측 신청</h2>
+              <p className="mt-3 text-base text-muted">이름 · 연락처 · 지역만 남겨주시면 확인 후 빠르게 연락드립니다.</p>
             </div>
 
             {done ? (
@@ -246,7 +263,7 @@ export default function EstimateForm() {
                 {/* 개인정보 수집 및 이용 동의 — 체크 1줄 + "내용 보기" 토글 안내문 */}
                 <div className="rounded-lg border border-line bg-surface px-4 py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <label className="flex cursor-pointer items-center gap-2 text-sm">
+                    <label className="flex cursor-pointer items-center gap-2 text-base">
                       <input
                         type="checkbox"
                         checked={form.agree}
@@ -261,7 +278,7 @@ export default function EstimateForm() {
                       onClick={() => setPrivacyOpen((v) => !v)}
                       aria-expanded={privacyOpen}
                       aria-controls="privacy-text"
-                      className="text-xs text-muted underline underline-offset-4 transition-colors hover:text-foreground"
+                      className="text-sm text-muted underline underline-offset-4 transition-colors hover:text-foreground"
                     >
                       {privacyOpen ? "닫기" : "내용 보기"}
                     </button>
@@ -275,9 +292,9 @@ export default function EstimateForm() {
                   >
                     <div className="overflow-hidden">
                       {/* 플레이스홀더 약관 문구 — 실제 개인정보처리방침으로 교체 필요 */}
-                      <div className="mt-3 max-h-32 space-y-2 overflow-auto border-t border-line pt-3 text-xs leading-relaxed text-muted">
+                      <div className="mt-3 max-h-32 space-y-2 overflow-auto border-t border-line pt-3 text-sm leading-relaxed text-muted">
                         <p>
-                          1. 수집 항목 및 목적: 성함, 연락처, 설치 지역, 원하는 상품, 문의 내용을 무료 방문실측 상담 및 해피콜
+                          1. 수집 항목 및 목적: 성함, 연락처, 설치 지역, 원하는 상품, 문의 내용을 무료 방문 실측 상담 및 확인 전화
                           안내를 위해 수집하며, 명시된 목적 외의 용도로 이용하지 않습니다.
                         </p>
                         <p>
@@ -287,7 +304,7 @@ export default function EstimateForm() {
                       </div>
                     </div>
                   </div>
-                  {errors.agree && <p className="mt-2 text-xs text-red-500">{errors.agree}</p>}
+                  {errors.agree && <p className="mt-2 text-sm text-red-500">{errors.agree}</p>}
                 </div>
 
                 {/* 제출 버튼 (전송 중 비활성) + 서버 오류 인라인 */}
@@ -295,19 +312,19 @@ export default function EstimateForm() {
                   <button
                     type="submit"
                     disabled={pending}
-                    className="flex h-14 w-full items-center justify-center rounded-full bg-gold text-base font-medium text-white transition-colors hover:bg-brown disabled:cursor-not-allowed disabled:opacity-70"
+                    className="flex h-14 w-full items-center justify-center rounded-full bg-accent text-base font-semibold text-white transition-colors hover:bg-brown disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    {pending ? "접수 중..." : "무료 방문실측 신청하기"}
+                    {pending ? "접수 중..." : "무료 방문 실측 신청하기"}
                   </button>
                   {serverError && (
-                    <p role="alert" className="mt-2 text-center text-xs text-red-500">
+                    <p role="alert" className="mt-2 text-center text-sm text-red-500">
                       {serverError}
                     </p>
                   )}
                 </div>
 
                 {/* 대체 연락 수단 — 전화/카카오 클릭 전환 추적 */}
-                <p className="text-center text-xs text-muted">
+                <p className="text-center text-sm text-muted md:text-base">
                   또는 전화{" "}
                   <a
                     href={SITE.telHref}
@@ -351,7 +368,7 @@ function Field({
   children: ReactNode;
 }) {
   // htmlFor 가 없으면(라디오/체크박스 그룹) label 대신 span 사용
-  const labelCls = "mb-1.5 block text-sm font-medium";
+  const labelCls = "mb-2 block text-base font-medium";
   const inner = (
     <>
       {label}
@@ -366,7 +383,7 @@ function Field({
         <span className={labelCls}>{inner}</span>
       )}
       {children}
-      {error && <p className="mt-1.5 text-xs text-red-500">{error}</p>}
+      {error && <p className="mt-1.5 text-sm text-red-500">{error}</p>}
     </div>
   );
 }

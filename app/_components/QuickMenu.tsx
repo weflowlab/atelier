@@ -1,6 +1,8 @@
 "use client";
-// 고정 퀵메뉴 — 데스크톱: 우측 중앙 원형 버튼(카카오톡/전화) + 세로 "무료 방문실측" 라벨 / 모바일: 하단 고정 3분할 바(전화/카카오 상담/무료 방문실측).
-// 모든 버튼 클릭 시 전환 이벤트(track) 전송. tel/앵커 링크는 기본 이동 유지(preventDefault 없음).
+// 고정 퀵메뉴 — 우하단 원형 아이콘 버튼 3개(무료 방문 실측 / 전화 / 카카오톡), 순서대로 번갈아 흔들림. 데스크톱·모바일 공통.
+// 모바일(<md)에서는 스크롤 중에만 스르륵 나타나고, 멈추면 오른쪽으로 숨음(최상단 근처에서는 항상 표시).
+// 클릭 시 전환 이벤트(track) 전송. tel/외부 링크는 기본 이동 유지(preventDefault 없음).
+import { useEffect, useState } from "react";
 import { SITE } from "../_lib/data";
 import { track, EVENTS } from "../_lib/analytics";
 
@@ -13,20 +15,21 @@ function KakaoIcon({ size = 24 }: { size?: number }) {
   );
 }
 
-// 전화기 아이콘
+// 전화기 아이콘 (초록 — 통화 버튼 관습색)
 function PhoneIcon({ size = 22 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600" aria-hidden>
       <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6.2 6.2l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />
     </svg>
   );
 }
 
 // 줄자(실측) 아이콘
-function RulerIcon({ size = 22 }: { size?: number }) {
+function RulerIcon({ size = 24 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M3 17.5 17.5 3 21 6.5 6.5 21 3 17.5zM7 13l1.5 1.5M10 10l1.5 1.5M13 7l1.5 1.5" />
+      <path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" />
+      <path d="M14.5 12.5l2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2" />
     </svg>
   );
 }
@@ -37,72 +40,61 @@ const onKakao = () => track(EVENTS.CLICK_KAKAO, { location: "quickmenu" });
 const onCta = () => track(EVENTS.CLICK_CTA, { location: "quickmenu" });
 
 export default function QuickMenu() {
-  return (
-    <>
-      {/* 데스크톱(md+) — 우측 중앙 세로 스택, hover 시 확대 + 그림자 */}
-      <nav aria-label="빠른 문의" className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-center gap-3 md:flex">
-        <a
-          href={SITE.kakaoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="카카오톡 문의"
-          onClick={onKakao}
-          className="flex h-14 w-14 flex-col items-center justify-center rounded-full bg-[#FEE500] text-[#191919] shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
-        >
-          <KakaoIcon size={22} />
-          <span className="mt-0.5 text-[9px] font-medium leading-none">카카오톡</span>
-        </a>
-        <a
-          href={SITE.telHref}
-          aria-label="전화 연결"
-          onClick={onCall}
-          className="flex h-14 w-14 flex-col items-center justify-center rounded-full bg-accent text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
-        >
-          <PhoneIcon size={20} />
-          <span className="mt-0.5 text-[9px] font-medium leading-none">전화 연결</span>
-        </a>
-        {/* 세로 라벨 — 무료 방문실측 → #estimate */}
-        <a
-          href="#estimate"
-          onClick={onCta}
-          className="flex items-center justify-center rounded-full bg-gold px-2 py-4 text-[11px] font-medium tracking-[0.2em] text-white shadow-md transition-all duration-200 [writing-mode:vertical-rl] hover:scale-105 hover:shadow-lg"
-        >
-          무료 방문실측
-        </a>
-      </nav>
+  const [lifted, setLifted] = useState(false); // 400px 이상 스크롤 → TOP 버튼 위로 올라감
+  const [idle, setIdle] = useState(false);     // 스크롤 멈춤(모바일에서 숨김)
 
-      {/* 모바일(<md) — 하단 고정 3분할 바(전화 / 카카오 상담 / 무료 방문실측), safe-area 하단 여백 보정 */}
-      <nav
-        aria-label="빠른 문의"
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-3 border-t border-line shadow-[0_-4px_16px_rgba(43,37,33,0.12)] md:hidden"
+  useEffect(() => {
+    const IDLE_MS = 800; // 스크롤 멈춤 판정 시간
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setLifted(y > 400);
+      setIdle(false);
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (window.scrollY > 50) setIdle(true);
+      }, IDLE_MS);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
+
+  const btn = "flex h-16 w-16 items-center justify-center rounded-full shadow-md transition-transform hover:scale-105 hover:shadow-lg";
+
+  return (
+    // 우하단 세로 스택 — 평소 bottom-6, TOP 버튼 등장 시 bottom-25 로 이동. 모바일은 idle 시 오른쪽으로 숨김(md 이상은 항상 표시)
+    <nav
+      aria-label="빠른 문의"
+      className={`fixed right-6 z-40 flex flex-col items-center gap-3 transition-[bottom,transform,opacity] duration-500 ease-out ${
+        lifted ? "bottom-25" : "bottom-6"
+      } ${idle ? "translate-x-[calc(100%+1.5rem)] opacity-0 md:translate-x-0 md:opacity-100" : "translate-x-0 opacity-100"}`}
+    >
+      {/* 세 버튼이 순서대로 번갈아 흔들리도록 딜레이 분산 (3.3s 주기 / 3 → 0 / 1.1 / 2.2s) */}
+      {/* 무료 방문 실측 — 브라운 원형(줄자 아이콘, 헤더 버튼과 동일 색) */}
+      <a href="#estimate" aria-label="무료 방문 실측 신청" title="무료 방문 실측 신청" onClick={onCta} className={`wiggle ${btn} bg-accent text-white`}>
+        <RulerIcon size={26} />
+      </a>
+      {/* 전화 — 화이트 */}
+      <a href={SITE.telHref} aria-label="전화 연결" title="전화 연결" onClick={onCall} className={`wiggle ${btn} border border-line bg-white text-foreground`} style={{ animationDelay: "1.1s" }}>
+        <PhoneIcon size={27} />
+      </a>
+      {/* 카카오톡 */}
+      <a
+        href={SITE.kakaoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="카카오톡 문의"
+        title="카카오톡 문의"
+        onClick={onKakao}
+        className={`wiggle ${btn} bg-[#FEE500] text-[#191919]`}
+        style={{ animationDelay: "2.2s" }}
       >
-        <a
-          href={SITE.telHref}
-          onClick={onCall}
-          className="flex min-h-14 flex-col items-center justify-center gap-1 bg-accent px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] text-white active:bg-brown"
-        >
-          <PhoneIcon size={20} />
-          <span className="text-xs font-semibold leading-none">전화</span>
-        </a>
-        <a
-          href={SITE.kakaoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onKakao}
-          className="flex min-h-14 flex-col items-center justify-center gap-1 bg-[#FEE500] px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] text-[#191919] active:bg-[#f5dc00]"
-        >
-          <KakaoIcon size={20} />
-          <span className="text-xs font-semibold leading-none">카카오 상담</span>
-        </a>
-        <a
-          href="#estimate"
-          onClick={onCta}
-          className="flex min-h-14 flex-col items-center justify-center gap-1 bg-gold px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] text-white active:brightness-95"
-        >
-          <RulerIcon size={20} />
-          <span className="text-xs font-semibold leading-none">무료 방문실측</span>
-        </a>
-      </nav>
-    </>
+        <KakaoIcon size={30} />
+      </a>
+    </nav>
   );
 }

@@ -11,7 +11,7 @@
   --brown: #8a6d55;        /* CTA 브라운 */
   --olive: #4a4a3b;        /* CTA 올리브 */
   --gold: #b8976b;         /* 포인트 골드 */
-  --header-h: 88px;        /* 헤더 높이 — 스크롤 시 축소 */
+  --header-h: 100px;       /* 헤더 높이 — 스크롤 시 축소(h-20) */
 }
 
 @theme inline {
@@ -61,3 +61,50 @@ body {
 /* 스크롤바 숨김 (가로 캐러셀) */
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ── 스티키 버튼 흔들림 (주기적으로 눈에 띄게) ───────── */
+@keyframes wiggle {
+  0%, 70%, 100% { transform: rotate(0) scale(1); }
+  74% { transform: rotate(-12deg) scale(1.08); }
+  78% { transform: rotate(10deg) scale(1.08); }
+  82% { transform: rotate(-8deg) scale(1.06); }
+  86% { transform: rotate(6deg) scale(1.04); }
+  90% { transform: rotate(-3deg) scale(1.02); }
+}
+.wiggle { animation: wiggle 3.3s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .wiggle { animation: none; }
+}
+
+/* ── 커서: 상호작용 요소는 손가락 커서 ─────────────── */
+a[href], button, [role="button"], label[for], summary,
+input[type="checkbox"], input[type="radio"], input[type="submit"], select {
+  cursor: pointer;
+}
+button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
+
+/* ── 밑줄 그리기 인터랙션: 부모 Reveal 이 보이면 왼→오로 2.5px 골드 라인이 쫙 그어짐 ── */
+.underline-draw { position: relative; }
+.underline-draw::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -6px;
+  height: 2.5px; width: 0;
+  background: var(--gold);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.1s; /* Reveal 딜레이(0.4s)+페이드(0.7s) 끝난 뒤 시작 */
+}
+.is-visible .underline-draw::after { width: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  .underline-draw::after { width: 100%; transition: none; }
+}
+
+/* ── 후기 마퀴: 두 줄 무한 흐름 (콘텐츠 2회 복제 → -50% 이동으로 이음새 없음). 호버 시 정지 ── */
+@keyframes marquee-left  { from { transform: translateX(0) }    to { transform: translateX(-50%) } }
+@keyframes marquee-right { from { transform: translateX(-50%) } to { transform: translateX(0) } }
+.marquee-track { display: flex; width: max-content; will-change: transform; }
+.marquee-left  { animation: marquee-left  var(--marquee-duration, 60s) linear infinite; }
+.marquee-right { animation: marquee-right var(--marquee-duration, 60s) linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
