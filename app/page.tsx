@@ -1,69 +1,60 @@
-import Image from "next/image";
+// 랜딩페이지 조립 파일.
+// 참고 사이트(커튼/블라인드) 섹션 순서를 그대로 따름:
+// 헤더 → 히어로 슬라이더 → CURTAIN 캐러셀 → BLIND 캐러셀 → 무료 견적 폼 → 회사소개 → 시공사진 → 푸터
+import Header from "./_components/Header";
+import HeroSlider from "./_components/HeroSlider";
+import ProductCarousel from "./_components/ProductCarousel";
+import EstimateForm from "./_components/EstimateForm";
+import AboutSection from "./_components/AboutSection";
+import GalleryGrid from "./_components/GalleryGrid";
+import Footer from "./_components/Footer";
+import ScrollTopButton from "./_components/ScrollTopButton";
+import { CURTAINS, BLINDS } from "./_lib/data";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      {/* 고정 헤더: 히어로 위에서는 투명, 스크롤 시 흰 배경으로 전환 */}
+      <Header />
+
+      <main className="flex-1">
+        {/* 1. 풀스크린 히어로 슬라이더 (자동재생 / 화살표 / 도트 / 스와이프) */}
+        <HeroSlider />
+
+        {/* 2. CURTAIN — 제품 카드 가로 캐러셀 */}
+        <ProductCarousel
+          id="curtain"
+          eyebrow="CURTAIN"
+          title="커튼"
+          subtitle="INTRODUCING CURTAINS OF VARIOUS MATERIALS"
+          items={CURTAINS}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        {/* 3. BLIND — 동일 컴포넌트 재사용, 어두운 톤으로 리듬 부여 */}
+        <ProductCarousel
+          id="blind"
+          eyebrow="BLIND"
+          title="블라인드"
+          subtitle="INTRODUCING BLINDS OF VARIOUS MATERIALS"
+          items={BLINDS}
+          dark
+        />
+
+        {/* 4. 무료 방문 견적 신청 폼 (개인정보 아코디언 + 확인 모달) */}
+        <EstimateForm />
+
+        {/* 5. 회사소개 (이미지 + 카피 + CTA 2개) */}
+        <AboutSection />
+
+        {/* 6. 시공사진 호버 그리드 + 커뮤니티 스트립 */}
+        <GalleryGrid />
       </main>
-    </div>
+
+      {/* CS CENTER / 사업자 정보 / 카피라이트 */}
+      <Footer />
+
+      {/* 스크롤 400px 이후 노출되는 TOP 버튼 */}
+      <ScrollTopButton />
+    </>
   );
 }

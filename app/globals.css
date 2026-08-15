@@ -1,26 +1,50 @@
 @import "tailwindcss";
 
+/* ── 디자인 토큰 ─────────────────────────────── */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --muted: #737373;
+  --line: #e5e5e5;
+  --accent: #1c1c1c; /* 버튼/강조 (참고 사이트는 블랙 톤) */
+  --header-h: 80px;   /* 헤더 높이 — 스크롤 시 축소 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html { scroll-behavior: smooth; }
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ── 스크롤 리빌 (Reveal 컴포넌트) ───────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* ── 공통 유틸 ───────────────────────────────── */
+/* 섹션 영문 소제목 (예: "CURTAIN") */
+.eyebrow { @apply text-[11px] tracking-[0.35em] uppercase text-muted; }
+/* 스크롤바 숨김 (가로 캐러셀) */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
