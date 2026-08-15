@@ -10,9 +10,9 @@ const notoSans = Noto_Sans_KR({ variable: "--font-noto-sans", subsets: ["latin"]
 const notoSerif = Noto_Serif_KR({ variable: "--font-noto-serif", subsets: ["latin"], weight: ["400", "600"] });
 const script = Great_Vibes({ variable: "--font-script", subsets: ["latin"], weight: "400" });
 
-// 파워링크 키워드와 일치하도록 지역/상품 키워드를 title/description 에 포함
-const TITLE = SITE.bizName; // 브라우저 탭 제목: "커튼장인 아뜰리에"
-const DESC = `${SITE.serviceAreaLabel} 커튼·블라인드 전문. 암막커튼, 쉬폰커튼, 린넨커튼, 로만쉐이드, 허니콤·우드블라인드 무료 방문 실측 후 맞춤 제작·직접 시공. ${SITE.careerYears}년 경력 커튼장인.`;
+// 탭 제목/설명 (지역·상품 키워드는 keywords 와 JSON-LD 에 포함)
+const TITLE = `ATELIER | ${SITE.bizName}`; // 브라우저 탭 제목: "ATELIER | 커튼장인 아뜰리에"
+const DESC = "커튼·블라인드 전문. 믿을 수 있는 전문가가 직접 실측·제작·시공합니다.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.siteUrl),
