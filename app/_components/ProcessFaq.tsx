@@ -101,7 +101,7 @@ export default function ProcessFaq() {
 
           {/* FAQ 하단 CTA — 전화 / 카카오톡 */}
           <Reveal delay={150} className="mt-12 text-center">
-            <p className="text-base text-muted md:text-lg">더 궁금한 점은 전화 또는 카카오톡으로 편하게 문의하세요.</p>
+            <p className="text-base text-muted md:text-lg">더 궁금한 점은<br className="md:hidden" /> 전화 또는 카카오톡으로 편하게 문의하세요.</p>
             <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
               <a
                 href={SITE.telHref}

@@ -72,9 +72,9 @@ export default function PriceGuide() {
         {/* 견적에 포함 — 체크 칩 */}
         <Reveal delay={150} className="mt-11 flex flex-col items-center gap-4 text-center md:mt-13 -translate-y-[5px]">
           <p className="text-sm font-medium tracking-[0.2em] uppercase text-muted">견적에 포함</p>
-          <ul className="flex flex-wrap justify-center gap-2">
+          <ul className="grid w-full max-w-md grid-cols-2 gap-2 md:flex md:w-auto md:max-w-none md:flex-wrap md:justify-center">
             {PRICE_GUIDE.includes.map((item) => (
-              <li key={item} className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-4.5 py-2.5 text-base transition-colors hover:border-accent hover:bg-accent hover:text-white">
+              <li key={item} className="inline-flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-line bg-surface px-3 py-2 text-sm transition-colors hover:border-accent hover:bg-accent hover:text-white md:gap-2 md:px-4.5 md:py-2.5 md:text-base">
                 <CheckIcon />
                 {item}
               </li>
@@ -88,10 +88,10 @@ export default function PriceGuide() {
       <div className="border-y border-line bg-surface">
         <Reveal delay={200} className="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-14 text-center md:px-10 md:py-16">
           <p className="serif text-xl leading-relaxed md:text-3xl">
-            정확한 견적은 <span className="font-semibold text-accent">무료 방문 실측</span>으로 확인하세요
+            정확한 견적은<br className="md:hidden" /> <span className="font-semibold text-accent">무료 방문 실측</span>으로 확인하세요
           </p>
           <p className="text-base text-muted md:text-lg">
-            실측 후 확정 견적을 안내드리며, <strong className="font-semibold text-foreground">추가 비용은 없습니다.</strong>
+            실측 후 확정 견적을 안내드리며,<br className="md:hidden" /> <strong className="font-semibold text-foreground">추가 비용은 없습니다.</strong>
           </p>
           <a
             href="#estimate"

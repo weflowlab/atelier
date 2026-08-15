@@ -104,18 +104,18 @@ export default function Strengths() {
 
       <div className="mx-auto max-w-7xl px-6 md:px-10">
 
-        {/* 강점: 모바일은 가로 스크롤(1.n장 보임, 인디케이터 없음) / md 3열 / lg 6열. 가운데 두 개(무료 방문 실측 · 100% 맞춤 제작) highlight 다크 카드 */}
-        <ul className="no-scrollbar -mx-6 mt-16 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 md:mx-0 md:mt-20 md:grid md:grid-cols-3 md:gap-x-4 md:gap-y-10 md:overflow-visible md:px-0 lg:grid-cols-6 lg:gap-x-0">
+        {/* 강점: 모바일은 가로 스크롤(1.n장 보임, 인디케이터 없음, 세로 스크롤 잠금) / md 3열 / lg 6열. 전부 박스, 가운데 두 개(무료 방문 실측 · 100% 맞춤 제작) highlight 다크 카드 */}
+        <ul className="no-scrollbar -mx-6 mt-14 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden px-6 py-4 md:mx-0 md:mt-20 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:py-0 lg:grid-cols-6 lg:gap-3">
           {STRENGTH.items.map((item, i) => {
             const hl = !!item.highlight;
-            const prevPlain = i > 0 && !STRENGTH.items[i - 1].highlight;
             return (
-              <Reveal key={item.title} as="li" delay={i * 90} className="h-full shrink-0 basis-[72%] snap-center md:basis-auto md:shrink">
+              <Reveal key={item.title} as="li" delay={i * 90} className="h-full shrink-0 basis-[58%] snap-center md:basis-auto md:shrink">
+                {/* 카드: 전부 박스. 강조는 다크 카드, 기본은 밝은 면 + 테두리 (높이·라인 동일) */}
                 <div
-                  className={`group flex h-full flex-col items-center px-4 text-center transition ${
+                  className={`group flex h-full flex-col items-center rounded-2xl px-4 py-10 text-center transition md:py-9 ${
                     hl
-                      ? "rounded-2xl bg-accent py-9 text-white shadow-lg shadow-accent/25 lg:-translate-y-3 lg:mx-1"
-                      : `py-9 ${prevPlain ? "lg:border-l lg:border-line" : ""}`
+                      ? "bg-accent text-white shadow-lg shadow-accent/25"
+                      : "border border-line bg-surface"
                   }`}
                 >
                   {/* 아이콘: 강조 카드는 골드, 기본은 딥 브라운. 호버 시 살짝 확대 */}

@@ -262,7 +262,8 @@ export default function EstimateForm() {
 
                 {/* 개인정보 수집 및 이용 동의 — 체크 1줄 + "내용 보기" 토글 안내문 */}
                 <div className="rounded-lg border border-line bg-surface px-4 py-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
+                  {/* 라벨(위) + "내용 보기" 버튼(우하단) */}
+                  <div className="flex flex-col gap-1.5">
                     <label className="flex cursor-pointer items-center gap-2 text-base">
                       <input
                         type="checkbox"
@@ -271,14 +272,14 @@ export default function EstimateForm() {
                         className="h-4 w-4 accent-accent"
                         aria-invalid={!!errors.agree}
                       />
-                      개인정보 수집 및 이용에 동의합니다. <span className="text-red-500">(필수)</span>
+                      <span>개인정보 수집 및 이용에 동의합니다. <span className="whitespace-nowrap text-red-500">(필수)</span></span>
                     </label>
                     <button
                       type="button"
                       onClick={() => setPrivacyOpen((v) => !v)}
                       aria-expanded={privacyOpen}
                       aria-controls="privacy-text"
-                      className="text-sm text-muted underline underline-offset-4 transition-colors hover:text-foreground"
+                      className="self-end text-sm text-muted underline underline-offset-4 transition-colors hover:text-foreground"
                     >
                       {privacyOpen ? "닫기" : "내용 보기"}
                     </button>
