@@ -10,17 +10,24 @@ export default function ScrollProgress({ trackId, className = "" }: { trackId: s
   useEffect(() => {
     const el = document.getElementById(trackId);
     if (!el) return;
-    const update = () => {
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
       const max = el.scrollWidth - el.clientWidth;
       setProgress(max > 0 ? el.scrollLeft / max : 0);
       setThumb(el.scrollWidth > 0 ? Math.max(0.15, el.clientWidth / el.scrollWidth) : 1);
     };
-    update();
+    // 스크롤 이벤트마다가 아니라 프레임당 1회만 갱신
+    const update = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    measure();
     el.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     return () => {
       el.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, [trackId]);
 

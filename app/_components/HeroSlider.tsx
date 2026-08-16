@@ -149,7 +149,7 @@ export default function HeroSlider() {
                           strokeLinejoin="round"
                         />
                       </svg>
-                      {HERO_CTA.secondary.label}
+                      <span className="-translate-y-[1.5px]">{HERO_CTA.secondary.label}</span>
                     </a>
                   </div>
 
