@@ -96,7 +96,7 @@ export default function HeroSlider() {
               active ? "z-10 opacity-100" : "z-0 opacity-0 pointer-events-none"
             }`}
           >
-            <Placeholder tone="dark" label="" className="border-0" />
+            <Placeholder tone="dark" label="" noticeSize="lg" className="border-0" />
             {/* 텍스트 가독성용 어두운 그라데이션 오버레이 (좌측 텍스트가 놓이는 쪽을 더 어둡게) */}
             <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/30 to-black/60" />
             <div className="absolute inset-0 bg-linear-to-r from-black/50 via-black/10 to-transparent" />

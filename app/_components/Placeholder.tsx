@@ -4,9 +4,10 @@ type Props = {
   label?: string;
   className?: string; // 크기/비율은 부모에서 aspect-* 또는 h-* 로 지정
   tone?: "light" | "dark";
+  noticeSize?: "sm" | "lg"; // 가운데 안내 문구 크기 (히어로처럼 큰 영역은 lg)
 };
 
-export default function Placeholder({ label = "IMAGE", className = "", tone = "light" }: Props) {
+export default function Placeholder({ label = "IMAGE", className = "", tone = "light", noticeSize = "sm" }: Props) {
   const base =
     tone === "dark"
       ? "bg-neutral-800 text-neutral-400 border-neutral-700"
@@ -25,7 +26,11 @@ export default function Placeholder({ label = "IMAGE", className = "", tone = "l
         </span>
       )}
       {/* 가운데 안내 문구 — 실제 이미지가 들어갈 자리임을 표시 */}
-      <span className="absolute inset-0 flex items-center justify-center px-3 text-center text-xs font-medium tracking-wide select-none sm:text-sm">
+      <span
+        className={`absolute inset-0 flex items-center justify-center px-3 text-center font-medium tracking-wide whitespace-nowrap select-none ${
+          noticeSize === "lg" ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl" : "text-xs sm:text-sm"
+        }`}
+      >
         이미지 삽입 예정
       </span>
     </div>
