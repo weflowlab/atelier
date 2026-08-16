@@ -27,7 +27,7 @@ export default function PainPoint() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold">{item.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{item.desc}</p>
+                <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted">{item.desc}</p>
               </article>
             </Reveal>
           ))}
@@ -36,7 +36,7 @@ export default function PainPoint() {
         {/* 마무리 한 줄 + 다음 섹션(브랜드 강점)으로 이어지는 화살표 */}
         <Reveal delay={400} className="mt-14 flex flex-col items-center gap-8 text-center md:mt-20">
           <p className="serif text-xl font-medium leading-relaxed md:text-3xl">
-            그래서 <span className="underline-draw font-semibold text-accent">커튼장인 아뜰리에</span>는 처음부터 끝까지 직접 합니다.
+            그래서 <span className="underline-draw font-semibold text-accent">커튼장인 아뜰리에</span>는<br className="md:hidden" /> 처음부터 끝까지 직접 합니다.
           </p>
           <a
             href="#strength"

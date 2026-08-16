@@ -28,8 +28,10 @@ function FilterRow({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex flex-wrap items-baseline justify-center gap-x-5 gap-y-2">
-      <span className="mr-1 text-sm tracking-[0.25em] text-muted">{label}</span>
+    // 모바일: 라벨 고정 폭 열 + 탭 열(왼쪽 정렬) → "지역"/"공간" 줄 시작선이 맞음. md+: 가운데 정렬 한 줄
+    <div className="grid grid-cols-[2.75rem_1fr] items-baseline gap-x-2 md:flex md:flex-wrap md:items-baseline md:justify-center md:gap-x-5 md:gap-y-2">
+      <span className="text-sm tracking-[0.25em] text-muted md:mr-1">{label}</span>
+      <div className="flex flex-wrap gap-x-4 gap-y-1.5 md:contents">
       {tabs.map((t) => {
         const active = t === value;
         return (
@@ -51,6 +53,7 @@ function FilterRow({
           </button>
         );
       })}
+      </div>
     </div>
   );
 }
@@ -98,6 +101,7 @@ export default function GalleryGrid() {
         </Reveal>
 
         {/* 필터 2줄 (지역 / 공간) + 결과 건수 */}
+        {/* 필터 2줄(모바일은 라벨 열 고정으로 지역/공간 시작선 일치) + 결과 건수(가운데) */}
         <Reveal delay={100} className="mt-10 space-y-3">
           <FilterRow label="지역" tabs={REGION_TABS} value={region} onChange={(v) => change("region", v)} />
           <FilterRow label="공간" tabs={SPACE_TABS} value={space} onChange={(v) => change("space", v)} />

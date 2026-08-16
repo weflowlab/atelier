@@ -49,12 +49,12 @@ export default function GalleryLightbox({ items, startIndex, onClose, filterLabe
   const item = items[safeIdx];
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="시공 사진 보기" className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-8">
+    <div role="dialog" aria-modal="true" aria-label="시공 사진 보기" className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-8">
       {/* 백드롭 */}
       <button type="button" aria-label="닫기" onClick={onClose} className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
 
       {/* 패널 — 좌 사진 3/5 · 우 정보/CTA 2/5 (제품 라이트박스와 동일 레이아웃, 블랙 톤) */}
-      <div className="relative z-10 flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-neutral-950 text-white shadow-2xl lg:flex-row">
+      <div className="relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-y-auto rounded-2xl bg-neutral-950 text-white shadow-2xl no-scrollbar sm:max-h-[calc(100dvh-4rem)] lg:flex-row lg:overflow-hidden">
         {/* 닫기 버튼 */}
         <button
           type="button"
@@ -66,8 +66,8 @@ export default function GalleryLightbox({ items, startIndex, onClose, filterLabe
         </button>
 
         {/* 좌: 큰 사진 + 좌우 화살표 + 카운터 + 썸네일 */}
-        <div className="flex flex-col lg:w-3/5">
-          <div className="relative aspect-[4/3] bg-black">
+        <div className="flex shrink-0 flex-col lg:w-3/5">
+          <div className="relative aspect-[3/2] bg-black lg:aspect-[4/3]">
             <div key={item.id} className="relative h-full w-full animate-[glbFade_0.3s_ease]">
               {item.src ? (
                 <Image src={item.src} alt={item.title} fill sizes="(min-width:1024px) 60vw, 100vw" className="object-contain" priority />
@@ -89,14 +89,14 @@ export default function GalleryLightbox({ items, startIndex, onClose, filterLabe
           </div>
           {/* 썸네일 스트립 — 활성 항목 골드 테두리, 자동 센터링 */}
           {count > 1 && (
-            <div ref={thumbsRef} className="no-scrollbar flex gap-2 overflow-x-auto p-3">
+            <div ref={thumbsRef} className="no-scrollbar flex gap-2 overflow-x-auto px-3 py-2 sm:p-3">
               {items.map((g, i) => (
                 <button
                   key={g.id}
                   type="button"
                   aria-label={`${i + 1}번 사진`}
                   onClick={() => setIdx(i)}
-                  className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-md border-2 transition ${i === safeIdx ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
+                  className={`relative h-11 w-16 shrink-0 overflow-hidden rounded-md border-2 transition sm:h-14 sm:w-20 ${i === safeIdx ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
                 >
                   {g.src ? <Image src={g.src} alt="" fill sizes="80px" className="object-cover" /> : <Placeholder label={`${i + 1}`} tone="dark" />}
                 </button>
@@ -106,27 +106,27 @@ export default function GalleryLightbox({ items, startIndex, onClose, filterLabe
         </div>
 
         {/* 우: 사례 정보 + CTA */}
-        <div className="flex flex-col justify-between gap-6 border-t border-white/10 p-6 sm:p-8 lg:w-2/5 lg:border-l lg:border-t-0">
+        <div className="flex flex-col justify-between gap-4 border-t border-white/10 p-5 sm:gap-6 sm:p-8 lg:w-2/5 lg:overflow-y-auto lg:border-l lg:border-t-0">
           <div>
             <p className="text-[11px] tracking-[0.35em] uppercase text-white/50">{filterLabel ?? "전체"} · 총 {count}건</p>
-            <h3 className="serif mt-2 text-2xl font-semibold md:text-3xl">{item.title}</h3>
+            <h3 className="serif mt-1 text-xl font-semibold sm:mt-2 sm:text-2xl md:text-3xl">{item.title}</h3>
             <p className="mt-2 text-sm text-white/60">{item.region} · {item.space} · {item.product}</p>
-            <p className="mt-5 text-sm leading-relaxed text-white/75">
+            <p className="mt-3 text-sm leading-relaxed text-white/75 sm:mt-4">
               {item.region} {item.space} {item.product} 시공 사례입니다. 무료 방문 실측 시 같은 원단·사양으로 견적을 받아보실 수 있습니다.
             </p>
           </div>
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-2">
             <a
               href="#estimate"
               onClick={() => { track(EVENTS.CLICK_CTA, { location: "gallery-lightbox", product: item.product }); preselectProduct(item.product); onClose(); }}
-              className="inline-flex h-12 items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-white transition hover:bg-brown"
+              className="inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-white transition hover:bg-brown sm:h-12"
             >
               이 사례로 무료 방문 실측 신청
             </a>
             <a
               href="#products"
               onClick={onClose}
-              className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 px-6 text-sm font-medium transition hover:border-white hover:bg-white hover:text-accent"
+              className="inline-flex h-11 items-center justify-center rounded-full border border-white/30 px-6 text-sm font-medium transition hover:border-white hover:bg-white hover:text-accent sm:h-12"
             >
               제품 안내 더 보기
             </a>

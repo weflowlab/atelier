@@ -54,8 +54,9 @@ export default function MobileDrawer({ open, onClose }: Props) {
         }`}
       >
         {/* 상단: 워드마크 + 닫기 버튼 */}
-        <div className="flex items-center justify-between border-b border-line px-5 py-4">
-          <span className="script text-4xl leading-none">{SITE.nameEn}</span>
+        <div className="flex h-20 items-center justify-between border-b border-line px-5">
+          {/* 필기체 로고 — 글리프 특성상 시각적 중심이 위로 쏠려서 살짝 내려 세로 중앙에 맞춤 */}
+          <span className="script translate-y-1.5 text-5xl leading-none">{SITE.nameEn}</span>
           <button
             type="button"
             aria-label="메뉴 닫기"
@@ -69,28 +70,28 @@ export default function MobileDrawer({ open, onClose }: Props) {
         </div>
 
         {/* 빠른 문의 — 전화 상담 / 카카오톡 문의 큰 버튼 2개 */}
-        <div className="grid grid-cols-2 gap-2 border-b border-line px-5 py-4">
+        <div className="grid grid-cols-2 gap-2 border-b border-line px-3 py-4">
           <a
             href={SITE.telHref}
             onClick={close}
-            className="flex h-12 items-center justify-center gap-2 rounded-md border border-line bg-white text-base font-medium text-foreground transition hover:bg-surface"
+            className="flex h-12 items-center justify-center gap-2 rounded-full border border-line bg-white text-[15px] font-medium text-foreground transition hover:bg-surface"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600" aria-hidden>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-emerald-600" aria-hidden>
               <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6.2 6.2l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />
             </svg>
-            전화 상담
+            <span className="-translate-y-[1px]">전화 상담</span>
           </a>
           <a
             href={SITE.kakaoUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={close}
-            className="flex h-12 items-center justify-center gap-2 rounded-md bg-[#FEE500] text-base font-medium text-[#191919] transition-colors hover:bg-[#f5dc00]"
+            className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#FEE500] text-[15px] font-medium text-[#191919] transition-colors hover:bg-[#f5dc00]"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
               <path d="M12 3C6.5 3 2 6.5 2 10.8c0 2.7 1.8 5.1 4.5 6.5l-1 3.7c-.1.3.3.6.6.4l4.4-2.9c.5.1 1 .1 1.5.1 5.5 0 10-3.5 10-7.8S17.5 3 12 3z" />
             </svg>
-            카카오톡 문의
+            <span className="-translate-y-[1px]">카카오톡 문의</span>
           </a>
         </div>
 

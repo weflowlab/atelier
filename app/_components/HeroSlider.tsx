@@ -96,7 +96,7 @@ export default function HeroSlider() {
               active ? "z-10 opacity-100" : "z-0 opacity-0 pointer-events-none"
             }`}
           >
-            <Placeholder tone="dark" label={`HERO ${s.id}`} className="border-0" />
+            <Placeholder tone="dark" label="" className="border-0" />
             {/* 텍스트 가독성용 어두운 그라데이션 오버레이 (좌측 텍스트가 놓이는 쪽을 더 어둡게) */}
             <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/30 to-black/60" />
             <div className="absolute inset-0 bg-linear-to-r from-black/50 via-black/10 to-transparent" />
@@ -113,7 +113,7 @@ export default function HeroSlider() {
                     {s.eyebrow}
                   </p>
                   {/* 메인 카피 (세리프, 줄바꿈 유지) */}
-                  <h1 className="serif whitespace-pre-line text-4xl font-semibold leading-[1.2] tracking-tight text-white md:text-6xl md:leading-[1.15]">
+                  <h1 className="serif whitespace-pre-line text-3xl font-semibold leading-[1.25] tracking-tight text-white md:text-6xl md:leading-[1.15]">
                     {s.title}
                   </h1>
                   {/* 얇은 골드 라인 */}
@@ -123,12 +123,12 @@ export default function HeroSlider() {
                     {s.sub}
                   </p>
 
-                  {/* CTA: 무료 방문 실측 신청(브라운, 헤더와 동일) / 전화 상담(화이트). 모바일은 세로 풀폭. 위(서브카피)·아래(배지) 간격 동일(mt-6) */}
-                  <div className="mt-4 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+                  {/* CTA: 무료 방문 실측 신청(브라운, 헤더와 동일) / 전화 상담(화이트). 모바일은 글자 폭 기준 작은 버튼 2개 가로 배치. 위(서브카피)·아래(배지) 간격 동일(mt-6) */}
+                  <div className="mt-4 grid w-fit grid-cols-1 gap-2.5 sm:flex sm:items-center sm:gap-4">
                     <a
                       href={HERO_CTA.primary.href}
                       onClick={() => track(EVENTS.CLICK_CTA, { location: "hero" })}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-10 py-5 text-lg font-semibold text-white shadow-md shadow-black/20 transition hover:-translate-y-0.5 hover:bg-brown hover:shadow-lg active:translate-y-0 sm:w-auto"
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-base font-semibold text-white shadow-md shadow-black/20 transition hover:-translate-y-0.5 hover:bg-brown hover:shadow-lg active:translate-y-0 sm:px-10 sm:py-5 sm:text-lg"
                     >
                       {HERO_CTA.primary.label}
                       {/* 화살표 아이콘 */}
@@ -139,10 +139,10 @@ export default function HeroSlider() {
                     <a
                       href={HERO_CTA.secondary.href}
                       onClick={() => track(EVENTS.CLICK_CALL, { location: "hero" })}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-10 py-5 text-lg font-semibold text-foreground shadow-md shadow-black/20 transition hover:-translate-y-0.5 hover:bg-surface hover:shadow-lg active:translate-y-0 sm:w-auto"
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-foreground shadow-md shadow-black/20 transition hover:-translate-y-0.5 hover:bg-surface hover:shadow-lg active:translate-y-0 sm:px-10 sm:py-5 sm:text-lg"
                     >
                       {/* 전화 아이콘 */}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" className="text-emerald-600" aria-hidden>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-emerald-600" aria-hidden>
                         <path
                           d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"
                           strokeLinecap="round"
@@ -154,7 +154,7 @@ export default function HeroSlider() {
                   </div>
 
                   {/* 핵심 배지 3개 (무료 방문 실측 · 100% 맞춤 제작 · 장인 직접 시공) — 첫 화면에서 바로 보이도록 CTA 바로 아래 */}
-                  <ul className="mt-6 flex flex-wrap items-center justify-center gap-2 md:justify-start" aria-label="핵심 안내">
+                  <ul className="mt-6 grid w-fit grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-start" aria-label="핵심 안내">
                     {HERO_BADGES.map((b) => (
                       <li
                         key={b}

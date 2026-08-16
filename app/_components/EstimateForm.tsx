@@ -149,7 +149,7 @@ export default function EstimateForm() {
             <div className="text-center">
               <p className="eyebrow">CALL TO ACTION</p>
               <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">무료 방문 실측 신청</h2>
-              <p className="mt-3 text-base text-muted">이름 · 연락처 · 지역만 남겨주시면 확인 후 빠르게 연락드립니다.</p>
+              <p className="mt-3 text-base text-muted">이름 · 연락처 · 지역만 남겨주시면<br className="md:hidden" /> 확인 후 빠르게 연락드립니다.</p>
             </div>
 
             {done ? (

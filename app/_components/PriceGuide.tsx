@@ -29,7 +29,14 @@ export default function PriceGuide() {
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="eyebrow mb-4">{PRICE_GUIDE.eyebrow}</p>
           <h2 className="serif text-2xl font-semibold leading-snug md:text-4xl">{PRICE_GUIDE.title}</h2>
-          <p className="mx-auto mt-5 max-w-2xl whitespace-pre-line text-sm leading-relaxed text-muted">{PRICE_GUIDE.note}</p>
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted">
+            {PRICE_GUIDE.note[0]}
+            <br />
+            {PRICE_GUIDE.note[1]}
+            <br className="md:hidden" />
+            <span className="hidden md:inline"> </span>
+            {PRICE_GUIDE.note[2]}
+          </p>
         </Reveal>
 
         {/* md+ 테이블: 상품 / 기준 / 가격대 */}

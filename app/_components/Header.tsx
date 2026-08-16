@@ -9,6 +9,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false); // 스크롤이 멈추면 위로 숨김, 움직이면 다시 표시
   const [hover, setHover] = useState(false);   // 헤더 위에 마우스가 있으면 숨기지 않음
+  const [nearTop, setNearTop] = useState(false); // 마우스가 화면 상단 근처(80px)로 오면 헤더 다시 표시 (PC)
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // 스크롤 10px 이상이면 솔리드 스타일로 전환.
@@ -33,6 +34,13 @@ export default function Header() {
     };
   }, []);
 
+  // 마우스가 페이지 상단으로 이동하면 헤더 등장 (숨김 상태에서도 메뉴 접근 가능)
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => setNearTop(e.clientY < 80);
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
   return (
@@ -41,7 +49,7 @@ export default function Header() {
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out ${
-          hidden && !hover && !drawerOpen ? "-translate-y-full" : "translate-y-0"
+          hidden && !hover && !nearTop && !drawerOpen ? "-translate-y-full" : "translate-y-0"
         } ${
           scrolled
             ? "bg-background/95 text-foreground shadow-[0_2px_16px_rgba(43,37,33,0.08)] backdrop-blur"

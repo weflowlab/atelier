@@ -60,23 +60,23 @@ export const NAV: NavItem[] = [
 // ① 히어로 — 첫 화면 핵심 문구: 무료 방문 실측 · 맞춤 제작 · 직접 시공 + 지역/상품 키워드
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string };
 export const HERO_SLIDES: Slide[] = [
-  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "무료 방문 실측부터 맞춤 제작,\n직접 시공까지 한 번에", sub: "커튼장인이 직접 방문해 실측하고 제작·시공합니다." },
-  { id: 2, eyebrow: "CURTAIN", title: "암막커튼 · 쉬폰커튼 · 린넨커튼\n로만쉐이드 맞춤 제작", sub: "국내외 프리미엄 원단을 실측 사이즈에 맞춰 1:1 제작합니다." },
-  { id: 3, eyebrow: "BLIND", title: "허니콤 · 우드블라인드 · 콤비\n공간에 맞는 블라인드 제안", sub: "채광·단열·프라이버시까지 고려해 최적의 제품을 추천드립니다." },
+  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "무료 실측부터 맞춤 제작,\n직접 시공까지 한 번에", sub: "커튼장인이 직접 방문해 실측하고 제작·시공합니다." },
+  { id: 2, eyebrow: "CURTAIN", title: "암막커튼 · 쉬폰커튼\n로만쉐이드 맞춤 제작", sub: "프리미엄 원단을 실측 사이즈에 맞춰 제작합니다." },
+  { id: 3, eyebrow: "BLIND", title: "허니콤 · 우드블라인드\n공간에 맞는 블라인드 제안", sub: "채광·단열·프라이버시까지 고려해 최적의 제품을 추천드립니다." },
 ];
 export const HERO_CTA = {
   primary: { label: "무료 방문 실측 신청", href: "#estimate" },
   secondary: { label: "전화 상담", href: "tel:18332523" },
 };
 // 히어로 CTA 아래 핵심 배지 3개
-export const HERO_BADGES = ["무료 방문 실측", "100% 맞춤 제작", "장인 직접 시공"];
+export const HERO_BADGES = ["무료 방문 실측", "100% 맞춤 제작", "장인 직접 시공", "추가 비용 없음"];
 
 // ② 문제 제기 & 공감
 export const PAIN = {
   eyebrow: "PAIN POINT",
   title: "이런 고민, 한 번쯤 해보셨죠?",
   items: [
-    { title: "사이즈가 안 맞아요", desc: "기성품 커튼은 창 크기와 맞지 않아 빛이 새거나 바닥에 끌립니다." },
+    { title: "사이즈가 안 맞아요", desc: "기성품 커튼은 창 크기와 맞지 않아\n빛이 새거나 바닥에 끌립니다." },
     { title: "암막? 쉬폰? 린넨?", desc: "종류가 많아 우리 집 거실·침실에 어떤 커튼·블라인드가 맞는지 고르기 어렵습니다." },
     { title: "시공이 불안해요", desc: "설치 후 처짐·틀어짐, 연락이 끊기는 업체 때문에 걱정됩니다." },
     { title: "가격이 불투명해요", desc: "방문 전에는 견적을 알 수 없고 추가 비용이 붙을까 불안합니다." },
@@ -88,12 +88,12 @@ export type Strength = { icon: "tape" | "fabric" | "sewing" | "shield" | "handsh
 export const STRENGTH = {
   eyebrow: "SOLUTION",
   intro: "커튼장인 아뜰리에는",
-  title: "믿을 수 있는 전문가가 직접 실측·제작·시공합니다",
+  title: "믿을 수 있는 전문가가 직접 실측·제작·시공합니다", // 실제 렌더는 Strengths.tsx 에서 모바일 줄바꿈 포함해 직접 출력
   items: [
     { icon: "fabric", title: "엄선된 원단", desc: "국내외 프리미엄 원단만을\n엄선하여 사용" },
     { icon: "sewing", title: "장인의 시공", desc: "수년의 경력을 가진\n전문가가 직접 시공" },
-    { icon: "calendar", title: "무료 방문 실측", desc: "직접 방문해 실측하고\n투명한 견적 안내", highlight: true },
     { icon: "tape", title: "100% 맞춤 제작", desc: "공간과 취향을 고려한\n1:1 맞춤 제작", highlight: true },
+    { icon: "calendar", title: "무료 방문 실측", desc: "직접 방문해 실측하고\n투명한 견적 안내", highlight: true },
     { icon: "shield", title: "완벽한 마감", desc: "디테일한 마감으로\n오래도록 아름답게" },
     { icon: "handshake", title: "사후 관리", desc: "시공 후에도 책임있는\n관리와 A/S" },
   ] as Strength[],
@@ -138,7 +138,8 @@ Object.assign(BLINDS.find((b) => b.name === "트리플쉐이드")!, { src: TRIPL
 export const PRICE_GUIDE = {
   eyebrow: "PRICE GUIDE",
   title: "가격 · 견적 기준 안내",
-  note: "아래 금액은 일반적인 아파트 거실/침실 창 기준 예시이며, 원단·사이즈·옵션에 따라 달라집니다.\n무료 방문 실측 후 확정 견적을 안내드리며 추가 비용은 없습니다.",
+  // 안내문: [0] 첫 줄 / [1]+[2] 둘째 줄 (모바일에서는 [1] 뒤에서 한 번 더 줄바꿈)
+  note: ["아래 금액은 일반적인 아파트 거실/침실 창 기준 예시이며, 원단·사이즈·옵션에 따라 달라집니다.", "무료 방문 실측 후 확정 견적을 안내드리며", "추가 비용은 없습니다."],
   rows: [
     { product: "암막커튼", basis: "거실창(가로 약 4m) 기준", price: "20만원대 ~", tag: "인기" },
     { product: "쉬폰커튼", basis: "거실창(가로 약 4m) 기준", price: "10만원대 ~" },

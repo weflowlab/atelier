@@ -1,6 +1,7 @@
 // ③ 브랜드 강점(Solution) 섹션. 헤더 → 신뢰 통계 밴드 → 6개 강점(가운데 100% 맞춤 제작 · 무료 방문 실측 다크 카드 강조).
 import { STRENGTH, TRUST, type Strength } from "../_lib/data";
 import Reveal from "./Reveal";
+import ScrollProgress from "./ScrollProgress";
 
 // 아이콘 키 → 1.5px 스트로크 라인 아이콘 (40px)
 function StrengthIcon({ name, className = "" }: { name: Strength["icon"]; className?: string }) {
@@ -82,7 +83,10 @@ export default function Strengths() {
           <p className="eyebrow mb-4">{STRENGTH.eyebrow}</p>
           <p className="serif text-base text-muted">{STRENGTH.intro}</p>
           {/* 데스크톱에서는 한 줄 유지 */}
-          <h2 className="serif mt-3 text-2xl font-semibold leading-snug md:text-4xl md:whitespace-nowrap">{STRENGTH.title}</h2>
+          <h2 className="serif mt-3 text-2xl font-semibold leading-snug md:text-4xl md:whitespace-nowrap">
+            {/* 모바일: "…전문가가 직접 / 실측·제작·시공합니다" 두 줄, PC: 한 줄 */}
+            믿을 수 있는 전문가가 직접<br className="md:hidden" /> 실측·제작·시공합니다
+          </h2>
           <span aria-hidden className="mx-auto mt-6 block h-px w-12 bg-gold" />
         </Reveal>
       </div>
@@ -104,12 +108,12 @@ export default function Strengths() {
 
       <div className="mx-auto max-w-7xl px-6 md:px-10">
 
-        {/* 강점: 모바일은 가로 스크롤(1.n장 보임, 인디케이터 없음, 세로 스크롤 잠금) / md 3열 / lg 6열. 전부 박스, 가운데 두 개(무료 방문 실측 · 100% 맞춤 제작) highlight 다크 카드 */}
-        <ul className="no-scrollbar -mx-6 mt-14 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden px-6 py-4 md:mx-0 md:mt-20 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:py-0 lg:grid-cols-6 lg:gap-3">
+        {/* 강점: 모바일은 가로 스크롤(1.n장, 진행바, 세로 스크롤 잠금) — 강조 카드 2개가 먼저 오도록 order-first / md 3열 / lg 6열(강조는 가운데). 전부 박스 */}
+        <ul id="strength-track" className="no-scrollbar -mx-6 mt-14 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden px-6 py-4 md:mx-0 md:mt-20 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:py-0 lg:grid-cols-6 lg:gap-3">
           {STRENGTH.items.map((item, i) => {
             const hl = !!item.highlight;
             return (
-              <Reveal key={item.title} as="li" delay={i * 90} className="h-full shrink-0 basis-[58%] snap-center md:basis-auto md:shrink">
+              <Reveal key={item.title} as="li" delay={i * 90} className={`h-full shrink-0 basis-[58%] snap-center md:basis-auto md:shrink ${hl ? "order-first md:order-none" : ""}`}>
                 {/* 카드: 전부 박스. 강조는 다크 카드, 기본은 밝은 면 + 테두리 (높이·라인 동일) */}
                 <div
                   className={`group flex h-full flex-col items-center rounded-2xl px-4 py-10 text-center transition md:py-9 ${
@@ -139,6 +143,8 @@ export default function Strengths() {
             );
           })}
         </ul>
+        {/* 모바일 가로 스크롤 진행바 */}
+        <ScrollProgress trackId="strength-track" className="mt-4 md:hidden" />
       </div>
     </section>
   );

@@ -19,8 +19,14 @@ export default function Placeholder({ label = "IMAGE", className = "", tone = "l
       {/* 대각선 패턴으로 "빈 이미지" 임을 시각적으로 표시 */}
       <div className="absolute inset-0 opacity-30 [background:repeating-linear-gradient(45deg,transparent_0_12px,currentColor_12px_13px)]" />
       {/* 라벨은 좌상단 고정 — 위에 얹히는 오버레이 텍스트(히어로/갤러리)와 겹치지 않게 */}
-      <span className="absolute left-3 top-3 text-[10px] font-medium tracking-[0.2em] uppercase select-none">
-        {label}
+      {label && (
+        <span className="absolute left-3 top-3 text-[10px] font-medium tracking-[0.2em] uppercase select-none">
+          {label}
+        </span>
+      )}
+      {/* 가운데 안내 문구 — 실제 이미지가 들어갈 자리임을 표시 */}
+      <span className="absolute inset-0 flex items-center justify-center px-3 text-center text-xs font-medium tracking-wide select-none sm:text-sm">
+        이미지 삽입 예정
       </span>
     </div>
   );

@@ -35,6 +35,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), "Apple SD Gothic Neo", sans-serif;
   -webkit-font-smoothing: antialiased;
+  word-break: keep-all;        /* 한글: 글자가 아니라 어절 단위로 줄바꿈 ("제 / 안" 방지) */
+  overflow-wrap: break-word;   /* 너무 긴 단어(URL 등)는 넘치지 않게 강제 줄바꿈 */
 }
 
 /* ── 스크롤 리빌 (Reveal 컴포넌트) ───────────── */

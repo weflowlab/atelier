@@ -102,24 +102,24 @@ export default function ProcessFaq() {
           {/* FAQ 하단 CTA — 전화 / 카카오톡 */}
           <Reveal delay={150} className="mt-12 text-center">
             <p className="text-base text-muted md:text-lg">더 궁금한 점은<br className="md:hidden" /> 전화 또는 카카오톡으로 편하게 문의하세요.</p>
-            <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
+            <div className="mx-auto mt-5 grid w-full grid-cols-2 gap-3 sm:w-fit sm:auto-cols-fr sm:grid-flow-col">
               <a
                 href={SITE.telHref}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-white px-8 py-4 text-base font-semibold text-foreground transition hover:bg-surface"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-white px-2 py-3 text-[15px] font-semibold text-foreground transition hover:bg-surface sm:px-8 sm:py-4 sm:text-base"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.8" className="text-emerald-600">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-emerald-600">
                   <path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z" strokeLinejoin="round" />
                 </svg>
-                전화 상담
+                <span className="-translate-y-[1px]">전화 상담</span>
               </a>
               <a
                 href={SITE.kakaoUrl}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FEE500] px-8 py-4 text-base font-semibold text-[#191919] transition-opacity hover:opacity-85"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FEE500] px-2 py-3 text-[15px] font-semibold text-[#191919] transition-opacity hover:opacity-85 sm:px-8 sm:py-4 sm:text-base"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7L5.7 21.6c-.1.3.3.6.6.4l4.4-2.9c.4 0 .9.1 1.3.1 5.5 0 10-3.6 10-8.1S17.5 3 12 3z" />
                 </svg>
-                카카오톡 문의
+                <span className="-translate-y-[1px]">카카오톡 문의</span>
               </a>
             </div>
           </Reveal>
