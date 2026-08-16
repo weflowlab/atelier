@@ -1,7 +1,6 @@
 // ③ 브랜드 강점(Solution) 섹션. 헤더 → 신뢰 통계 밴드 → 6개 강점(가운데 100% 맞춤 제작 · 무료 방문 실측 다크 카드 강조).
 import { STRENGTH, TRUST, type Strength } from "../_lib/data";
 import Reveal from "./Reveal";
-import ScrollProgress from "./ScrollProgress";
 
 // 아이콘 키 → 1.5px 스트로크 라인 아이콘 (40px)
 function StrengthIcon({ name, className = "" }: { name: Strength["icon"]; className?: string }) {
@@ -109,15 +108,15 @@ export default function Strengths() {
       <div className="mx-auto max-w-7xl px-6 md:px-10">
 
         {/* 강점: 모바일은 일반 가로 스크롤(스냅 없음, 1.n장, 진행바, 세로 스크롤 잠금) — 강조 카드 2개가 먼저 오도록 order-first / md 3열 / lg 6열(강조는 가운데). 전부 박스 */}
-        <div>
-        <ul id="strength-track" className="no-scrollbar -mx-6 mt-14 flex gap-3 overflow-x-auto overscroll-x-contain px-6 py-4 md:mx-0 md:mt-20 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:py-0 lg:grid-cols-6 lg:gap-3">
+        {/* 강점 그리드: 모바일 2열 / md 3열 / lg 6열. 전부 박스, 강조 두 개(무료 방문 실측 · 100% 맞춤 제작)는 모바일 첫 줄, lg 는 가운데 */}
+        <ul className="mt-14 grid grid-cols-2 gap-3 md:mt-20 md:grid-cols-3 md:gap-4 lg:grid-cols-6 lg:gap-3">
           {STRENGTH.items.map((item) => {
             const hl = !!item.highlight; // 카드는 개별 페이드업 없이 그룹 단위로 등장 (가로 스크롤 중 튐 방지)
             return (
-              <li key={item.title} className={`h-full shrink-0 basis-[58%] md:basis-auto md:shrink ${hl ? "order-first md:order-none" : ""}`}>
+              <li key={item.title} className={`h-full ${hl ? "order-first lg:order-none" : ""}`}>
                 {/* 카드: 전부 박스. 강조는 다크 카드, 기본은 밝은 면 + 테두리 (높이·라인 동일) */}
                 <div
-                  className={`group flex h-full flex-col items-center rounded-2xl px-4 py-10 text-center md:py-9 md:transition ${
+                  className={`group flex h-full flex-col items-center rounded-2xl px-3 py-8 text-center md:px-4 md:py-9 md:transition ${
                     hl
                       ? "bg-accent text-white shadow-lg shadow-accent/25"
                       : "border border-line bg-surface"
@@ -144,9 +143,6 @@ export default function Strengths() {
             );
           })}
         </ul>
-        {/* 모바일 가로 스크롤 진행바 */}
-        <ScrollProgress trackId="strength-track" className="mt-4 md:hidden" />
-        </div>
       </div>
     </section>
   );
