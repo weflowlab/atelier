@@ -111,7 +111,7 @@ export default function MobileDrawer({ open, onClose }: Props) {
                   <a
                     href={item.href}
                     onClick={close}
-                    className="block px-5 py-4 text-lg font-medium tracking-wide hover:bg-background"
+                    className="block px-5 py-4 text-[17px] font-medium tracking-wide hover:bg-background"
                   >
                     {item.label}
                   </a>
@@ -124,10 +124,10 @@ export default function MobileDrawer({ open, onClose }: Props) {
         {/* 하단: 대표번호 + 운영시간 */}
         <div className="border-t border-line px-5 py-4">
           <p className="eyebrow">{SITE.tagline}</p>
-          <a href={SITE.telHref} className="mt-1 block text-2xl font-medium tracking-tight hover:text-brown">
+          <a href={SITE.telHref} className="mt-1 block text-[22px] font-medium tracking-tight hover:text-brown">
             {SITE.tels[0]}
           </a>
-          <p className="mt-1 text-sm tracking-wider text-muted">{SITE.hours}</p>
+          <p className="mt-1 text-[13px] tracking-wider text-muted">{SITE.hours}</p>
         </div>
       </aside>
     </div>
@@ -152,7 +152,7 @@ function AccordionItem({
         type="button"
         aria-expanded={expanded}
         onClick={onToggle}
-        className="flex w-full items-center justify-between px-5 py-4 text-left text-lg font-medium tracking-wide hover:bg-background"
+        className="flex w-full items-center justify-between px-5 py-4 text-left text-[17px] font-medium tracking-wide hover:bg-background"
       >
         {item.label}
         <svg
@@ -180,7 +180,7 @@ function AccordionItem({
               <a
                 href={c.href}
                 onClick={onNavigate}
-                className="block px-8 py-2.5 text-base text-muted hover:text-foreground"
+                className="block px-8 py-2.5 text-[15px] text-muted hover:text-foreground"
               >
                 {c.label}
               </a>

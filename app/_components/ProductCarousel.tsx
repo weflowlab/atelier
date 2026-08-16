@@ -81,7 +81,7 @@ export default function ProductCarousel({ id, eyebrow, title, subtitle, items, d
         el.scrollLeft = el.scrollLeft < setW * 0.5 ? el.scrollLeft + setW : el.scrollLeft - setW;
         el.style.scrollBehavior = "";
       }
-    }, 120);
+    }, 250); // 터치 관성 스크롤 + 스냅이 완전히 멈춘 뒤 점프
   }, [loop, n, setWidth]);
 
   // 화살표: 카드 1장 폭만큼 부드럽게 스크롤 (루프라 끝이 없음)
@@ -97,7 +97,7 @@ export default function ProductCarousel({ id, eyebrow, title, subtitle, items, d
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.2 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -192,7 +192,12 @@ export default function ProductCarousel({ id, eyebrow, title, subtitle, items, d
       </Reveal>
 
       {/* 카드 트랙: 가로 스크롤 + 스냅, 스크롤바 숨김. 양끝 패딩으로 다음 카드가 살짝 보이게(peek) */}
-      <div className="relative mx-auto max-w-7xl" onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
+      <div
+        className="relative mx-auto max-w-7xl"
+        // 터치 기기는 탭 시 hover 가 고착돼 자동재생이 멈추므로, 마우스 포인터일 때만 hover 처리
+        onPointerEnter={(e) => e.pointerType === "mouse" && setHovering(true)}
+        onPointerLeave={(e) => e.pointerType === "mouse" && setHovering(false)}
+      >
         {/* 양옆 화살표 — 카드 1장씩 이동 */}
         <button type="button" aria-label="이전" onClick={() => scrollByCard(-1)} className={`${arrowBase} ${arrowTone} left-2 sm:left-4`}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M15 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
