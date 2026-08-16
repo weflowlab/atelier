@@ -8,7 +8,7 @@ export default function ScrollTopButton() {
   const [idle, setIdle] = useState(false);       // 스크롤 멈춤(모바일 숨김)
 
   useEffect(() => {
-    const IDLE_MS = 800; // QuickMenu 와 동일
+    const IDLE_MS = 1100; // QuickMenu/헤더와 동일
     let timer: ReturnType<typeof setTimeout> | null = null;
     const onScroll = () => {
       setVisible(window.scrollY > 400);
@@ -34,7 +34,7 @@ export default function ScrollTopButton() {
       tabIndex={visible ? 0 : -1}
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       // 표시/숨김은 opacity + 세로 이동, 모바일 idle 은 오른쪽으로 밀어냄(translate 속성 트랜지션)
-      className={`fixed bottom-3 right-3 z-40 flex h-16 w-16 items-center justify-center rounded-full border border-line bg-surface text-foreground shadow-md transition-[opacity,translate,background-color,color] duration-700 ease-in-out hover:bg-accent hover:text-white ${
+      className={`fixed bottom-3 right-3 z-40 flex h-16 w-16 items-center justify-center rounded-full border border-line bg-surface text-foreground shadow-md transition-[opacity,translate,background-color,color] duration-[600ms] ease-in-out hover:bg-accent hover:text-white ${
         visible ? "opacity-100" : "pointer-events-none opacity-0"
       } ${idle ? "translate-x-[calc(100%+1.25rem)] md:translate-x-0" : visible ? "translate-x-0 translate-y-0" : "translate-y-3"}`}
     >

@@ -46,7 +46,7 @@ export default function QuickMenu() {
   const [idle, setIdle] = useState(false);     // 스크롤 멈춤(모바일에서 숨김)
 
   useEffect(() => {
-    const IDLE_MS = 800; // 스크롤 멈춤 판정 시간
+    const IDLE_MS = 1100; // 스크롤 멈춤 판정 시간 (헤더와 동일)
     let timer: ReturnType<typeof setTimeout> | null = null;
     const onScroll = () => {
       const y = window.scrollY;
@@ -71,7 +71,7 @@ export default function QuickMenu() {
     // 우하단 세로 스택 — 평소 bottom-3, TOP 버튼 등장 시 bottom-22(12+64+12px)로 이동. 모바일은 idle 시 오른쪽으로 숨김 + 흔들림 정지(md 이상은 항상 표시)
     <nav
       aria-label="빠른 문의"
-      className={`fixed right-3 z-40 flex flex-col items-center gap-3 transition-[bottom,translate] duration-700 ease-in-out ${
+      className={`fixed right-3 z-40 flex flex-col items-center gap-3 transition-[bottom,translate] duration-[600ms] ease-in-out ${
         lifted ? "bottom-22" : "bottom-3"
       } ${idle ? "translate-x-[calc(100%+1.25rem)] md:translate-x-0 [&_.wiggle]:animate-none md:[&_.wiggle]:animate-[wiggle_3.3s_ease-in-out_infinite]" : "translate-x-0"}`}
     >

@@ -108,13 +108,13 @@ export default function Strengths() {
 
       <div className="mx-auto max-w-7xl px-6 md:px-10">
 
-        {/* 강점: 모바일은 가로 스크롤(1.n장, 진행바, 세로 스크롤 잠금) — 강조 카드 2개가 먼저 오도록 order-first / md 3열 / lg 6열(강조는 가운데). 전부 박스 */}
+        {/* 강점: 모바일은 일반 가로 스크롤(스냅 없음, 1.n장, 진행바, 세로 스크롤 잠금) — 강조 카드 2개가 먼저 오도록 order-first / md 3열 / lg 6열(강조는 가운데). 전부 박스 */}
         <Reveal delay={100}>
-        <ul id="strength-track" className="no-scrollbar -mx-6 mt-14 flex snap-x snap-proximity gap-3 overflow-x-auto overflow-y-hidden px-6 py-4 md:mx-0 md:mt-20 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:py-0 lg:grid-cols-6 lg:gap-3">
-          {STRENGTH.items.map((item, i) => {
+        <ul id="strength-track" className="no-scrollbar -mx-6 mt-14 flex gap-3 overflow-x-auto overflow-y-hidden px-6 py-4 md:mx-0 md:mt-20 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:py-0 lg:grid-cols-6 lg:gap-3">
+          {STRENGTH.items.map((item) => {
             const hl = !!item.highlight; // 카드는 개별 페이드업 없이 그룹 단위로 등장 (가로 스크롤 중 튐 방지)
             return (
-              <li key={item.title} className={`h-full shrink-0 basis-[58%] snap-center md:basis-auto md:shrink ${hl ? "order-first md:order-none" : ""}`}>
+              <li key={item.title} className={`h-full shrink-0 basis-[58%] md:basis-auto md:shrink ${hl ? "order-first md:order-none" : ""}`}>
                 {/* 카드: 전부 박스. 강조는 다크 카드, 기본은 밝은 면 + 테두리 (높이·라인 동일) */}
                 <div
                   className={`group flex h-full flex-col items-center rounded-2xl px-4 py-10 text-center md:py-9 md:transition ${

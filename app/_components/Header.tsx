@@ -15,7 +15,7 @@ export default function Header() {
   // 스크롤 10px 이상이면 솔리드 스타일로 전환.
   // 스크롤 중에는 헤더 표시, 멈춘 뒤 IDLE_MS 지나면 스르륵 숨김(최상단 근처에서는 항상 표시).
   useEffect(() => {
-    const IDLE_MS = 1200;
+    const IDLE_MS = 1100; // 스크롤 멈춤 판정 (스티키와 동일)
     let timer: ReturnType<typeof setTimeout> | null = null;
     const onScroll = () => {
       const y = window.scrollY;
@@ -48,7 +48,7 @@ export default function Header() {
       <header
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out ${
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-[600ms] ease-in-out ${
           hidden && !hover && !nearTop && !drawerOpen ? "-translate-y-full" : "translate-y-0"
         } ${
           scrolled
@@ -116,10 +116,11 @@ export default function Header() {
               aria-label="전체 메뉴 열기"
               aria-expanded={drawerOpen}
               onClick={() => setDrawerOpen(true)}
-              className="flex h-9 items-center gap-2 px-1"
+              className="flex h-11 items-center gap-2 px-1 md:h-9"
             >
               <span className="hidden text-xs tracking-[0.2em] md:inline">MENU</span>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+              {/* 햄버거 아이콘 — 모바일은 조금 크게(28px), md+ 는 22px */}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden className="h-7 w-7 md:h-[22px] md:w-[22px]">
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>
             </button>
