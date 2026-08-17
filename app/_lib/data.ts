@@ -9,16 +9,17 @@ export const SITE = {
   bizName: "커튼장인 아뜰리에",
   tels: ["1833-2523", "010-4126-2209"], // 첫 번째가 대표번호
   telHref: "tel:18332523",
-  kakaoUrl: "#",                 // TODO: 카카오톡 채널 링크
+  kakaoUrl: "https://open.kakao.com/o/sYZyueoi",
   hours: "MON - SUN : 08:00 AM ~ 12:00 AM",
   holiday: "Holidays Available",
-  owner: "김보남",
-  address: "경기 남양주시 (상세주소 입력 예정)", // TODO: 사업장 주소
+  owner: "김용재",
+  address: "경기도 남양주시 경춘로 1786 1층",
   bizAddress: "사업자주소 입력 예정",          // TODO
-  bizNo: "000-00-00000",                     // TODO: 사업자등록번호
-  careerYears: 15,                           // TODO: 실제 시공 경력(년)
+  bizNo: "180-17-02995",
+  careerYears: 17,
+  totalProjects: 12350, // 누적 시공 건수
   siteUrl: "https://example.com",            // TODO: 실제 도메인 (sitemap/JSON-LD 용)
-  serviceAreaLabel: "남양주 · 마석 · 화도읍 · 구리 · 다산 · 별내",
+  serviceAreaLabel: "서울 · 경기 · 인천 전 지역, 강원 일부(춘천·화천)",
 };
 
 // ── 지역 키워드 (파워링크 유입 지역) ─────────────────────────
@@ -90,7 +91,7 @@ export const STRENGTH = {
   intro: "커튼장인 아뜰리에는",
   title: "믿을 수 있는 전문가가 직접 실측·제작·시공합니다", // 실제 렌더는 Strengths.tsx 에서 모바일 줄바꿈 포함해 직접 출력
   items: [
-    { icon: "fabric", title: "엄선된 원단", desc: "국내외 프리미엄 원단만을\n엄선하여 사용" },
+    { icon: "fabric", title: "엄선된 원단", desc: "프리미엄 원단만을\n엄선하여 사용" },
     { icon: "sewing", title: "장인의 시공", desc: "수년의 경력을 가진\n전문가가 직접 시공" },
     { icon: "tape", title: "100% 맞춤 제작", desc: "공간과 취향을 고려한\n1:1 맞춤 제작", highlight: true },
     { icon: "calendar", title: "무료 방문 실측", desc: "직접 방문해 실측하고\n투명한 견적 안내", highlight: true },
@@ -137,17 +138,18 @@ Object.assign(BLINDS.find((b) => b.name === "트리플쉐이드")!, { src: TRIPL
 // ④-2 가격/견적 안내 — 표시 가격은 예시. TODO: 실제 단가 확인 후 수정
 export const PRICE_GUIDE = {
   eyebrow: "PRICE GUIDE",
-  title: "가격 · 견적 기준 안내",
+  title: "견적 기준 안내",
   // 안내문: [0] 첫 줄 / [1]+[2] 둘째 줄 (모바일에서는 [1] 뒤에서 한 번 더 줄바꿈)
-  note: ["아래 금액은 일반적인 아파트 거실/침실 창 기준 예시이며, 원단·사이즈·옵션에 따라 달라집니다.", "무료 방문 실측 후 확정 견적을 안내드리며", "추가 비용은 없습니다."],
+  note: ["모든 제품은 원단·사이즈·옵션에 따라 견적이 달라집니다.", "무료 방문 실측 후 확정 견적을 안내드리며", "추가 비용은 없습니다."],
+  // 가격은 표기하지 않음(고객 요청) — 대표 상품과 실측 기준만 안내
   rows: [
-    { product: "암막커튼", basis: "거실창(가로 약 4m) 기준", price: "20만원대 ~", tag: "인기" },
-    { product: "쉬폰커튼", basis: "거실창(가로 약 4m) 기준", price: "10만원대 ~" },
-    { product: "린넨커튼", basis: "침실창(가로 약 2m) 기준", price: "15만원대 ~" },
-    { product: "로만쉐이드", basis: "창 1개(가로 약 1.5m) 기준", price: "12만원대 ~" },
-    { product: "허니콤블라인드", basis: "창 1개(가로 약 1.5m) 기준", price: "8만원대 ~" },
-    { product: "우드블라인드", basis: "창 1개(가로 약 1.5m) 기준", price: "10만원대 ~" },
-    { product: "콤비블라인드", basis: "창 1개(가로 약 1.5m) 기준", price: "6만원대 ~", tag: "가성비" },
+    { product: "암막커튼", basis: "거실창(가로 약 4m) 기준", tag: "인기" },
+    { product: "쉬폰커튼", basis: "거실창(가로 약 4m) 기준" },
+    { product: "린넨커튼", basis: "침실창(가로 약 2m) 기준" },
+    { product: "로만쉐이드", basis: "창 1개(가로 약 1.5m) 기준" },
+    { product: "허니콤블라인드", basis: "창 1개(가로 약 1.5m) 기준" },
+    { product: "우드블라인드", basis: "창 1개(가로 약 1.5m) 기준" },
+    { product: "콤비블라인드", basis: "창 1개(가로 약 1.5m) 기준", tag: "가성비" },
   ],
   includes: ["무료 방문 실측", "맞춤 제작", "직접 시공 · 설치", "기존 제품 철거"],
 };
@@ -155,40 +157,42 @@ export const PRICE_GUIDE = {
 // ⑤ 시공 포트폴리오 — 지역별 · 공간별 구분
 export type GalleryItem = { id: string; title: string; region: string; space: string; product: string; src?: string };
 export const GALLERY: GalleryItem[] = [
-  { id: "g1", title: "다산 아파트 거실 암막커튼", region: "다산", space: "거실", product: "암막커튼" },
-  { id: "g2", title: "별내 아파트 침실 허니콤블라인드", region: "별내", space: "침실", product: "허니콤블라인드" },
-  { id: "g3", title: "마석 전원주택 린넨커튼", region: "마석", space: "거실", product: "린넨커튼" },
-  { id: "g4", title: "구리 카페 우드블라인드", region: "구리", space: "상가", product: "우드블라인드" },
-  { id: "g5", title: "남양주 사무실 롤스크린", region: "남양주", space: "사무실", product: "롤스크린" },
-  { id: "g6", title: "화도읍 타운하우스 쉬폰커튼", region: "화도읍", space: "거실", product: "쉬폰커튼" },
-  { id: "g7", title: "다산 아이방 허니콤블라인드", region: "다산", space: "아이방", product: "허니콤블라인드" },
-  { id: "g8", title: "남양주 병원 방염커튼", region: "남양주", space: "병원", product: "병원커튼" },
-  { id: "g9", title: "별내 주방 로만쉐이드", region: "별내", space: "주방", product: "로만쉐이드" },
-  { id: "g10", title: "구리 아파트 거실 콤비블라인드", region: "구리", space: "거실", product: "콤비블라인드" },
-  { id: "g11", title: "마석 침실 암막커튼", region: "마석", space: "침실", product: "암막커튼" },
-  { id: "g12", title: "남양주 호평 거실 쉬폰+암막", region: "남양주", space: "거실", product: "쉬폰커튼" },
-  { id: "g13", title: "화도읍 전원주택 트리플쉐이드", region: "화도읍", space: "거실", product: "트리플쉐이드" },
+  { id: "g1", title: "서울 강남구 아파트 거실 암막커튼", region: "서울", space: "거실", product: "암막커튼" },
+  { id: "g2", title: "남양주 다산 침실 허니콤블라인드", region: "경기", space: "침실", product: "허니콤블라인드" },
+  { id: "g3", title: "인천 송도 아파트 쉬폰커튼", region: "인천", space: "거실", product: "쉬폰커튼" },
+  { id: "g4", title: "서울 마포구 카페 우드블라인드", region: "서울", space: "상가", product: "우드블라인드" },
+  { id: "g5", title: "경기 구리 사무실 롤스크린", region: "경기", space: "사무실", product: "롤스크린" },
+  { id: "g6", title: "경기 하남 전원주택 린넨커튼", region: "경기", space: "거실", product: "린넨커튼" },
+  { id: "g7", title: "서울 송파구 아이방 허니콤블라인드", region: "서울", space: "아이방", product: "허니콤블라인드" },
+  { id: "g8", title: "인천 부평구 병원 방염커튼", region: "인천", space: "병원", product: "병원커튼" },
+  { id: "g9", title: "경기 성남 분당 주방 로만쉐이드", region: "경기", space: "주방", product: "로만쉐이드" },
+  { id: "g10", title: "서울 서초구 거실 콤비블라인드", region: "서울", space: "거실", product: "콤비블라인드" },
+  { id: "g11", title: "강원 춘천 침실 암막커튼", region: "강원", space: "침실", product: "암막커튼" },
+  { id: "g12", title: "경기 남양주 거실 쉬폰+암막", region: "경기", space: "거실", product: "쉬폰커튼" },
+  { id: "g13", title: "경기 용인 전원주택 트리플쉐이드", region: "경기", space: "거실", product: "트리플쉐이드" },
 ];
 
 // ⑥ 고객 후기 & 신뢰 요소 — 더미, 실제 후기로 교체 (지역 키워드 포함)
 export type Review = { id: string; name: string; area: string; product: string; rating: number; text: string; date: string };
 export const REVIEWS: Review[] = [
-  { id: "r1", name: "김○○", area: "남양주 다산동", product: "암막커튼", rating: 5, date: "2026.07", text: "실측부터 시공까지 꼼꼼하게 봐주셔서 만족스러워요. 빛이 하나도 안 새고 마감이 정말 깔끔합니다." },
-  { id: "r2", name: "이○○", area: "남양주 별내동", product: "허니콤블라인드", rating: 5, date: "2026.06", text: "무료 방문 실측이라 부담 없이 시작했는데 가격도 투명하고 시공 당일 바로 끝났어요." },
-  { id: "r3", name: "박○○", area: "마석 화도읍", product: "린넨커튼", rating: 5, date: "2026.06", text: "원단 샘플을 직접 보여주시면서 추천해 주셔서 고르기 쉬웠습니다. 전원주택 분위기가 확 살아났어요." },
-  { id: "r4", name: "최○○", area: "구리 인창동", product: "우드블라인드", rating: 5, date: "2026.05", text: "카페 창 전체를 우드블라인드로 교체했는데 일정 맞춰 정확하게 시공해 주셨습니다. 사후 관리도 확실해요." },
-  { id: "r5", name: "정○○", area: "남양주 호평동", product: "쉬폰커튼 + 암막", rating: 5, date: "2026.05", text: "속커튼과 암막을 같이 했는데 조합 추천이 딱이었어요. 견적도 처음 말씀하신 그대로였습니다." },
-  { id: "r6", name: "한○○", area: "구리 교문동", product: "로만쉐이드", rating: 5, date: "2026.04", text: "주방 창에 로만쉐이드 했는데 주름이 정말 예쁘게 떨어져요. 사이즈도 딱 맞아서 빛 샘이 없습니다." },
-  { id: "r7", name: "오○○", area: "남양주 진접읍", product: "콤비블라인드", rating: 5, date: "2026.04", text: "이사 날짜에 맞춰서 시공해 주셨어요. 채광 조절이 편하고 아이들 방에도 잘 어울립니다." },
-  { id: "r8", name: "윤○○", area: "다산 지금동", product: "트리플쉐이드", rating: 5, date: "2026.03", text: "거실 전체를 트리플쉐이드로 바꿨는데 분위기가 확 고급스러워졌어요. 설명도 친절하셨습니다." },
-  { id: "r9", name: "장○○", area: "별내 별내면", product: "린넨커튼 + 쉬폰", rating: 5, date: "2026.03", text: "전원주택 큰 창이라 걱정했는데 원단 추천부터 시공까지 완벽했어요. 주변에도 소개했습니다." },
-  { id: "r10", name: "서○○", area: "남양주 퇴계원", product: "전동커튼", rating: 5, date: "2026.02", text: "높은 창이라 전동으로 했는데 리모컨 세팅까지 다 해주시고 A/S 안내도 확실해서 안심됩니다." },
+  { id: "r1", name: "김○○", area: "경기 남양주", product: "암막커튼", rating: 5, date: "2026.07", text: "실측부터 시공까지 꼼꼼하게 봐주셔서 만족스러워요. 빛이 하나도 안 새고 마감이 정말 깔끔합니다." },
+  { id: "r2", name: "이○○", area: "서울 강동구", product: "허니콤블라인드", rating: 5, date: "2026.06", text: "무료 방문 실측이라 부담 없이 시작했는데 가격도 투명하고 시공 당일 바로 끝났어요." },
+  { id: "r3", name: "박○○", area: "경기 남양주", product: "린넨커튼", rating: 5, date: "2026.06", text: "원단 샘플을 직접 보여주시면서 추천해 주셔서 고르기 쉬웠습니다. 전원주택 분위기가 확 살아났어요." },
+  { id: "r4", name: "최○○", area: "서울 마포구", product: "우드블라인드", rating: 5, date: "2026.05", text: "카페 창 전체를 우드블라인드로 교체했는데 일정 맞춰 정확하게 시공해 주셨습니다. 사후 관리도 확실해요." },
+  { id: "r5", name: "정○○", area: "인천 송도", product: "쉬폰커튼 + 암막", rating: 5, date: "2026.05", text: "속커튼과 암막을 같이 했는데 조합 추천이 딱이었어요. 견적도 처음 말씀하신 그대로였습니다." },
+  { id: "r6", name: "한○○", area: "경기 성남", product: "로만쉐이드", rating: 5, date: "2026.04", text: "주방 창에 로만쉐이드 했는데 주름이 정말 예쁘게 떨어져요. 사이즈도 딱 맞아서 빛 샘이 없습니다." },
+  { id: "r7", name: "오○○", area: "경기 구리", product: "콤비블라인드", rating: 5, date: "2026.04", text: "이사 날짜에 맞춰서 시공해 주셨어요. 채광 조절이 편하고 아이들 방에도 잘 어울립니다." },
+  { id: "r8", name: "윤○○", area: "서울 송파구", product: "트리플쉐이드", rating: 5, date: "2026.03", text: "거실 전체를 트리플쉐이드로 바꿨는데 분위기가 확 고급스러워졌어요. 설명도 친절하셨습니다." },
+  { id: "r9", name: "장○○", area: "경기 하남", product: "린넨커튼 + 쉬폰", rating: 5, date: "2026.03", text: "전원주택 큰 창이라 걱정했는데 원단 추천부터 시공까지 완벽했어요. 주변에도 소개했습니다." },
+  { id: "r10", name: "서○○", area: "강원 춘천", product: "전동커튼", rating: 5, date: "2026.02", text: "높은 창이라 전동으로 했는데 리모컨 세팅까지 다 해주시고 A/S 안내도 확실해서 안심됩니다." },
 ];
-export const TRUST = [
-  { value: "N년+", label: "시공 경력" },     // TODO: 실제 경력 확인 후 `${SITE.careerYears}년+`
-  { value: "NNN+", label: "누적 시공" },     // TODO: 실제 수치
-  { value: "100%", label: "맞춤 제작" },
-  { value: "0원", label: "방문 실측 비용" },
+// 신뢰 통계 — animate 인 항목만 카운트업, 나머지는 정적 표시 (format: 천 단위 콤마)
+export type TrustStat = { end: number; suffix: string; label: string; format?: boolean; animate?: boolean; highlight?: boolean };
+export const TRUST: TrustStat[] = [
+  { end: SITE.careerYears, suffix: "년+", label: "시공 경력", highlight: true }, // 강조 표시
+  { end: SITE.totalProjects, suffix: "+", label: "누적 시공", format: true, animate: true },
+  { end: 100, suffix: "%", label: "맞춤 제작" },
+  { end: 0, suffix: "원", label: "방문 실측 비용" },
 ];
 
 // ⑦ 진행 절차 + FAQ
@@ -199,9 +203,20 @@ export const PROCESS = [
   { step: "04", title: "맞춤 제작", desc: "실측 사이즈에 맞춰\n장인이 직접 제작" },
   { step: "05", title: "시공 & A/S", desc: "직접 시공 후\n사후 관리까지 책임" },
 ];
-export const FAQ = [
-  { q: "방문 실측은 정말 무료인가요?", a: "네. 남양주·구리 전 지역 방문 실측과 견적 상담은 무료이며, 견적 후 계약하지 않으셔도 비용이 발생하지 않습니다." },
-  { q: "어느 지역까지 방문 가능한가요?", a: "남양주(다산·별내·호평·평내·진접·오남·퇴계원), 마석·화도읍, 구리 전 지역 방문 가능합니다. 그 외 수도권은 별도 문의 부탁드립니다." },
+export type FaqItem = { q: string; a: string; list?: { label: string; items: string }[] };
+export const FAQ: FaqItem[] = [
+  { q: "방문 실측은 정말 무료인가요?", a: "네. 서비스 지역 내 방문 실측과 견적 상담은 무료이며, 견적 후 계약하지 않으셔도 비용이 발생하지 않습니다." },
+  {
+    q: "어느 지역까지 방문 가능한가요?",
+    a: "서울 25개 자치구, 경기도 31개 시·군, 인천 전 지역, 강원 일부(춘천·화천)까지 방문 실측·시공이 가능합니다.",
+    // 라벨 열 고정 → 줄바꿈되어도 지역명이 첫 지역명 아래에서 시작 (행잉 인덴트)
+    list: [
+      { label: "서울", items: "강남구 · 강동구 · 강북구 · 강서구 · 관악구 · 광진구 · 구로구 · 금천구 · 노원구 · 도봉구 · 동대문구 · 동작구 · 마포구 · 서대문구 · 서초구 · 성동구 · 성북구 · 송파구 · 양천구 · 영등포구 · 용산구 · 은평구 · 종로구 · 중구 · 중랑구" },
+      { label: "경기", items: "수원시 · 성남시 · 고양시 · 용인시 · 부천시 · 안산시 · 안양시 · 남양주시 · 화성시 · 평택시 · 의정부시 · 시흥시 · 파주시 · 광명시 · 김포시 · 광주시 · 군포시 · 하남시 · 오산시 · 이천시 · 안성시 · 의왕시 · 양주시 · 포천시 · 여주시 · 동두천시 · 과천시 · 구리시 · 양평군 · 가평군 · 연천군" },
+      { label: "인천", items: "중구 · 동구 · 미추홀구 · 연수구 · 남동구 · 부평구 · 계양구 · 서구 · 강화군 · 옹진군" },
+      { label: "강원", items: "춘천시 · 화천시" },
+    ],
+  },
   { q: "제작·시공까지 얼마나 걸리나요?", a: "실측 후 보통 5~7일 내 제작이 완료되며, 시공은 당일 마무리됩니다. 원단·수량에 따라 달라질 수 있습니다." },
   { q: "암막커튼과 쉬폰커튼, 무엇을 골라야 하나요?", a: "침실은 암막, 거실은 쉬폰(속커튼)+암막 조합을 가장 많이 선택하십니다. 방문 실측 시 원단 샘플을 보여드리며 공간에 맞게 추천드립니다." },
   { q: "기존 커튼/블라인드 철거도 해주시나요?", a: "네. 기존 제품 철거와 폐기까지 함께 진행해 드립니다." },
@@ -209,7 +224,7 @@ export const FAQ = [
 ];
 
 // ⑧ 신청 폼 — 필수: 성함/연락처/설치지역, 선택: 원하는 상품/문의내용
-export const REGION_OPTIONS = [...REGION_NAMES, "기타 지역"];
+export const REGION_OPTIONS = ["서울", "경기", "인천", "강원(춘천·화천)", "기타 지역"];
 export const PRODUCT_OPTIONS = [
   "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "트리플쉐이드", "허니콤블라인드", "우드블라인드", "콤비블라인드", "롤스크린", "전동커튼/블라인드", "기타",
 ];

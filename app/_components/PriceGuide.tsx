@@ -52,7 +52,7 @@ export default function PriceGuide() {
                   </p>
                   <p className="mt-1 text-sm text-muted">{r.basis}</p>
                 </div>
-                <p className="serif shrink-0 text-xl font-semibold text-accent">{r.price}</p>
+                <p className="serif shrink-0 text-base font-semibold text-accent">무료 실측 후 안내</p>
               </li>
             ))}
           </ul>
@@ -70,7 +70,7 @@ export default function PriceGuide() {
                   </p>
                   <p className="mt-1 text-xs text-muted">{r.basis}</p>
                 </div>
-                <p className="serif shrink-0 text-base font-semibold text-accent">{r.price}</p>
+                <p className="serif shrink-0 text-sm font-semibold text-accent">실측 후 안내</p>
               </div>
             </Reveal>
           ))}

@@ -29,7 +29,11 @@ export default function Footer() {
         <div>
           <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-12 md:flex-row md:items-end md:justify-between md:px-8">
             <div>
-              <p className="script text-4xl leading-none md:text-5xl">{SITE.nameEn}</p>
+              <p className="flex items-center gap-3">
+                <span className="text-2xl font-semibold tracking-tight md:text-3xl">{SITE.nameKo}</span>
+                <span aria-hidden className="h-7 w-px bg-line" />
+                <span className="script translate-y-1 text-4xl leading-none md:text-5xl">{SITE.nameEn}</span>
+              </p>
               <p className="mt-3 text-sm font-medium">{SITE.bizName}</p>
               <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs leading-relaxed text-muted">
                 <span>대표 {SITE.owner}</span>

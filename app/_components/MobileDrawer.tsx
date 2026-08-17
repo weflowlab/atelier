@@ -56,7 +56,11 @@ export default function MobileDrawer({ open, onClose }: Props) {
         {/* 상단: 워드마크 + 닫기 버튼 */}
         <div className="flex h-20 items-center justify-between border-b border-line px-5">
           {/* 필기체 로고 — 글리프 특성상 시각적 중심이 위로 쏠려서 살짝 내려 세로 중앙에 맞춤 */}
-          <span className="script translate-y-1 text-[40px] leading-none">{SITE.nameEn}</span>
+          <span className="flex items-center gap-2.5">
+            <span className="text-base font-semibold tracking-tight">{SITE.nameKo}</span>
+            <span aria-hidden className="h-5 w-px bg-line" />
+            <span className="script translate-y-1 text-[34px] leading-none">{SITE.nameEn}</span>
+          </span>
           <button
             type="button"
             aria-label="메뉴 닫기"

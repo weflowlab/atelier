@@ -61,11 +61,13 @@ export default function Header() {
             scrolled ? "h-20" : "h-[var(--header-h)]"
           }`}
         >
-          {/* 로고 워드마크 — Atelier(필기체) + 하단 태그라인 */}
-          <a href="#top" aria-label={`${SITE.bizName} 홈으로`} className="flex items-center">
+          {/* 로고 워드마크 — "커튼장인" | Atelier(필기체) + 하단 태그라인 (참고 시안) */}
+          <a href="#top" aria-label={`${SITE.bizName} 홈으로`} className="flex items-center gap-3">
+            <span className="text-base font-semibold tracking-tight md:text-lg">{SITE.nameKo}</span>
+            <span aria-hidden className="h-7 w-px bg-current opacity-40" />
             <span className="flex flex-col leading-none">
-              <span className="script text-4xl leading-none">{SITE.nameEn}</span>
-              <span className="mt-1 text-[10px] tracking-[0.3em] uppercase opacity-70">{SITE.tagline}</span>
+              <span className="script text-3xl leading-none">{SITE.nameEn}</span>
+              <span className="mt-1 text-[9px] tracking-[0.3em] uppercase opacity-70">{SITE.tagline}</span>
             </span>
           </a>
 
@@ -76,7 +78,7 @@ export default function Header() {
                 <li key={item.label} className="group relative">
                   <a
                     href={item.href}
-                    className="relative flex h-20 items-center text-[15px] font-medium tracking-wide after:absolute after:bottom-5 after:left-0 after:h-px after:w-0 after:bg-current after:transition-[width] after:duration-300 group-hover:after:w-full"
+                    className="relative flex h-20 items-center text-sm font-medium tracking-wide after:absolute after:bottom-5 after:left-0 after:h-px after:w-0 after:bg-current after:transition-[width] after:duration-300 group-hover:after:w-full"
                   >
                     {item.label}
                   </a>
@@ -88,7 +90,7 @@ export default function Header() {
                           <li key={c.label}>
                             <a
                               href={c.href}
-                              className="block whitespace-nowrap px-5 py-2.5 text-sm text-muted hover:bg-background hover:text-foreground"
+                              className="block whitespace-nowrap px-5 py-2.5 text-[13px] text-muted hover:bg-background hover:text-foreground"
                             >
                               {c.label}
                             </a>
@@ -107,7 +109,7 @@ export default function Header() {
             <a
               href="#estimate"
               onClick={() => track(EVENTS.CLICK_CTA, { location: "header" })}
-              className="hidden items-center rounded-full bg-accent px-5 py-2.5 text-sm font-bold tracking-wide text-white shadow-sm transition-transform duration-200 hover:scale-105 hover:bg-brown md:inline-flex"
+              className="hidden items-center rounded-full bg-accent px-4 py-2 text-[13px] font-bold tracking-wide text-white shadow-sm transition-transform duration-200 hover:scale-105 hover:bg-brown md:inline-flex"
             >
               무료 방문 실측 신청
             </a>

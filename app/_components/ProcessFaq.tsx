@@ -90,7 +90,20 @@ export default function ProcessFaq() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <p className="pb-5 pl-7 text-sm leading-relaxed text-muted">{f.a}</p>
+                        <div className="pb-5 pl-7">
+                          <p className="whitespace-pre-line text-sm leading-relaxed text-muted">{f.a}</p>
+                          {/* 지역 목록 — 라벨 열 고정 폭이라 줄바꿈 시 첫 지역명 아래로 정렬(행잉 인덴트) */}
+                          {f.list && (
+                            <dl className="mt-3 space-y-2">
+                              {f.list.map((g) => (
+                                <div key={g.label} className="flex gap-3 text-sm leading-relaxed">
+                                  <dt className="w-8 shrink-0 font-medium text-foreground/70">{g.label}</dt>
+                                  <dd className="flex-1 text-muted">{g.items}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </li>
