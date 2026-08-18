@@ -1,5 +1,6 @@
 // ④ 주요 제품 섹션. 대표 4카드(쉬어/암막/블라인드/호텔&프로젝트) — 클릭 시 상세 캐러셀/갤러리 앵커로 이동.
 import { PRODUCTS } from "../_lib/data";
+import Image from "next/image";
 import Placeholder from "./Placeholder";
 import Reveal from "./Reveal";
 
@@ -24,8 +25,12 @@ export default function ProductGrid() {
               >
                 {/* 이미지: 호버 시 내부만 확대 (바깥 overflow-hidden 으로 잘림) */}
                 <div className="aspect-square overflow-hidden">
-                  <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105">
-                    <Placeholder label={item.en} className="border-0" />
+                  <div className="relative h-full w-full transition-transform duration-700 ease-out group-hover:scale-105">
+                    {item.src ? (
+                      <Image src={item.src} alt={item.ko} fill sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw" className="object-cover" />
+                    ) : (
+                      <Placeholder label={item.en} className="border-0" />
+                    )}
                   </div>
                 </div>
                 {/* 캡션 */}

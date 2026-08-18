@@ -1,13 +1,16 @@
 "use client";
 // 상단 고정 헤더 — 히어로 위에서는 투명(흰 글자), 스크롤 시 베이지 배경/블러/그림자/축소. 스크롤이 멈추면 위로 숨고 움직이면 다시 내려옴. 워드마크 로고 + 데스크톱 드롭다운 + 견적 CTA + MENU 드로어.
 import { useCallback, useEffect, useState } from "react";
-import { NAV, SITE } from "../_lib/data";
+import { HERO_SLIDES, NAV, SITE } from "../_lib/data";
 import { track, EVENTS } from "../_lib/analytics";
 import Image from "next/image";
 import MobileDrawer from "./MobileDrawer";
 
+// 첫 히어로 슬라이드가 밝은 배경(split)이면 최상단에서도 솔리드 헤더로 시작
+const HERO_IS_LIGHT = HERO_SLIDES[0]?.layout === "split";
+
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(HERO_IS_LIGHT);
   const [hidden, setHidden] = useState(false); // 스크롤이 멈추면 위로 숨김, 움직이면 다시 표시
   const [hover, setHover] = useState(false);   // 헤더 위에 마우스가 있으면 숨기지 않음
   const [nearTop, setNearTop] = useState(false); // 마우스가 화면 상단 근처(80px)로 오면 헤더 다시 표시 (PC)
@@ -20,7 +23,7 @@ export default function Header() {
     let timer: ReturnType<typeof setTimeout> | null = null;
     const onScroll = () => {
       const y = window.scrollY;
-      setScrolled(y > 10);
+      setScrolled(HERO_IS_LIGHT || y > 10);
       setHidden(false);
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {

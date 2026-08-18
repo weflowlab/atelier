@@ -42,6 +42,15 @@ const jsonLd = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className={`${notoSans.variable} ${notoSerif.variable} ${script.variable} h-full antialiased`}>
+      <head>
+        {/* 재방문(세션)·모션 최소화면 인트로를 첫 페인트부터 숨김 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(sessionStorage.getItem('atelier_intro_seen')||matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.setAttribute('data-intro','seen')}}catch(e){}",
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         {children}

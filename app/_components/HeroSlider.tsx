@@ -22,6 +22,7 @@ export default function HeroSlider() {
   const total = slides.length;
 
   const go = useCallback((n: number) => setIndex((i) => (i + n + total) % total), [total]);
+  const lightBg = slides[index]?.layout === "split"; // 현재 슬라이드가 밝은 배경이면 컨트롤을 어둡게
 
   // 키워드 개인화: sessionStorage(캡처 이후) → 없으면 URL ?kw= 직접 확인 → 매칭되면 1번 슬라이드 교체
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function HeroSlider() {
       {/* 슬라이드: 전부 겹쳐두고 opacity 로 크로스페이드 */}
       {slides.map((s, i) => {
         const active = i === index;
+        const split = s.layout === "split" && !!s.src; // 밝은 배경 + 우측 사진 레이아웃
         return (
           <div
             key={s.id}
@@ -97,14 +99,29 @@ export default function HeroSlider() {
               active ? "z-10 opacity-100" : "z-0 opacity-0 pointer-events-none"
             }`}
           >
-            {s.src ? (
-              <Image src={s.src} alt="" fill sizes="100vw" priority={i === 0} className="object-cover" />
+            {split ? (
+              // split: 밝은 베이지 배경 + 우측 사진 (모바일은 사진이 배경, 위에 밝은 그라데이션)
+              <>
+                <div className="absolute inset-0 bg-linear-to-br from-surface via-background to-[#efe7dc]" />
+                <div className="absolute inset-y-0 right-0 w-full md:w-[50%] lg:w-[52%]">
+                  <Image src={s.src!} alt="" fill sizes="(min-width:768px) 55vw, 100vw" priority={i === 0} className="object-cover" />
+                  {/* 좌측(텍스트 쪽)으로 배경색이 자연스럽게 이어지도록 페이드 */}
+                  <div className="absolute inset-0 bg-linear-to-r from-background via-background/50 to-transparent md:via-background/25 md:to-transparent" />
+                </div>
+                <div className="absolute inset-0 bg-background/55 md:hidden" />
+              </>
             ) : (
-              <Placeholder tone="dark" label="" noticeSize="lg" className="border-0" />
+              <>
+                {s.src ? (
+                  <Image src={s.src} alt="" fill sizes="100vw" priority={i === 0} className="object-cover" />
+                ) : (
+                  <Placeholder tone="dark" label="" noticeSize="lg" className="border-0" />
+                )}
+                {/* 텍스트 가독성용 어두운 그라데이션 오버레이 (좌측 텍스트가 놓이는 쪽을 더 어둡게) */}
+                <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/30 to-black/60" />
+                <div className="absolute inset-0 bg-linear-to-r from-black/50 via-black/10 to-transparent" />
+              </>
             )}
-            {/* 텍스트 가독성용 어두운 그라데이션 오버레이 (좌측 텍스트가 놓이는 쪽을 더 어둡게) */}
-            <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/30 to-black/60" />
-            <div className="absolute inset-0 bg-linear-to-r from-black/50 via-black/10 to-transparent" />
 
             {/* 텍스트 블록: key 를 활성 여부로 바꿔 활성화될 때마다 페이드업 재실행 */}
             {active && (
@@ -112,19 +129,19 @@ export default function HeroSlider() {
                 key={`text-${s.id}-${index}`}
                 className="absolute inset-0 flex items-center animate-[heroText_0.9s_ease_both]"
               >
-                <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-6 pt-32 pb-24 text-center md:items-start md:px-16 md:pt-36 lg:px-24 md:text-left">
+                <div className={`mx-auto flex w-full max-w-7xl flex-col items-center px-6 pt-32 pb-24 text-center md:items-start md:px-16 md:pt-36 md:text-left lg:px-24 ${split ? "md:pr-0" : ""}`}>
                   {/* 영문 소제목 */}
-                  <p className="mb-5 text-[11px] tracking-[0.35em] uppercase text-white/80 sm:text-xs">
+                  <p className={`mb-5 w-full text-[11px] tracking-[0.35em] uppercase sm:text-xs ${split ? "text-muted md:max-w-[30rem] lg:max-w-[34rem]" : "text-white/80"}`}>
                     {s.eyebrow}
                   </p>
                   {/* 메인 카피 (세리프, 줄바꿈 유지) */}
-                  <h1 className="serif whitespace-pre-line text-3xl font-semibold leading-[1.25] tracking-tight text-white md:text-6xl md:leading-[1.15]">
+                  <h1 className={`serif whitespace-pre-line text-3xl font-semibold leading-[1.25] tracking-tight md:leading-[1.15] ${split ? "text-foreground md:max-w-[30rem] md:text-[2.2rem] lg:max-w-[38rem] lg:text-[2.6rem]" : "text-white md:text-6xl"}`}>
                     {s.title}
                   </h1>
                   {/* 얇은 골드 라인 */}
                   <span aria-hidden className="mt-5.5 mb-4 block h-px w-12 bg-gold" />
                   {/* 서브 카피 */}
-                  <p className="max-w-xl text-sm leading-relaxed text-white/80 sm:text-base md:text-lg">
+                  <p className={`max-w-xl text-sm leading-relaxed sm:text-base md:text-lg ${split ? "text-muted md:max-w-[30rem] lg:max-w-[34rem]" : "text-white/80"}`}>
                     {s.sub}
                   </p>
 
@@ -144,7 +161,7 @@ export default function HeroSlider() {
                     <a
                       href={HERO_CTA.secondary.href}
                       onClick={() => track(EVENTS.CLICK_CALL, { location: "hero" })}
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-foreground shadow-md shadow-black/20 transition hover:-translate-y-0.5 hover:bg-surface hover:shadow-lg active:translate-y-0 sm:px-10 sm:py-5 sm:text-lg"
+                      className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-white px-7 py-3.5 text-base font-semibold text-foreground shadow-md shadow-black/10 transition hover:-translate-y-0.5 hover:bg-surface hover:shadow-lg active:translate-y-0 sm:px-10 sm:py-5 sm:text-lg"
                     >
                       {/* 전화 아이콘 */}
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-emerald-600" aria-hidden>
@@ -163,7 +180,7 @@ export default function HeroSlider() {
                     {HERO_BADGES.map((b) => (
                       <li
                         key={b}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-white/40 px-3 py-1 text-xs text-white/90"
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs ${split ? "border border-line bg-surface/70 text-foreground/80" : "border border-white/40 text-white/90"}`}
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gold" aria-hidden>
                           <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />
@@ -189,7 +206,7 @@ export default function HeroSlider() {
           type="button"
           aria-label={b.label}
           onClick={() => go(b.dir)}
-          className={`absolute top-1/2 ${b.side} z-20 hidden -translate-y-1/2 p-3 text-white/70 transition hover:text-white sm:block`}
+          className={`absolute top-1/2 ${b.side} z-20 hidden -translate-y-1/2 p-3 transition sm:block ${lightBg ? "text-foreground/40 hover:text-foreground" : "text-white/70 hover:text-white"}`}
         >
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
             <path d={b.path} strokeLinecap="round" strokeLinejoin="round" />
@@ -212,9 +229,9 @@ export default function HeroSlider() {
               className="group flex items-center px-1 py-3"
             >
               <span
-                className={`relative block h-[3px] overflow-hidden rounded-full bg-white/40 transition-all duration-500 ${
-                  active ? "w-10" : "w-2 group-hover:w-4 group-hover:bg-white/80"
-                }`}
+                className={`relative block h-[3px] overflow-hidden rounded-full transition-all duration-500 ${
+                  lightBg ? "bg-foreground/25" : "bg-white/40"
+                } ${active ? "w-10" : `w-2 ${lightBg ? "group-hover:bg-foreground/50" : "group-hover:bg-white/80"} group-hover:w-4`}`}
               >
                 {active && !paused && !reduced && (
                   <span

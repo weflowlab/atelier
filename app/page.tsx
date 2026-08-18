@@ -1,5 +1,6 @@
 // 랜딩페이지 조립 파일 — 8섹션 + 가격 안내 (파워링크 유입 최적화).
-// 헤더 → ①메인 → ②문제제기 → ③브랜드강점 → ④주요제품(+가격) → ⑤시공포트폴리오 → ⑥고객후기 → ⑦절차/FAQ → ⑧신청폼 → 푸터
+// 헤더 → 메인 → 브랜드강점(+신뢰통계) → 고객후기 → 문제제기 → 주요제품(+가격) → 시공포트폴리오 → 진행절차/FAQ → 신청폼 → 푸터
+import IntroSplash from "./_components/IntroSplash";
 import Header from "./_components/Header";
 import HeroSlider from "./_components/HeroSlider";
 import PainPoint from "./_components/PainPoint";
@@ -20,6 +21,9 @@ import { CURTAINS, BLINDS } from "./_lib/data";
 export default function Home() {
   return (
     <>
+      {/* 진입 인트로 — 재봉틀 일러스트 + 문구 타이핑 후 페이드아웃 (세션 1회) */}
+      <IntroSplash />
+
       {/* 고정 헤더: 히어로 위 투명 → 스크롤 시 배경색 전환 */}
       <Header />
 
@@ -27,11 +31,14 @@ export default function Home() {
         {/* ① 메인 — 핵심 문구(무료 방문 실측·맞춤 제작·직접 시공) + 큰 CTA. ?kw= 유입 키워드로 헤드라인 매칭 */}
         <HeroSlider />
 
-        {/* ② 문제 제기 & 공감 */}
-        <PainPoint />
-
         {/* ③ 브랜드 강점 — 신뢰 통계 + 강점 5개 */}
         <Strengths />
+
+        {/* ⑥ 고객 후기 캐러셀 */}
+        <Reviews />
+
+        {/* ② 문제 제기 & 공감 */}
+        <PainPoint />
 
         {/* ④ 주요 제품 — 대표 4카드 + 커튼/블라인드 캐러셀 + 가격·견적 기준 */}
         <ProductGrid />
@@ -41,9 +48,6 @@ export default function Home() {
 
         {/* ⑤ 시공 포트폴리오 — 지역별·공간별 필터 그리드 */}
         <GalleryGrid />
-
-        {/* ⑥ 고객 후기 캐러셀 */}
-        <Reviews />
 
         {/* ⑦ 진행 절차 + FAQ */}
         <ProcessFaq />

@@ -110,3 +110,7 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
 }
+
+/* ── 인트로 스플래시: 첫 방문에만 노출 (재방문·모션최소화는 layout 의 인라인 스크립트가 data-intro="seen" 부여) ── */
+html:not([data-intro="seen"]) body { overflow: hidden; }
+html[data-intro="seen"] #intro-splash { display: none; }

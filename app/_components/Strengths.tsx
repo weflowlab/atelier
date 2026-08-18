@@ -3,75 +3,45 @@ import { STRENGTH, TRUST, type Strength } from "../_lib/data";
 import Reveal from "./Reveal";
 import CountUp from "./CountUp";
 
-// 아이콘 키 → 1.5px 스트로크 라인 아이콘 (40px)
-function StrengthIcon({ name, className = "" }: { name: Strength["icon"]; className?: string }) {
-  const common = {
-    width: 56,
-    height: 56,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.4,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    className,
-    "aria-hidden": true,
-  };
-  switch (name) {
-    case "tape": // 줄자(자)
-      return (
-        <svg {...common}>
-          <path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" />
-          <path d="M14.5 12.5l2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2" />
-        </svg>
-      );
-    case "calendar": // 방문 일정 (체크 달력)
-      return (
-        <svg {...common}>
-          <path d="M8 2v4M16 2v4" />
-          <rect width="18" height="18" x="3" y="4" rx="2" />
-          <path d="M3 10h18" />
-          <path d="m9 16 2 2 4-4" />
-        </svg>
-      );
-    case "fabric": // 겹쳐진 원단 (레이어)
-      return (
-        <svg {...common}>
-          <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
-          <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
-          <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
-        </svg>
-      );
-    case "sewing": // 재봉틀 (받침 · 팔 · 바늘대 · 휠)
-      return (
-        <svg {...common}>
-          <path d="M3 19h18" />
-          <path d="M4 19v-4h5" />
-          <path d="M20 19V8a3 3 0 0 0-3-3H8.5" />
-          <path d="M8.5 5v7.5" />
-          <path d="M6.5 12.5h4" />
-          <path d="M8.5 12.5V15" />
-          <circle cx="16.5" cy="9.5" r="1.6" />
-        </svg>
-      );
-    case "shield": // 체크 방패
-      return (
-        <svg {...common}>
-          <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
-          <path d="m9 12 2 2 4-4" />
-        </svg>
-      );
-    case "handshake": // 악수 (사후 관리)
-      return (
-        <svg {...common}>
-          <path d="m11 17 2 2a1 1 0 1 0 3-3" />
-          <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" />
-          <path d="m21 3 1 11h-2" />
-          <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
-          <path d="M3 4h8" />
-        </svg>
-      );
+// 아이콘 키 → 시안에서 추출한 마스크 PNG (CSS mask 로 currentColor 색을 입혀 다크/라이트 카드 모두 대응).
+// calendar(무료 방문 실측)만 시안에 없어 인라인 SVG 유지.
+const MASK_ICONS: Partial<Record<Strength["icon"], string>> = {
+  tape: "/images/icons/tape.png",
+  fabric: "/images/icons/fabric.png",
+  sewing: "/images/icons/sewing.png",
+  shield: "/images/icons/shield.png",
+  handshake: "/images/icons/handshake.png",
+};
+
+function StrengthIcon({ name }: { name: Strength["icon"] }) {
+  const src = MASK_ICONS[name];
+  if (src) {
+    return (
+      <span
+        aria-hidden
+        className="block h-14 w-14 bg-current"
+        style={{
+          maskImage: `url(${src})`,
+          WebkitMaskImage: `url(${src})`,
+          maskSize: "contain",
+          WebkitMaskSize: "contain",
+          maskRepeat: "no-repeat",
+          WebkitMaskRepeat: "no-repeat",
+          maskPosition: "center",
+          WebkitMaskPosition: "center",
+        }}
+      />
+    );
   }
+  // 무료 방문 실측 — 체크 달력
+  return (
+    <svg width={56} height={56} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M8 2v4M16 2v4" />
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M3 10h18" />
+      <path d="m9 16 2 2 4-4" />
+    </svg>
+  );
 }
 
 export default function Strengths() {
