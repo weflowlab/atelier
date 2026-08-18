@@ -1,6 +1,5 @@
 "use client";
-// 고정 퀵메뉴 — 우하단 원형 아이콘 버튼 3개(무료 방문 실측 / 전화 / 카카오톡), 순서대로 번갈아 흔들림. 데스크톱·모바일 공통.
-// 모바일(<md)에서는 스크롤 중에만 스르륵 나타나고, 멈추면 오른쪽으로 숨음(최상단 근처에서는 항상 표시).
+// 고정 퀵메뉴(PC 전용) — 우하단 원형 아이콘 버튼 3개(무료 방문 실측 / 전화 / 카카오톡), 순서대로 번갈아 흔들림. 모바일은 MobileBar.
 // 클릭 시 전환 이벤트(track) 전송. tel/외부 링크는 기본 이동 유지(preventDefault 없음).
 import { useEffect, useState } from "react";
 import { SITE } from "../_lib/data";
@@ -43,37 +42,23 @@ const onCta = () => track(EVENTS.CLICK_CTA, { location: "quickmenu" });
 
 export default function QuickMenu() {
   const [lifted, setLifted] = useState(false); // 400px 이상 스크롤 → TOP 버튼 위로 올라감
-  const [idle, setIdle] = useState(false);     // 스크롤 멈춤(모바일에서 숨김)
 
   useEffect(() => {
-    const IDLE_MS = 1100; // 스크롤 멈춤 판정 시간 (헤더와 동일)
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    const onScroll = () => {
-      const y = window.scrollY;
-      setLifted(y > 400);
-      setIdle(false);
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        if (window.scrollY > 50) setIdle(true);
-      }, IDLE_MS);
-    };
+    const onScroll = () => setLifted(window.scrollY > 400);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (timer) clearTimeout(timer);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const btn = "flex h-16 w-16 items-center justify-center rounded-full shadow-md transition-transform hover:scale-105 hover:shadow-lg";
 
   return (
-    // 우하단 세로 스택 — 평소 bottom-3, TOP 버튼 등장 시 bottom-22(12+64+12px)로 이동. 모바일은 idle 시 오른쪽으로 숨김 + 흔들림 정지(md 이상은 항상 표시)
+    // PC 전용 우하단 세로 스택 — 평소 bottom-3, TOP 버튼 등장 시 bottom-22(12+64+12px)로 이동. 모바일은 하단 바(MobileBar) 사용
     <nav
       aria-label="빠른 문의"
-      className={`fixed right-3 z-40 flex flex-col items-center gap-3 transition-[bottom,translate] duration-[600ms] ease-in-out ${
+      className={`fixed right-3 z-40 hidden flex-col items-center gap-3 transition-[bottom] duration-[600ms] ease-in-out md:flex ${
         lifted ? "bottom-22" : "bottom-3"
-      } ${idle ? "translate-x-[calc(100%+1.25rem)] md:translate-x-0 [&_.wiggle]:animate-none md:[&_.wiggle]:animate-[wiggle_3.3s_ease-in-out_infinite]" : "translate-x-0"}`}
+      }`}
     >
       {/* 세 버튼이 순서대로 번갈아 흔들리도록 딜레이 분산 (3.3s 주기 / 3 → 0 / 1.1 / 2.2s) */}
       {/* 무료 방문 실측 — 브라운 원형(체크 달력 아이콘, 헤더 버튼과 동일 색) */}

@@ -61,7 +61,7 @@ export const NAV: NavItem[] = [
 // ① 히어로 — 첫 화면 핵심 문구: 무료 방문 실측 · 맞춤 제작 · 직접 시공 + 지역/상품 키워드
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string };
 export const HERO_SLIDES: Slide[] = [
-  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "무료 실측부터 맞춤 제작,\n직접 시공까지 한 번에", sub: "커튼장인이 직접 방문해 실측하고 제작·시공합니다." },
+  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "무료 실측부터 맞춤 제작,\n직접 시공까지 한 번에", sub: "커튼장인이 직접 방문해 실측하고 제작·시공합니다.", src: "/images/hero/hero-01.webp" },
   { id: 2, eyebrow: "CURTAIN", title: "암막커튼 · 쉬폰커튼\n로만쉐이드 맞춤 제작", sub: "프리미엄 원단을 실측 사이즈에 맞춰 제작합니다." },
   { id: 3, eyebrow: "BLIND", title: "허니콤 · 우드블라인드\n공간에 맞는 블라인드 제안", sub: "채광·단열·프라이버시까지 고려해 최적의 제품을 추천드립니다." },
 ];
@@ -173,23 +173,24 @@ export const GALLERY: GalleryItem[] = [
 ];
 
 // ⑥ 고객 후기 & 신뢰 요소 — 더미, 실제 후기로 교체 (지역 키워드 포함)
-export type Review = { id: string; name: string; area: string; product: string; rating: number; text: string; date: string };
+export type Review = { id: string; name: string; area: string; product: string; rating: number; text: string; date: string; src?: string };
+const REVIEW_PHOTO = "/images/products/roman-shade/roman-shade-2.webp"; // 임시: 모든 후기에 동일 사진 (실제 사진으로 교체)
 export const REVIEWS: Review[] = [
-  { id: "r1", name: "김○○", area: "경기 남양주", product: "암막커튼", rating: 5, date: "2026.07", text: "실측부터 시공까지 꼼꼼하게 봐주셔서 만족스러워요. 빛이 하나도 안 새고 마감이 정말 깔끔합니다." },
-  { id: "r2", name: "이○○", area: "서울 강동구", product: "허니콤블라인드", rating: 5, date: "2026.06", text: "무료 방문 실측이라 부담 없이 시작했는데 가격도 투명하고 시공 당일 바로 끝났어요." },
-  { id: "r3", name: "박○○", area: "경기 남양주", product: "린넨커튼", rating: 5, date: "2026.06", text: "원단 샘플을 직접 보여주시면서 추천해 주셔서 고르기 쉬웠습니다. 전원주택 분위기가 확 살아났어요." },
-  { id: "r4", name: "최○○", area: "서울 마포구", product: "우드블라인드", rating: 5, date: "2026.05", text: "카페 창 전체를 우드블라인드로 교체했는데 일정 맞춰 정확하게 시공해 주셨습니다. 사후 관리도 확실해요." },
-  { id: "r5", name: "정○○", area: "인천 송도", product: "쉬폰커튼 + 암막", rating: 5, date: "2026.05", text: "속커튼과 암막을 같이 했는데 조합 추천이 딱이었어요. 견적도 처음 말씀하신 그대로였습니다." },
-  { id: "r6", name: "한○○", area: "경기 성남", product: "로만쉐이드", rating: 5, date: "2026.04", text: "주방 창에 로만쉐이드 했는데 주름이 정말 예쁘게 떨어져요. 사이즈도 딱 맞아서 빛 샘이 없습니다." },
-  { id: "r7", name: "오○○", area: "경기 구리", product: "콤비블라인드", rating: 5, date: "2026.04", text: "이사 날짜에 맞춰서 시공해 주셨어요. 채광 조절이 편하고 아이들 방에도 잘 어울립니다." },
-  { id: "r8", name: "윤○○", area: "서울 송파구", product: "트리플쉐이드", rating: 5, date: "2026.03", text: "거실 전체를 트리플쉐이드로 바꿨는데 분위기가 확 고급스러워졌어요. 설명도 친절하셨습니다." },
-  { id: "r9", name: "장○○", area: "경기 하남", product: "린넨커튼 + 쉬폰", rating: 5, date: "2026.03", text: "전원주택 큰 창이라 걱정했는데 원단 추천부터 시공까지 완벽했어요. 주변에도 소개했습니다." },
-  { id: "r10", name: "서○○", area: "강원 춘천", product: "전동커튼", rating: 5, date: "2026.02", text: "높은 창이라 전동으로 했는데 리모컨 세팅까지 다 해주시고 A/S 안내도 확실해서 안심됩니다." },
+  { id: "r1", name: "김○○", area: "경기 남양주", product: "암막커튼", rating: 5, date: "2026.07", src: REVIEW_PHOTO, text: "실측부터 시공까지 꼼꼼하게 봐주셔서 만족스러워요. 빛이 하나도 안 새고 마감이 정말 깔끔합니다." },
+  { id: "r2", name: "이○○", area: "서울 강동구", product: "허니콤블라인드", rating: 5, date: "2026.06", src: REVIEW_PHOTO, text: "무료 방문 실측이라 부담 없이 시작했는데 가격도 투명하고 시공 당일 바로 끝났어요." },
+  { id: "r3", name: "박○○", area: "경기 남양주", product: "린넨커튼", rating: 5, date: "2026.06", src: REVIEW_PHOTO, text: "원단 샘플을 직접 보여주시면서 추천해 주셔서 고르기 쉬웠습니다. 전원주택 분위기가 확 살아났어요." },
+  { id: "r4", name: "최○○", area: "서울 마포구", product: "우드블라인드", rating: 5, date: "2026.05", src: REVIEW_PHOTO, text: "카페 창 전체를 우드블라인드로 교체했는데 일정 맞춰 정확하게 시공해 주셨습니다. 사후 관리도 확실해요." },
+  { id: "r5", name: "정○○", area: "인천 송도", product: "쉬폰커튼 + 암막", rating: 5, date: "2026.05", src: REVIEW_PHOTO, text: "속커튼과 암막을 같이 했는데 조합 추천이 딱이었어요. 견적도 처음 말씀하신 그대로였습니다." },
+  { id: "r6", name: "한○○", area: "경기 성남", product: "로만쉐이드", rating: 5, date: "2026.04", src: REVIEW_PHOTO, text: "주방 창에 로만쉐이드 했는데 주름이 정말 예쁘게 떨어져요. 사이즈도 딱 맞아서 빛 샘이 없습니다." },
+  { id: "r7", name: "오○○", area: "경기 구리", product: "콤비블라인드", rating: 5, date: "2026.04", src: REVIEW_PHOTO, text: "이사 날짜에 맞춰서 시공해 주셨어요. 채광 조절이 편하고 아이들 방에도 잘 어울립니다." },
+  { id: "r8", name: "윤○○", area: "서울 송파구", product: "트리플쉐이드", rating: 5, date: "2026.03", src: REVIEW_PHOTO, text: "거실 전체를 트리플쉐이드로 바꿨는데 분위기가 확 고급스러워졌어요. 설명도 친절하셨습니다." },
+  { id: "r9", name: "장○○", area: "경기 하남", product: "린넨커튼 + 쉬폰", rating: 5, date: "2026.03", src: REVIEW_PHOTO, text: "전원주택 큰 창이라 걱정했는데 원단 추천부터 시공까지 완벽했어요. 주변에도 소개했습니다." },
+  { id: "r10", name: "서○○", area: "강원 춘천", product: "전동커튼", rating: 5, date: "2026.02", src: REVIEW_PHOTO, text: "높은 창이라 전동으로 했는데 리모컨 세팅까지 다 해주시고 A/S 안내도 확실해서 안심됩니다." },
 ];
 // 신뢰 통계 — animate 인 항목만 카운트업, 나머지는 정적 표시 (format: 천 단위 콤마)
 export type TrustStat = { end: number; suffix: string; label: string; format?: boolean; animate?: boolean; highlight?: boolean };
 export const TRUST: TrustStat[] = [
-  { end: SITE.careerYears, suffix: "년+", label: "시공 경력", highlight: true }, // 강조 표시
+  { end: SITE.careerYears, suffix: "년+", label: "제작·시공 경력", highlight: true }, // 강조 표시
   { end: SITE.totalProjects, suffix: "+", label: "누적 시공", format: true, animate: true },
   { end: 100, suffix: "%", label: "맞춤 제작" },
   { end: 0, suffix: "원", label: "방문 실측 비용" },
@@ -217,15 +218,20 @@ export const FAQ: FaqItem[] = [
       { label: "강원", items: "춘천시 · 화천시" },
     ],
   },
-  { q: "제작·시공까지 얼마나 걸리나요?", a: "실측 후 보통 5~7일 내 제작이 완료되며, 시공은 당일 마무리됩니다. 원단·수량에 따라 달라질 수 있습니다." },
-  { q: "암막커튼과 쉬폰커튼, 무엇을 골라야 하나요?", a: "침실은 암막, 거실은 쉬폰(속커튼)+암막 조합을 가장 많이 선택하십니다. 방문 실측 시 원단 샘플을 보여드리며 공간에 맞게 추천드립니다." },
-  { q: "기존 커튼/블라인드 철거도 해주시나요?", a: "네. 기존 제품 철거와 폐기까지 함께 진행해 드립니다." },
+  { q: "제작·시공까지 얼마나 걸리나요?", a: "실측 후 보통 3~7일 내 제작이 완료되며, 시공은 당일 마무리됩니다. 원단·수량에 따라 달라질 수 있습니다." },
+  { q: "암막커튼과 쉬폰커튼, 무엇을 골라야 하나요?", a: "안방은 암막을, 거실은 쉬폰 또는 린넨에 생활암막 또는 비암막 겉지를 조합해 많이 선택하십니다. 방문 실측 시 원단 샘플을 보여드리며 공간에 맞게 추천드립니다." },
+  { q: "기존 커튼/블라인드 철거도 해주시나요?", a: "※ 기존 커튼·블라인드 철거는 가능하나, 철거 제품의 폐기·처분은 불가합니다." },
   { q: "A/S는 어떻게 받나요?", a: "시공 후 문제가 생기면 대표번호 또는 카카오톡으로 연락 주시면 신속히 방문해 드립니다." },
 ];
 
 // ⑧ 신청 폼 — 필수: 성함/연락처/설치지역, 선택: 원하는 상품/문의내용
 export const REGION_OPTIONS = ["서울", "경기", "인천", "강원(춘천·화천)", "기타 지역"];
+// 설치 장소 (드롭다운, 선택)
+export const PLACE_OPTIONS = ["아파트/주거", "회사/사무실", "상업공간(식당/카페)", "기타"];
+// 설치 제품 (드롭다운, 선택) — 폼은 크게 커튼/블라인드만 고름 (세부 제품은 상담 시)
+export const PRODUCT_TYPE_OPTIONS = ["커튼", "블라인드", "상담 후 결정"];
+// 상품 키워드 매칭용 목록 (폼 표시 X)
 export const PRODUCT_OPTIONS = [
-  "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "트리플쉐이드", "허니콤블라인드", "우드블라인드", "콤비블라인드", "롤스크린", "전동커튼/블라인드", "기타",
+  "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "트리플쉐이드", "허니콤블라인드", "우드블라인드", "콤비블라인드", "롤스크린", "전동커튼/블라인드", "상담 후 결정",
 ];
 export const FORM_SUCCESS = "성공적으로 접수되었습니다. 빠른 시간 내에 연락드리겠습니다.";

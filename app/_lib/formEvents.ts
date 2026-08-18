@@ -18,3 +18,10 @@ export function matchProductOption(product: string, options: readonly string[]):
     options.find((o) => o === "기타")
   );
 }
+
+// 제품명 → 폼의 설치 제품 구분 (커튼 / 블라인드). 블라인드·롤스크린·쉐이드(트리플/허니콤)는 블라인드, 그 외 커튼
+export function productTypeOf(product: string): string {
+  const p = product.replace(/\s+/g, "");
+  if (/블라인드|롤스크린|트리플쉐이드|허니콤|콤비/.test(p)) return "블라인드";
+  return "커튼";
+}

@@ -7,8 +7,10 @@ import type { Attribution } from "../_lib/attribution";
 export type LeadInput = {
   name: string;
   phone: string;
-  region: string;
-  products: string[];
+  address?: string;    // 주소 (선택)
+  date?: string;       // 희망 날짜 (선택)
+  places?: string[];   // 설치 장소 (체크)
+  products: string[];  // 설치 제품 (커튼/블라인드/상담 후 결정)
   message?: string;
   agree: boolean;
   attribution?: Attribution;
@@ -20,7 +22,6 @@ export async function submitLead(input: LeadInput): Promise<LeadResult> {
   // 서버 측 재검증 (클라이언트 검증 우회 방지)
   if (!input.name?.trim()) return { ok: false, error: "성함을 입력해주세요." };
   if (!/^[0-9-+\s]{9,}$/.test(input.phone ?? "")) return { ok: false, error: "올바른 연락처를 입력해주세요." };
-  if (!input.region?.trim()) return { ok: false, error: "설치 지역을 선택해주세요." };
   if (!input.agree) return { ok: false, error: "개인정보 수집 및 이용에 동의해주세요." };
 
   const id = `L${Date.now().toString(36)}`;
@@ -29,7 +30,9 @@ export async function submitLead(input: LeadInput): Promise<LeadResult> {
     createdAt: new Date().toISOString(),
     name: input.name.trim(),
     phone: input.phone.replace(/\s+/g, ""),
-    region: input.region,
+    address: input.address?.trim() || "",
+    date: input.date || "",
+    places: input.places ?? [],
     products: input.products ?? [],
     message: input.message?.trim() || "",
     // 유입 추적: 파워링크 키워드/매체/UTM/랜딩URL/리퍼러

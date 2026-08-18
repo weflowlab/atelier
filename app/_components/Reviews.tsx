@@ -1,6 +1,8 @@
 // ⑥ 고객 후기 섹션 (#reviews) — 후기 카드 2줄 마퀴. 윗줄은 오른쪽으로, 아랫줄은 왼쪽으로 화면 끝까지 무한 흐름, 호버 시 정지.
 // 각 줄은 카드 목록을 2번 이어붙이고 CSS 로 -50% 만큼 이동시켜 이음새 없이 반복. (data.ts REVIEWS — 실제 후기로 교체 예정)
+import Image from "next/image";
 import { REVIEWS, type Review } from "../_lib/data";
+import Placeholder from "./Placeholder";
 import Reveal from "./Reveal";
 
 // 골드 별점 (rating 개수만큼 채움, 5개 고정 표시)
@@ -19,7 +21,12 @@ function Stars({ rating }: { rating: number }) {
 // 후기 카드 — 고정 폭, 별점 + 지역 pill / 본문 / 이름·상품·날짜
 function ReviewCard({ r }: { r: Review }) {
   return (
-    <article className="flex w-[300px] shrink-0 flex-col rounded-2xl border border-line bg-background p-6 md:w-[380px]">
+    <article className="flex w-[300px] shrink-0 flex-col overflow-hidden rounded-2xl border border-line bg-background md:w-[380px]">
+      {/* 시공 사진 (임시: 동일 사진, 실제 후기 사진으로 교체) */}
+      <div className="relative aspect-[16/9] w-full">
+        {r.src ? <Image src={r.src} alt={`${r.product} 시공 사진`} fill sizes="380px" className="object-cover" /> : <Placeholder label={r.product} />}
+      </div>
+      <div className="flex flex-1 flex-col p-6">
       <div className="flex items-center justify-between gap-3">
         <Stars rating={r.rating} />
         <span className="shrink-0 rounded-full border border-line bg-surface px-2.5 py-1 text-[11px] font-medium tracking-wide text-accent">{r.area}</span>
@@ -28,6 +35,7 @@ function ReviewCard({ r }: { r: Review }) {
       <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4 text-xs text-muted">
         <p>{r.name} · {r.product}</p>
         <time className="shrink-0">{r.date}</time>
+      </div>
       </div>
     </article>
   );

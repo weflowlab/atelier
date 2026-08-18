@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { NAV, SITE } from "../_lib/data";
 import { track, EVENTS } from "../_lib/analytics";
+import Image from "next/image";
 import MobileDrawer from "./MobileDrawer";
 
 export default function Header() {
@@ -61,14 +62,16 @@ export default function Header() {
             scrolled ? "h-20" : "h-[var(--header-h)]"
           }`}
         >
-          {/* 로고 워드마크 — "커튼장인" | Atelier(필기체) + 하단 태그라인 (참고 시안) */}
-          <a href="#top" aria-label={`${SITE.bizName} 홈으로`} className="flex items-center gap-3">
-            <span className="text-base font-semibold tracking-tight md:text-lg">{SITE.nameKo}</span>
-            <span aria-hidden className="h-7 w-px bg-current opacity-40" />
-            <span className="flex flex-col leading-none">
-              <span className="script text-3xl leading-none">{SITE.nameEn}</span>
-              <span className="mt-1 text-[9px] tracking-[0.3em] uppercase opacity-70">{SITE.tagline}</span>
-            </span>
+          {/* 로고 워드마크 이미지 — 히어로 위(투명 헤더)는 흰색, 스크롤 후는 다크 버전 */}
+          <a href="#top" aria-label={`${SITE.bizName} 홈으로`} className="flex items-center">
+            <Image
+              src={scrolled ? "/images/logo/wordmark-dark.png" : "/images/logo/wordmark-light.png"}
+              alt={`${SITE.nameKo} ${SITE.nameEn}`}
+              width={880}
+              height={208}
+              priority
+              className="h-9 w-auto md:h-11"
+            />
           </a>
 
           {/* 데스크톱 GNB — 로고/버튼 폭과 무관하게 헤더 정중앙에 절대 배치. children 있으면 hover 드롭다운 */}

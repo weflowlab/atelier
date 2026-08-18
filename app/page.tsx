@@ -13,6 +13,7 @@ import ProcessFaq from "./_components/ProcessFaq";
 import EstimateForm from "./_components/EstimateForm";
 import Footer from "./_components/Footer";
 import QuickMenu from "./_components/QuickMenu";
+import MobileBar from "./_components/MobileBar";
 import ScrollTopButton from "./_components/ScrollTopButton";
 import { CURTAINS, BLINDS } from "./_lib/data";
 
@@ -54,8 +55,9 @@ export default function Home() {
       {/* CS CENTER / 사업자 정보 / 저작권 */}
       <Footer />
 
-      {/* 고정 퀵메뉴: 카카오톡 / 전화 / 무료 방문 실측 (모바일 하단 3버튼) + TOP */}
+      {/* PC: 우하단 고정 퀵메뉴(실측/전화/카카오톡) · 모바일: 하단 2분할 바(바로전화/무료상담신청) + TOP */}
       <QuickMenu />
+      <MobileBar />
       <ScrollTopButton />
     </>
   );

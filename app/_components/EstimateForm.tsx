@@ -1,23 +1,22 @@
 "use client";
-// 무료 방문 실측 신청 폼 섹션 (#estimate) — DB 수집: 성함/연락처/설치지역(필수) + 원하는 상품/문의내용(선택).
-// 유입 키워드로 지역·상품 프리필 → 검증 → submitLead 서버 액션 → 성공 패널 + 전환 이벤트(track) 전송.
+// 무료 방문 실측 신청 폼 섹션 (#estimate) — 입력 최소화(참고 시안): 이름·전화번호(필수) + 주소·희망날짜·설치장소·설치제품·추가 문의(선택) + 동의.
+// 유입 키워드/라이트박스로 제품 프리필 → 검증 → submitLead 서버 액션 → 성공 패널 + 전환 이벤트(track) 전송.
 import { useEffect, useState, useTransition, type FormEvent, type ReactNode } from "react";
-import { FORM_SUCCESS, PRODUCT_OPTIONS, REGION_OPTIONS, SITE } from "../_lib/data";
+import { FORM_SUCCESS, PLACE_OPTIONS, PRODUCT_TYPE_OPTIONS, SITE } from "../_lib/data";
 import { submitLead } from "../_actions/submitLead";
 import { getAttribution, getEntryKeyword } from "../_lib/attribution";
 import { matchKeyword } from "../_lib/keywords";
-import { PRESELECT_EVENT, matchProductOption } from "../_lib/formEvents";
+import { PRESELECT_EVENT, productTypeOf } from "../_lib/formEvents";
 import { EVENTS, track } from "../_lib/analytics";
 import Reveal from "./Reveal";
-
-const OTHER_REGION = "기타 지역"; // 선택 시 직접 입력 필드 노출
 
 type FormState = {
   name: string;
   phone: string;
-  region: string;      // REGION_OPTIONS 중 하나
-  regionEtc: string;   // "기타 지역" 선택 시 직접 입력값
-  products: string[];
+  address: string;     // 주소 (선택)
+  date: string;        // 희망 날짜 (선택, yyyy-mm-dd)
+  places: string[];    // 설치 장소 (드롭다운 단일 → 배열 1개)
+  products: string[];  // 설치 제품 (드롭다운: 커튼 / 블라인드 / 상담 후 결정)
   message: string;
   agree: boolean;
 };
@@ -25,24 +24,27 @@ type FormState = {
 const INITIAL: FormState = {
   name: "",
   phone: "",
-  region: "",
-  regionEtc: "",
+  address: "",
+  date: "",
+  places: [],
   products: [],
   message: "",
   agree: false,
 };
 
-type Errors = Partial<Record<"name" | "phone" | "region" | "agree", string>>;
+type Errors = Partial<Record<"name" | "phone" | "agree", string>>;
 
+// 드롭다운(select) — 기본 화살표 제거(appearance-none) + 오른쪽 커스텀 아래 화살표(인라인 배경 SVG)
+const selectCls = "appearance-none pr-10";
+const selectStyle: React.CSSProperties = {
+  backgroundImage:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237d7168' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>\")",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 0.9rem center",
+};
 // 소프트 라운드 인풋 공통 클래스
 const inputCls =
   "w-full rounded-lg border border-line bg-surface px-4 py-3.5 text-base outline-none transition-colors placeholder:text-muted/70 focus:border-accent aria-[invalid=true]:border-red-400";
-// 선택 pill 공통 클래스 (선택 여부에 따라 반전)
-const pillCls = (on: boolean) =>
-  `cursor-pointer rounded-full border px-4 py-2 text-sm transition-colors select-none ${
-    on ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent hover:text-foreground"
-  }`;
-
 export default function EstimateForm() {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [errors, setErrors] = useState<Errors>({});
@@ -50,20 +52,23 @@ export default function EstimateForm() {
   const [pending, startTransition] = useTransition();     // 서버 액션 전송 중
   const [serverError, setServerError] = useState<string | null>(null); // 서버 응답 오류
   const [done, setDone] = useState(false);                // 접수 완료 상태
+  const [today, setToday] = useState("");                 // 희망날짜 최소값(오늘) — 클라이언트 시간대 기준으로 마운트 후 계산
+  useEffect(() => {
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setToday(`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`);
+  }, []);
 
-  // 유입 키워드(파워링크 n_keyword / utm_term / ?kw=)로 지역·상품 프리필 (마운트 1회)
+  // 유입 키워드(파워링크 n_keyword / utm_term / ?kw=)로 설치 제품 프리필 (마운트 1회)
   useEffect(() => {
     const kw = getEntryKeyword() ?? new URLSearchParams(window.location.search).get("kw");
     const m = matchKeyword(kw);
-    if (!m.region && !m.product) return;
+    if (!m.product) return;
+    const type = productTypeOf(m.product);
     // URL/sessionStorage(외부 상태) → 클라이언트 전용 프리필
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setForm((f) => {
-      const region = m.region && REGION_OPTIONS.includes(m.region) ? m.region : f.region;
-      const product = m.product ? PRODUCT_OPTIONS.find((p) => p.includes(m.product!)) : undefined;
-      const products = product && !f.products.includes(product) ? [...f.products, product] : f.products;
-      return { ...f, region, products };
-    });
+    setForm((f) => ({ ...f, products: [type] }));
   }, []);
 
   // 라이트박스 "이 제품으로 신청" → 해당 상품 자동 체크 (커스텀 이벤트 수신)
@@ -71,10 +76,9 @@ export default function EstimateForm() {
     const onPreselect = (e: Event) => {
       const product = (e as CustomEvent<{ product: string }>).detail?.product;
       if (!product) return;
-      const opt = matchProductOption(product, PRODUCT_OPTIONS);
-      if (!opt) return;
+      const type = productTypeOf(product); // 제품명 → 커튼 / 블라인드
       setDone(false); // 접수 완료 화면이었다면 폼으로 복귀
-      setForm((f) => (f.products.includes(opt) ? f : { ...f, products: [...f.products, opt] }));
+      setForm((f) => ({ ...f, products: [type] }));
     };
     window.addEventListener(PRESELECT_EVENT, onPreselect);
     return () => window.removeEventListener(PRESELECT_EVENT, onPreselect);
@@ -84,15 +88,6 @@ export default function EstimateForm() {
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  // 원하는 상품 체크박스 토글 (다중 선택)
-  const toggleProduct = (p: string) =>
-    setForm((f) => ({
-      ...f,
-      products: f.products.includes(p) ? f.products.filter((x) => x !== p) : [...f.products, p],
-    }));
-
-  // 최종 지역값 — "기타 지역"이면 직접 입력값 사용
-  const regionFinal = form.region === OTHER_REGION ? form.regionEtc.trim() : form.region;
 
   // 필수값 검증 — 오류 메시지를 필드 아래 인라인 표시
   const validate = (): boolean => {
@@ -100,8 +95,6 @@ export default function EstimateForm() {
     if (!form.name.trim()) next.name = "성함을 입력해주세요.";
     if (!form.phone.trim()) next.phone = "연락 가능한 번호를 입력해주세요.";
     else if (!/^[0-9-+\s]{9,}$/.test(form.phone.trim())) next.phone = "올바른 연락처 형식이 아닙니다.";
-    if (!form.region) next.region = "설치 지역을 선택해주세요.";
-    else if (form.region === OTHER_REGION && !form.regionEtc.trim()) next.region = "지역을 입력해주세요.";
     if (!form.agree) next.agree = "개인정보 수집 및 이용에 동의해주세요.";
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -115,7 +108,9 @@ export default function EstimateForm() {
     const payload = {
       name: form.name.trim(),
       phone: form.phone.trim(),
-      region: regionFinal,
+      address: form.address.trim() || undefined,
+      date: form.date || undefined,
+      places: form.places,
       products: form.products,
       message: form.message.trim() || undefined,
       agree: form.agree,
@@ -129,7 +124,7 @@ export default function EstimateForm() {
           setServerError(res.error);
           return;
         }
-        track(EVENTS.LEAD_SUBMIT, { region: payload.region, products: payload.products.join(","), lead_id: res.id });
+        track(EVENTS.LEAD_SUBMIT, { products: payload.products.join(","), lead_id: res.id });
         setDone(true);
         setForm(INITIAL);
         setErrors({});
@@ -149,7 +144,7 @@ export default function EstimateForm() {
             <div className="text-center">
               <p className="eyebrow">CALL TO ACTION</p>
               <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">무료 방문 실측 신청</h2>
-              <p className="mt-3 text-base text-muted">이름 · 연락처 · 지역만 남겨주시면<br className="md:hidden" /> 확인 후 빠르게 연락드립니다.</p>
+              <p className="mt-3 text-base text-muted">이름 · 전화번호만 남겨주시면<br className="md:hidden" /> 확인 후 빠르게 연락드립니다.</p>
             </div>
 
             {done ? (
@@ -171,91 +166,99 @@ export default function EstimateForm() {
               </div>
             ) : (
               <form onSubmit={onSubmit} noValidate className="mt-10 space-y-6">
-                {/* 성함 */}
-                <Field label="성함" required error={errors.name} htmlFor="est-name">
-                  <input
-                    id="est-name"
-                    type="text"
-                    autoComplete="name"
-                    value={form.name}
-                    onChange={(e) => set("name", e.target.value)}
-                    placeholder="성함을 입력하세요"
-                    className={inputCls}
-                    aria-invalid={!!errors.name}
-                  />
-                </Field>
-
-                {/* 연락처 */}
-                <Field label="연락처" required error={errors.phone} htmlFor="est-phone">
-                  <input
-                    id="est-phone"
-                    type="tel"
-                    autoComplete="tel"
-                    value={form.phone}
-                    onChange={(e) => set("phone", e.target.value)}
-                    placeholder="010-0000-0000"
-                    className={inputCls}
-                    aria-invalid={!!errors.phone}
-                  />
-                </Field>
-
-                {/* 설치 지역 — 라디오 pill (단일 선택) + "기타 지역" 직접 입력 */}
-                <Field label="설치 지역" required error={errors.region}>
-                  <div role="radiogroup" aria-label="설치 지역" className="flex flex-wrap gap-2 pt-1">
-                    {REGION_OPTIONS.map((r) => {
-                      const on = form.region === r;
-                      return (
-                        <label key={r} className={pillCls(on)}>
-                          <input
-                            type="radio"
-                            name="est-region"
-                            value={r}
-                            checked={on}
-                            onChange={() => set("region", r)}
-                            className="sr-only"
-                          />
-                          {r}
-                        </label>
-                      );
-                    })}
-                  </div>
-                  {form.region === OTHER_REGION && (
+                {/* 이름 · 전화번호 (필수) — 시안처럼 한 줄 2칸 */}
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field label="이름" required error={errors.name} htmlFor="est-name">
                     <input
+                      id="est-name"
                       type="text"
-                      value={form.regionEtc}
-                      onChange={(e) => set("regionEtc", e.target.value)}
-                      placeholder="지역을 입력해주세요 (예: 하남 미사)"
-                      aria-label="기타 지역 직접 입력"
-                      className={`${inputCls} mt-2.5`}
-                      aria-invalid={!!errors.region}
-                      autoFocus
+                      autoComplete="name"
+                      value={form.name}
+                      onChange={(e) => set("name", e.target.value)}
+                      placeholder="이름"
+                      className={inputCls}
+                      aria-invalid={!!errors.name}
                     />
-                  )}
+                  </Field>
+                  <Field label="전화번호" required error={errors.phone} htmlFor="est-phone">
+                    <input
+                      id="est-phone"
+                      type="tel"
+                      autoComplete="tel"
+                      value={form.phone}
+                      onChange={(e) => set("phone", e.target.value)}
+                      placeholder="010-0000-0000"
+                      className={inputCls}
+                      aria-invalid={!!errors.phone}
+                    />
+                  </Field>
+                </div>
+
+                {/* 주소 (선택) */}
+                <Field label="주소" htmlFor="est-address">
+                  <input
+                    id="est-address"
+                    type="text"
+                    autoComplete="street-address"
+                    value={form.address}
+                    onChange={(e) => set("address", e.target.value)}
+                    placeholder="시/구/동까지 입력해주셔도 됩니다"
+                    className={inputCls}
+                  />
                 </Field>
 
-                {/* 원하는 상품 — 다중 선택 체크박스 pill */}
-                <Field label="원하는 상품 (선택)">
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {PRODUCT_OPTIONS.map((p) => {
-                      const on = form.products.includes(p);
-                      return (
-                        <label key={p} className={pillCls(on)}>
-                          <input type="checkbox" checked={on} onChange={() => toggleProduct(p)} className="sr-only" />
-                          {p}
-                        </label>
-                      );
-                    })}
-                  </div>
+                {/* 희망 날짜 (선택) — 네이티브 날짜 선택기 */}
+                <Field label="희망날짜" htmlFor="est-date">
+                  <input
+                    id="est-date"
+                    type="date"
+                    value={form.date}
+                    min={today}
+                    onChange={(e) => set("date", e.target.value)}
+                    className={`${inputCls} [color-scheme:light]`}
+                  />
                 </Field>
 
-                {/* 문의 내용 */}
-                <Field label="문의 내용 (선택)" htmlFor="est-message">
+                {/* 설치 장소 / 설치 제품 — 누르면 목록이 열리는 드롭다운 (오른쪽 아래 화살표) */}
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field label="설치장소" htmlFor="est-place">
+                    <select
+                      id="est-place"
+                      value={form.places[0] ?? ""}
+                      onChange={(e) => set("places", e.target.value ? [e.target.value] : [])}
+                      className={`${inputCls} ${selectCls}`}
+                      style={selectStyle}
+                    >
+                      <option value="">선택</option>
+                      {PLACE_OPTIONS.map((o) => (
+                        <option key={o} value={o}>{o}</option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field label="설치제품" htmlFor="est-product">
+                    <select
+                      id="est-product"
+                      value={form.products[0] ?? ""}
+                      onChange={(e) => set("products", e.target.value ? [e.target.value] : [])}
+                      className={`${inputCls} ${selectCls}`}
+                      style={selectStyle}
+                    >
+                      <option value="">선택</option>
+                      {PRODUCT_TYPE_OPTIONS.map((o) => (
+                        <option key={o} value={o}>{o}</option>
+                      ))}
+                    </select>
+                  </Field>
+                </div>
+
+                {/* 추가 문의 사항 */}
+                <Field label="추가 문의 사항" htmlFor="est-message">
                   <textarea
                     id="est-message"
                     rows={3}
                     value={form.message}
                     onChange={(e) => set("message", e.target.value)}
-                    placeholder="창 개수, 사이즈, 원하시는 스타일 등을 적어주세요"
+                    placeholder="추가 문의사항이 있다면 작성해 주세요."
                     className={`${inputCls} resize-none`}
                   />
                 </Field>
