@@ -24,7 +24,7 @@ export default function MobileBar() {
     </a>
     <nav
       aria-label="빠른 문의"
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-line bg-surface shadow-[0_-4px_16px_rgba(43,37,33,0.10)] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 bg-surface md:hidden"
     >
       {/* 바로전화 — 흰 배경 + 초록 전화기 */}
       <a

@@ -209,14 +209,19 @@ export default function EstimateForm() {
 
                 {/* 희망 날짜 (선택) — 네이티브 날짜 선택기 */}
                 <Field label="희망날짜" htmlFor="est-date">
+                  {/* iOS Safari: 날짜 입력이 내용 폭으로 줄어들고 min 을 무시하는 경우가 있어 폭 강제 + onChange 에서 과거 날짜 차단 */}
                   <input
                     id="est-date"
                     type="date"
                     value={form.date}
                     min={today}
-                    onChange={(e) => set("date", e.target.value)}
-                    className={`${inputCls} [color-scheme:light]`}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      set("date", v && today && v < today ? today : v); // 오늘 이전이면 오늘로 보정
+                    }}
+                    className={`${inputCls} block min-h-[3.25rem] w-full min-w-full appearance-none [color-scheme:light] [&::-webkit-date-and-time-value]:min-h-[1.5rem] [&::-webkit-date-and-time-value]:text-left`}
                   />
+                  <p className="mt-1.5 text-xs text-muted">오늘 이후 날짜만 선택할 수 있어요.</p>
                 </Field>
 
                 {/* 설치 장소 / 설치 제품 — 누르면 목록이 열리는 드롭다운 (오른쪽 아래 화살표) */}
