@@ -1,5 +1,8 @@
-// ⑥ 고객 후기 섹션 (#reviews) — 후기 카드 2줄 마퀴. 윗줄은 오른쪽으로, 아랫줄은 왼쪽으로 화면 끝까지 무한 흐름, 호버 시 정지.
+"use client";
+// ⑥ 고객 후기 섹션 (#reviews) — 후기 카드 2줄 마퀴. 윗줄은 오른쪽으로, 아랫줄은 왼쪽으로 화면 끝까지 무한 흐름.
+// PC 는 호버 시 정지, 모바일은 터치하면 멈췄다가 5초 뒤 자동 재개.
 // 각 줄은 카드 목록을 2번 이어붙이고 CSS 로 -50% 만큼 이동시켜 이음새 없이 반복. (data.ts REVIEWS — 실제 후기로 교체 예정)
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { REVIEWS, type Review } from "../_lib/data";
 import Placeholder from "./Placeholder";
@@ -43,8 +46,19 @@ function ReviewCard({ r }: { r: Review }) {
 
 // 한 줄 마퀴 — 방향(left/right)에 따라 애니메이션 클래스, 목록 2회 복제(두 번째는 aria-hidden)
 function MarqueeRow({ items, direction, duration }: { items: Review[]; direction: "left" | "right"; duration: number }) {
+  const [paused, setPaused] = useState(false); // 터치로 일시정지 (5초 뒤 자동 재개)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pauseAwhile = () => {
+    setPaused(true);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => setPaused(false), 5000);
+  };
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
+
   return (
-    <div className="marquee overflow-hidden">
+    <div className="marquee overflow-hidden" data-paused={paused} onTouchStart={pauseAwhile}>
       <div className={`marquee-track gap-4 md:gap-6 ${direction === "left" ? "marquee-left" : "marquee-right"}`} style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}>
         {[0, 1].map((copy) => (
           <div key={copy} className="flex gap-4 md:gap-6 pr-4 md:pr-6" aria-hidden={copy === 1}>

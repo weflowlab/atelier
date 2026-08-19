@@ -36,8 +36,8 @@ export const REGION_NAMES = REGIONS.map((r) => r.name);
 
 // ── 상품 키워드 ─────────────────────────────────────────────
 export const PRODUCT_KEYWORDS = [
-  "커튼", "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "패널커튼",
-  "블라인드", "트리플쉐이드", "유니슬렛", "콤비블라인드", "허니콤블라인드", "한옥쉐이드", "알루미늄블라인드",
+  "커튼", "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "패널커튼", "유니슬렛커튼",
+  "블라인드", "트리플쉐이드", "콤비블라인드", "허니콤블라인드", "한옥쉐이드", "알루미늄블라인드",
 ];
 
 // GNB 메뉴 — 섹션 앵커. children 이 있으면 드로어에서 아코디언
@@ -62,9 +62,9 @@ export const NAV: NavItem[] = [
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string; layout?: "split" };
 export const HERO_SLIDES: Slide[] = [
   // 1번은 밝은 배경 + 우측 사진(split) 레이아웃, 2·3번은 사진 위 다크 오버레이
-  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "무료 실측부터 맞춤 제작,\n직접 시공까지 한 번에", sub: "커튼장인이 직접 방문해 실측하고 제작·시공합니다.", src: "/images/hero/hero-living.webp", layout: "split" },
-  { id: 2, eyebrow: "CURTAIN", title: "암막커튼 · 쉬폰커튼\n로만쉐이드 맞춤 제작", sub: "프리미엄 원단을 실측 사이즈에 맞춰 제작합니다.", src: "/images/hero/hero-01.webp" },
-  { id: 3, eyebrow: "BLIND", title: "트리플쉐이드 · 유니슬렛\n공간에 맞는 블라인드 제안", sub: "채광·단열·프라이버시까지 고려해 최적의 제품을 추천드립니다.", src: "/images/products/unislat/unislat-1.webp" },
+  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "공간을 빛나게 하는\n커튼의 가치", sub: "수년의 경험과 장인의 시공으로\n디테일이 다른 커튼을 만듭니다.", src: "/images/hero/hero-living.webp", layout: "split" },
+  { id: 2, eyebrow: "CURTAIN", title: "암막커튼 · 쉬폰커튼\n로만쉐이드 맞춤 제작", sub: "프리미엄 원단을\n실측 사이즈에 맞춰 제작합니다.", src: "/images/hero/hero-01.webp" },
+  { id: 3, eyebrow: "BLIND", title: "트리플쉐이드 · 허니콤\n공간에 맞는 블라인드 제안", sub: "채광·단열·프라이버시까지 고려해\n최적의 제품을 추천드립니다.", src: "/images/products/triple-shade/triple-shade-1.webp" },
 ];
 export const HERO_CTA = {
   primary: { label: "무료 방문 실측 신청", href: "#estimate" },
@@ -112,10 +112,11 @@ export const PRODUCTS: Product[] = [
 export type ProductCard = { id: string; name: string; caption: string; src?: string; photos?: string[] }; // photos: 라이트박스용 시공 사진
 
 // 실제 시공 사진 (public/images/products/<slug>/<slug>-N.webp) — [슬러그, 제품명, 소개, 사진 장수]
-const photos = (slug: string, n: number) => Array.from({ length: n }, (_, i) => `/images/products/${slug}/${slug}-${i + 1}.webp`);
-const build = (rows: [string, string, string, number][]): ProductCard[] =>
-  rows.map(([slug, name, caption, n], i) => {
-    const p = photos(slug, n);
+const photos = (slug: string, n: number, order?: number[]) =>
+  (order ?? Array.from({ length: n }, (_, i) => i + 1)).map((i) => `/images/products/${slug}/${slug}-${i}.webp`);
+const build = (rows: [string, string, string, number, number[]?][]): ProductCard[] =>
+  rows.map(([slug, name, caption, n, order], i) => {
+    const p = photos(slug, n, order);
     return { id: `${slug}-${i}`, name, caption, src: p[0], photos: p };
   });
 
@@ -126,11 +127,12 @@ export const CURTAINS: ProductCard[] = build([
   ["linen", "자수 린넨 속지커튼", "내추럴 질감 · 포인트 자수", 2],
   ["roman-shade", "로만쉐이드", "깔끔한 주름 · 주방/서재", 4],
   ["panel", "패널커튼", "모던한 면 분할 · 큰 창", 3],
+  // 1번은 시공 전 사진이라 제외하고 15번을 대표로
+  ["unislat", "유니슬렛 커튼", "세로 슬랫 · 거실/큰 창", 23, [15, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23]],
 ]);
 
 export const BLINDS: ProductCard[] = build([
   ["triple-shade", "트리플쉐이드", "부드러운 채광 조절", 15],
-  ["unislat", "유니슬렛 블라인드", "세로 슬랫 · 거실/큰 창", 23],
   ["combi", "암막 콤비블라인드", "빛 차단 · 채광 조절", 8],
   ["honeycomb", "허니콤 블라인드", "단열 · 아이방/침실", 4],
   ["hanok", "한옥 쉐이드 블라인드", "우드 감성 · 채광 조절", 13],
@@ -146,14 +148,14 @@ export const PRICE_GUIDE = {
   // 가격은 표기하지 않음(고객 요청) — 대표 상품과 실측 기준만 안내
   rows: [
     { product: "암막커튼", basis: "거실창(가로 약 4m) 기준", tag: "인기" },
+    { product: "생활암막 + 쉬폰 속지", basis: "거실창(가로 약 4m) 기준" },
     { product: "쉬폰커튼", basis: "거실창(가로 약 4m) 기준" },
-    { product: "린넨커튼", basis: "침실창(가로 약 2m) 기준" },
+    { product: "유니슬렛 커튼", basis: "거실창(가로 약 4m) 기준" },
     { product: "로만쉐이드", basis: "창 1개(가로 약 1.5m) 기준" },
-    { product: "허니콤블라인드", basis: "창 1개(가로 약 1.5m) 기준" },
-    { product: "우드블라인드", basis: "창 1개(가로 약 1.5m) 기준" },
-    { product: "콤비블라인드", basis: "창 1개(가로 약 1.5m) 기준", tag: "가성비" },
-  ],
-  includes: ["무료 방문 실측", "맞춤 제작", "직접 시공 · 설치", "기존 제품 철거"],
+    { product: "트리플쉐이드", basis: "창 1개(가로 약 1.5m) 기준" },
+    { product: "암막 콤비블라인드", basis: "창 1개(가로 약 1.5m) 기준", tag: "가성비" },
+    { product: "알루미늄 25mm 블라인드", basis: "주방창(가로 약 1.5m) 기준" },
+  ],  includes: ["무료 방문 실측", "맞춤 제작", "직접 시공 · 설치", "기존 제품 철거"],
 };
 
 // ⑤ 시공 포트폴리오 — 지역별 · 공간별 구분
@@ -231,9 +233,23 @@ export const REGION_OPTIONS = ["서울", "경기", "인천", "강원(춘천·화
 // 설치 장소 (드롭다운, 선택)
 export const PLACE_OPTIONS = ["아파트/주거", "회사/사무실", "상업공간(식당/카페)", "기타"];
 // 설치 제품 (드롭다운, 선택) — 폼은 크게 커튼/블라인드만 고름 (세부 제품은 상담 시)
-export const PRODUCT_TYPE_OPTIONS = ["커튼", "블라인드", "상담 후 결정"];
+export const PRODUCT_TYPE_OPTIONS = [
+  "암막커튼",
+  "생활암막 + 쉬폰 속지",
+  "쉬폰커튼",
+  "자수 린넨 속지커튼",
+  "로만쉐이드",
+  "패널커튼",
+  "유니슬렛 커튼",
+  "트리플쉐이드",
+  "암막 콤비블라인드",
+  "허니콤 블라인드",
+  "한옥 쉐이드 블라인드",
+  "알루미늄 25mm 블라인드",
+  "상담 후 결정",
+];
 // 상품 키워드 매칭용 목록 (폼 표시 X)
 export const PRODUCT_OPTIONS = [
-  "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "패널커튼", "트리플쉐이드", "유니슬렛", "콤비블라인드", "허니콤블라인드", "한옥쉐이드", "알루미늄블라인드", "상담 후 결정",
+  "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "패널커튼", "유니슬렛커튼", "트리플쉐이드", "콤비블라인드", "허니콤블라인드", "한옥쉐이드", "알루미늄블라인드", "상담 후 결정",
 ];
 export const FORM_SUCCESS = "성공적으로 접수되었습니다. 빠른 시간 내에 연락드리겠습니다.";

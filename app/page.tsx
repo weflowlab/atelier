@@ -42,8 +42,8 @@ export default function Home() {
 
         {/* ④ 주요 제품 — 대표 4카드 + 커튼/블라인드 캐러셀 + 가격·견적 기준 */}
         <ProductGrid />
-        <ProductCarousel id="curtain" eyebrow="CURTAIN" title="커튼" subtitle="암막커튼 · 쉬폰커튼 · 린넨커튼 · 로만쉐이드" items={CURTAINS} />
-        <ProductCarousel id="blind" eyebrow="BLIND" title="블라인드" subtitle="허니콤 · 우드 · 콤비 · 롤스크린" items={BLINDS} dark />
+        <ProductCarousel id="curtain" eyebrow="CURTAIN" title="커튼" subtitle="암막커튼 · 쉬폰커튼 · 린넨커튼 · 로만쉐이드 · 유니슬렛" items={CURTAINS} />
+        <ProductCarousel id="blind" eyebrow="BLIND" title="블라인드" subtitle="트리플쉐이드 · 콤비 · 허니콤 · 한옥쉐이드 · 알루미늄" items={BLINDS} dark />
         <PriceGuide />
 
         {/* ⑤ 시공 포트폴리오 — 지역별·공간별 필터 그리드 */}

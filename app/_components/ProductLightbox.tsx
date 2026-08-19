@@ -1,7 +1,7 @@
 "use client";
 // 제품 라이트박스 모달 — 카드 클릭 시 큰 사진 + 좌우 넘김 + 썸네일 + 제품 설명 + CTA(무료 방문 실측 신청 / 시공 사례 보기).
 // 사진은 item.photos 가 없으면 플레이스홀더 4장. ESC/백드롭/닫기 버튼으로 닫힘, 열려 있는 동안 body 스크롤 잠금.
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { ProductCard } from "../_lib/data";
 import Placeholder from "./Placeholder";
@@ -13,11 +13,18 @@ const PLACEHOLDER_COUNT = 4; // 실제 사진 준비 전 플레이스홀더 개�
 
 export default function ProductLightbox({ item, onClose }: Props) {
   const [idx, setIdx] = useState(0); // 부모가 key={item.id} 로 리마운트하므로 열릴 때마다 0부터
+  const thumbsRef = useRef<HTMLDivElement>(null);
   const photos: (string | undefined)[] = item?.photos?.length ? item.photos : Array.from({ length: PLACEHOLDER_COUNT }, () => undefined);
   const count = photos.length;
 
   const prev = useCallback(() => setIdx((i) => (i - 1 + count) % count), [count]);
   const next = useCallback(() => setIdx((i) => (i + 1) % count), [count]);
+
+  // 사진이 바뀌면 해당 썸네일이 보이도록 스트립을 스크롤 (사진이 많아도 계속 넘겨볼 수 있게)
+  useEffect(() => {
+    const el = thumbsRef.current?.children[idx] as HTMLElement | undefined;
+    el?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+  }, [idx]);
 
   // ESC 닫기, ←/→ 넘김, body 스크롤 잠금
   useEffect(() => {
@@ -84,14 +91,14 @@ export default function ProductLightbox({ item, onClose }: Props) {
           </div>
           {/* 썸네일 — 클릭 시 해당 사진으로 */}
           {count > 1 && (
-            <div className="flex gap-2 overflow-x-auto px-3 py-2 no-scrollbar sm:p-3">
+            <div ref={thumbsRef} className="flex gap-2 overflow-x-auto px-3 py-2 no-scrollbar sm:p-3">
               {photos.map((_, i) => (
                 <button
                   key={i}
                   type="button"
                   aria-label={`${i + 1}번 사진`}
                   onClick={() => setIdx(i)}
-                  className={`h-11 w-16 shrink-0 overflow-hidden rounded-md border-2 transition sm:h-14 sm:w-20 ${i === idx ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
+                  className={`h-11 w-16 shrink-0 overflow-hidden rounded-md border-2 transition sm:h-14 sm:w-20 ${i === idx ? "border-gold opacity-100 ring-2 ring-gold/40" : "border-transparent opacity-55 hover:opacity-100"}`}
                 >
                   {photos[i] ? (
                     <span className="relative block h-full w-full">

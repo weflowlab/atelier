@@ -19,7 +19,7 @@ function StrengthIcon({ name }: { name: Strength["icon"] }) {
     return (
       <span
         aria-hidden
-        className="block h-14 w-14 bg-current"
+        className="block h-16 w-16 bg-current"
         style={{
           maskImage: `url(${src})`,
           WebkitMaskImage: `url(${src})`,

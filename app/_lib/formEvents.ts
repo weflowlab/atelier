@@ -1,5 +1,5 @@
-// 라이트박스 등 다른 컴포넌트에서 신청 폼의 "원하는 상품"을 미리 선택시키는 커스텀 이벤트.
-// dispatch: preselectProduct("로만쉐이드") → EstimateForm 이 수신해 PRODUCT_OPTIONS 중 매칭 항목을 체크.
+// 라이트박스 등 다른 컴포넌트에서 신청 폼의 "설치 제품"을 미리 선택시키는 커스텀 이벤트.
+// dispatch: preselectProduct("로만쉐이드") → EstimateForm 이 수신해 PRODUCT_TYPE_OPTIONS 중 매칭 항목을 선택.
 export const PRESELECT_EVENT = "atelier:preselect-product";
 
 export function preselectProduct(product: string) {
@@ -7,21 +7,18 @@ export function preselectProduct(product: string) {
   window.dispatchEvent(new CustomEvent(PRESELECT_EVENT, { detail: { product } }));
 }
 
-// 제품명 → 폼 옵션 매칭 (부분 일치, 없으면 "기타")
-export function matchProductOption(product: string, options: readonly string[]): string | undefined {
+// 제품명 → 폼 옵션 매칭: 완전일치 → 부분일치(긴 옵션 우선) → 커튼/블라인드 대분류 → "상담 후 결정"
+export function matchProductOption(product: string, options: readonly string[]): string {
   const norm = (s: string) => s.replace(/\s+/g, "");
   const p = norm(product);
-  return (
-    options.find((o) => norm(o) === p) ??
-    options.find((o) => p.includes(norm(o)) || norm(o).includes(p)) ??
-    options.find((o) => (p.includes("전동") && o.includes("전동"))) ??
-    options.find((o) => o === "기타")
-  );
-}
-
-// 제품명 → 폼의 설치 제품 구분 (커튼 / 블라인드). 블라인드·롤스크린·쉐이드(트리플/허니콤)는 블라인드, 그 외 커튼
-export function productTypeOf(product: string): string {
-  const p = product.replace(/\s+/g, "");
-  if (/블라인드|롤스크린|트리플쉐이드|허니콤|콤비|유니슬렛/.test(p)) return "블라인드";
-  return "커튼";
+  const exact = options.find((o) => norm(o) === p);
+  if (exact) return exact;
+  const partial = [...options]
+    .sort((a, b) => b.length - a.length)
+    .find((o) => p.includes(norm(o)) || norm(o).includes(p));
+  if (partial) return partial;
+  // 대분류로라도 맞춰줌 (예: "우드블라인드" → 알루미늄/콤비 등에 없으면 블라인드 계열 첫 항목)
+  const isBlind = /블라인드|롤스크린|허니콤|콤비|트리플쉐이드|한옥쉐이드/.test(p);
+  const fallback = options.find((o) => (isBlind ? /블라인드|쉐이드/.test(o) : /커튼/.test(o)));
+  return fallback ?? options[options.length - 1]; // 마지막 항목("상담 후 결정")
 }

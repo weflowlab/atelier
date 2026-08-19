@@ -26,7 +26,6 @@
   --color-gold: var(--gold);
   --font-sans: var(--font-noto-sans);
   --font-serif: var(--font-noto-serif);   /* 한글 세리프 (헤드라인) */
-  --font-script: var(--font-script);      /* 영문 필기체 (Atelier 로고) */
 }
 
 html { scroll-behavior: smooth; }
@@ -56,8 +55,6 @@ body {
 /* ── 공통 유틸 ───────────────────────────────── */
 /* 섹션 영문 소제목 (예: "CURTAIN & BLIND") */
 .eyebrow { @apply text-[11px] tracking-[0.35em] uppercase text-muted; }
-/* 스크립트 로고 텍스트 (Atelier) */
-.script { font-family: var(--font-script), cursive; }
 /* 세리프 헤드라인 */
 .serif { font-family: var(--font-serif), serif; }
 /* 스크롤바 숨김 (가로 캐러셀) */
@@ -106,7 +103,10 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 .marquee-track { display: flex; width: max-content; will-change: transform; }
 .marquee-left  { animation: marquee-left  var(--marquee-duration, 60s) linear infinite; }
 .marquee-right { animation: marquee-right var(--marquee-duration, 60s) linear infinite; }
-.marquee:hover .marquee-track { animation-play-state: paused; }
+@media (hover: hover) {
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+}
+.marquee[data-paused="true"] .marquee-track { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
 }

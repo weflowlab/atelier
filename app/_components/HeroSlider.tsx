@@ -104,7 +104,7 @@ export default function HeroSlider() {
               <>
                 <div className="absolute inset-0 bg-linear-to-br from-surface via-background to-[#efe7dc]" />
                 <div className="absolute inset-y-0 right-0 w-full md:w-[50%] lg:w-[52%]">
-                  <Image src={s.src!} alt="" fill sizes="(min-width:768px) 55vw, 100vw" priority={i === 0} className="object-cover" />
+                  <Image src={s.src!} alt="" fill sizes="(min-width:768px) 58vw, 100vw" priority={i === 0} className="object-cover object-[50%_60%]" />
                   {/* 좌측(텍스트 쪽)으로 배경색이 자연스럽게 이어지도록 페이드 */}
                   <div className="absolute inset-0 bg-linear-to-r from-background via-background/50 to-transparent md:via-background/25 md:to-transparent" />
                 </div>
@@ -129,19 +129,19 @@ export default function HeroSlider() {
                 key={`text-${s.id}-${index}`}
                 className="absolute inset-0 flex items-center animate-[heroText_0.9s_ease_both]"
               >
-                <div className={`mx-auto flex w-full max-w-7xl flex-col items-center px-6 pt-32 pb-24 text-center md:items-start md:px-16 md:pt-36 md:text-left lg:px-24 ${split ? "md:pr-0" : ""}`}>
+                <div className={`mx-auto flex w-full max-w-7xl flex-col items-center px-6 pt-32 pb-24 text-center md:items-start md:pt-36 md:text-left ${split ? "md:px-10 md:pr-0 lg:px-14" : "md:px-16 lg:px-24"}`}>
                   {/* 영문 소제목 */}
-                  <p className={`mb-5 w-full text-[11px] tracking-[0.35em] uppercase sm:text-xs ${split ? "text-muted md:max-w-[30rem] lg:max-w-[34rem]" : "text-white/80"}`}>
+                  <p className={`mb-5 w-full text-[11px] tracking-[0.35em] uppercase sm:text-xs ${split ? "text-muted" : "text-white/80"}`}>
                     {s.eyebrow}
                   </p>
                   {/* 메인 카피 (세리프, 줄바꿈 유지) */}
-                  <h1 className={`serif whitespace-pre-line text-3xl font-semibold leading-[1.25] tracking-tight md:leading-[1.15] ${split ? "text-foreground md:max-w-[30rem] md:text-[2.2rem] lg:max-w-[38rem] lg:text-[2.6rem]" : "text-white md:text-6xl"}`}>
+                  <h1 className={`serif whitespace-pre-line text-3xl font-semibold leading-[1.25] tracking-tight md:leading-[1.15] ${split ? "text-foreground" : "text-white"} md:text-6xl`}>
                     {s.title}
                   </h1>
                   {/* 얇은 골드 라인 */}
                   <span aria-hidden className="mt-5.5 mb-4 block h-px w-12 bg-gold" />
                   {/* 서브 카피 */}
-                  <p className={`max-w-xl text-sm leading-relaxed sm:text-base md:text-lg ${split ? "text-muted md:max-w-[30rem] lg:max-w-[34rem]" : "text-white/80"}`}>
+                  <p className={`max-w-xl whitespace-pre-line text-sm leading-relaxed sm:text-base md:whitespace-normal md:text-lg ${split ? "text-muted" : "text-white/80"}`}>
                     {s.sub}
                   </p>
 

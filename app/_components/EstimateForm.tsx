@@ -6,7 +6,7 @@ import { FORM_SUCCESS, PLACE_OPTIONS, PRODUCT_TYPE_OPTIONS, SITE } from "../_lib
 import { submitLead } from "../_actions/submitLead";
 import { getAttribution, getEntryKeyword } from "../_lib/attribution";
 import { matchKeyword } from "../_lib/keywords";
-import { PRESELECT_EVENT, productTypeOf } from "../_lib/formEvents";
+import { PRESELECT_EVENT, matchProductOption } from "../_lib/formEvents";
 import { EVENTS, track } from "../_lib/analytics";
 import Reveal from "./Reveal";
 
@@ -65,7 +65,7 @@ export default function EstimateForm() {
     const kw = getEntryKeyword() ?? new URLSearchParams(window.location.search).get("kw");
     const m = matchKeyword(kw);
     if (!m.product) return;
-    const type = productTypeOf(m.product);
+    const type = matchProductOption(m.product, PRODUCT_TYPE_OPTIONS);
     // URL/sessionStorage(외부 상태) → 클라이언트 전용 프리필
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setForm((f) => ({ ...f, products: [type] }));
@@ -76,7 +76,7 @@ export default function EstimateForm() {
     const onPreselect = (e: Event) => {
       const product = (e as CustomEvent<{ product: string }>).detail?.product;
       if (!product) return;
-      const type = productTypeOf(product); // 제품명 → 커튼 / 블라인드
+      const type = matchProductOption(product, PRODUCT_TYPE_OPTIONS); // 제품명 → 폼 옵션
       setDone(false); // 접수 완료 화면이었다면 폼으로 복귀
       setForm((f) => ({ ...f, products: [type] }));
     };
