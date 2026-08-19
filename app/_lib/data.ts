@@ -61,10 +61,8 @@ export const NAV: NavItem[] = [
 // ① 히어로 — 첫 화면 핵심 문구: 무료 방문 실측 · 맞춤 제작 · 직접 시공 + 지역/상품 키워드
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string; layout?: "split" };
 export const HERO_SLIDES: Slide[] = [
-  // 1번은 밝은 배경 + 우측 사진(split) 레이아웃, 2·3번은 사진 위 다크 오버레이
+  // 단일 히어로 — 밝은 배경 + 우측 사진(split) 레이아웃
   { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "공간을 빛나게 하는\n커튼의 가치", sub: "수년의 경험과 장인의 시공으로\n디테일이 다른 커튼을 만듭니다.", src: "/images/hero/hero-living.webp", layout: "split" },
-  { id: 2, eyebrow: "CURTAIN", title: "암막커튼 · 쉬폰커튼\n로만쉐이드 맞춤 제작", sub: "프리미엄 원단을\n실측 사이즈에 맞춰 제작합니다.", src: "/images/hero/hero-01.webp" },
-  { id: 3, eyebrow: "BLIND", title: "트리플쉐이드 · 허니콤\n공간에 맞는 블라인드 제안", sub: "채광·단열·프라이버시까지 고려해\n최적의 제품을 추천드립니다.", src: "/images/products/triple-shade/triple-shade-1.webp" },
 ];
 export const HERO_CTA = {
   primary: { label: "무료 방문 실측 신청", href: "#estimate" },
@@ -104,7 +102,7 @@ export const STRENGTH = {
 // ④ 주요 제품 — 대표 4카드 + 커튼/블라인드 상세 캐러셀 (상품 키워드 반영)
 export type Product = { id: string; en: string; ko: string; href: string; src?: string };
 export const PRODUCTS: Product[] = [
-  { id: "p1", en: "BLACKOUT CURTAIN", ko: "암막커튼", href: "#curtain", src: "/images/products/blackout/blackout-1.webp" },
+  { id: "p1", en: "BLACKOUT CURTAIN", ko: "암막커튼", href: "#curtain", src: "/images/products/blackout/blackout-0.webp" },
   { id: "p2", en: "SHEER CURTAIN", ko: "쉬폰커튼", href: "#curtain", src: "/images/products/sheer/sheer-1.webp" },
   { id: "p3", en: "ROMAN SHADE", ko: "로만쉐이드", href: "#curtain", src: "/images/products/roman-shade/roman-shade-1.webp" },
   { id: "p4", en: "BLIND", ko: "블라인드", href: "#blind", src: "/images/products/triple-shade/triple-shade-1.webp" },
@@ -121,7 +119,8 @@ const build = (rows: [string, string, string, number, number[]?][]): ProductCard
   });
 
 export const CURTAINS: ProductCard[] = build([
-  ["blackout", "암막커튼", "빛 차단 · 단열 · 침실/거실", 8],
+  // 0번이 대표 사진(신규)
+  ["blackout", "암막커튼", "빛 차단 · 단열 · 침실/거실", 9, [0, 1, 2, 3, 4, 5, 6, 7, 8]],
   ["daylight", "생활암막 + 쉬폰 속지", "은은한 채광 · 거실 조합", 8],
   ["sheer", "쉬폰커튼", "부드러운 빛 · 거실 속커튼", 8],
   ["linen", "자수 린넨 속지커튼", "내추럴 질감 · 포인트 자수", 2],
@@ -135,7 +134,7 @@ export const BLINDS: ProductCard[] = build([
   ["triple-shade", "트리플쉐이드", "부드러운 채광 조절", 15],
   ["combi", "암막 콤비블라인드", "빛 차단 · 채광 조절", 8],
   ["honeycomb", "허니콤 블라인드", "단열 · 아이방/침실", 4],
-  ["hanok", "한옥 쉐이드 블라인드", "우드 감성 · 채광 조절", 13],
+  ["hanok", "한옥 쉐이드 블라인드", "우드 감성 · 채광 조절", 12], // 13번 사진 제외
   ["aluminum", "알루미늄 25mm 블라인드", "습기 강함 · 주방/욕실", 16],
 ]);
 
@@ -159,37 +158,83 @@ export const PRICE_GUIDE = {
 };
 
 // ⑤ 시공 포트폴리오 — 지역별 · 공간별 구분
+// 실제 시공 사진 (public/images/gallery/gallery-NN.webp). 순서·지역·공간은 고객님이 전달한 원본 파일명 기준.
+// region/space 값이 그대로 필터 탭이 되므로(GalleryGrid) 새 값을 넣으면 탭이 늘어난다.
 export type GalleryItem = { id: string; title: string; region: string; space: string; product: string; src?: string };
+const galleryPhoto = (n: number) => `/images/gallery/gallery-${String(n).padStart(2, "0")}.webp`;
 export const GALLERY: GalleryItem[] = [
-  { id: "g1", title: "서울 강남구 아파트 거실 암막커튼", region: "서울", space: "거실", product: "암막커튼" },
-  { id: "g2", title: "남양주 다산 침실 허니콤블라인드", region: "경기", space: "침실", product: "허니콤블라인드" },
-  { id: "g3", title: "인천 송도 아파트 쉬폰커튼", region: "인천", space: "거실", product: "쉬폰커튼" },
-  { id: "g4", title: "서울 마포구 카페 우드블라인드", region: "서울", space: "상가", product: "우드블라인드" },
-  { id: "g5", title: "경기 구리 사무실 롤스크린", region: "경기", space: "사무실", product: "롤스크린" },
-  { id: "g6", title: "경기 하남 전원주택 린넨커튼", region: "경기", space: "거실", product: "린넨커튼" },
-  { id: "g7", title: "서울 송파구 아이방 허니콤블라인드", region: "서울", space: "아이방", product: "허니콤블라인드" },
-  { id: "g8", title: "인천 부평구 병원 방염커튼", region: "인천", space: "병원", product: "병원커튼" },
-  { id: "g9", title: "경기 성남 분당 주방 로만쉐이드", region: "경기", space: "주방", product: "로만쉐이드" },
-  { id: "g10", title: "서울 서초구 거실 콤비블라인드", region: "서울", space: "거실", product: "콤비블라인드" },
-  { id: "g11", title: "강원 춘천 침실 암막커튼", region: "강원", space: "침실", product: "암막커튼" },
-  { id: "g12", title: "경기 남양주 거실 쉬폰+암막", region: "경기", space: "거실", product: "쉬폰커튼" },
-  { id: "g13", title: "경기 용인 전원주택 트리플쉐이드", region: "경기", space: "거실", product: "트리플쉐이드" },
+  { id: "g1", title: "여주 전원주택 암막커튼 · 쉬폰커튼", region: "경기", space: "침실", product: "암막커튼 + 쉬폰커튼", src: galleryPhoto(1) },
+  { id: "g2", title: "서울 평창동 쉬폰커튼", region: "서울", space: "거실", product: "쉬폰커튼", src: galleryPhoto(2) },
+  { id: "g3", title: "서울 강동구 로만쉐이드", region: "서울", space: "거실", product: "로만쉐이드", src: galleryPhoto(3) },
+  { id: "g4", title: "서울 잠실 뷰티샵 커튼 · 블라인드", region: "서울", space: "상가", product: "커튼 + 블라인드", src: galleryPhoto(4) },
+  { id: "g5", title: "서울 은평구 에스테틱 커튼", region: "서울", space: "상가", product: "커튼", src: galleryPhoto(5) },
+  { id: "g6", title: "평택 아파트 전동 유니슬렛", region: "경기", space: "거실", product: "유니슬렛 커튼", src: galleryPhoto(6) },
+  { id: "g7", title: "남양주 병원 방염커튼", region: "경기", space: "병원", product: "방염커튼", src: galleryPhoto(7) },
+  { id: "g8", title: "용인 린넨커튼", region: "경기", space: "거실", product: "린넨커튼", src: galleryPhoto(8) },
+  { id: "g9", title: "남양주 별내 카페 알루미늄 블라인드", region: "경기", space: "상가", product: "알루미늄 25mm 블라인드", src: galleryPhoto(9) },
+  { id: "g10", title: "파주 식당 썬스크린 블라인드", region: "경기", space: "상가", product: "썬스크린 블라인드", src: galleryPhoto(10) },
+  { id: "g11", title: "서울 영등포 고등학교 블라인드", region: "서울", space: "학교", product: "롤스크린 블라인드", src: galleryPhoto(11) },
+  { id: "g12", title: "과천 커튼 · 블라인드", region: "경기", space: "거실", product: "커튼 + 블라인드", src: galleryPhoto(12) },
 ];
 
-// ⑥ 고객 후기 & 신뢰 요소 — 더미, 실제 후기로 교체 (지역 키워드 포함)
-export type Review = { id: string; name: string; area: string; product: string; rating: number; text: string; date: string; src?: string };
-const REVIEW_PHOTO = "/images/products/roman-shade/roman-shade-2.webp"; // 임시: 모든 후기에 동일 사진 (실제 사진으로 교체)
+// ⑥ 고객 후기 & 신뢰 요소 — 고객님이 전달한 실제 후기 (문구·이름·지역 원문 그대로)
+// 사진: r1 은 제품컷(로만쉐이드 3), r2~r6 은 /images/review/ 실제 시공 사진
+export type Review = { id: string; name: string; area: string; product: string; rating: number; text: string; src?: string };
 export const REVIEWS: Review[] = [
-  { id: "r1", name: "김○○", area: "경기 남양주", product: "암막커튼", rating: 5, date: "2026.07", src: REVIEW_PHOTO, text: "실측부터 시공까지 꼼꼼하게 봐주셔서 만족스러워요. 빛이 하나도 안 새고 마감이 정말 깔끔합니다." },
-  { id: "r2", name: "이○○", area: "서울 강동구", product: "허니콤블라인드", rating: 5, date: "2026.06", src: REVIEW_PHOTO, text: "무료 방문 실측이라 부담 없이 시작했는데 가격도 투명하고 시공 당일 바로 끝났어요." },
-  { id: "r3", name: "박○○", area: "경기 남양주", product: "린넨커튼", rating: 5, date: "2026.06", src: REVIEW_PHOTO, text: "원단 샘플을 직접 보여주시면서 추천해 주셔서 고르기 쉬웠습니다. 전원주택 분위기가 확 살아났어요." },
-  { id: "r4", name: "최○○", area: "서울 마포구", product: "우드블라인드", rating: 5, date: "2026.05", src: REVIEW_PHOTO, text: "카페 창 전체를 우드블라인드로 교체했는데 일정 맞춰 정확하게 시공해 주셨습니다. 사후 관리도 확실해요." },
-  { id: "r5", name: "정○○", area: "인천 송도", product: "쉬폰커튼 + 암막", rating: 5, date: "2026.05", src: REVIEW_PHOTO, text: "속커튼과 암막을 같이 했는데 조합 추천이 딱이었어요. 견적도 처음 말씀하신 그대로였습니다." },
-  { id: "r6", name: "한○○", area: "경기 성남", product: "로만쉐이드", rating: 5, date: "2026.04", src: REVIEW_PHOTO, text: "주방 창에 로만쉐이드 했는데 주름이 정말 예쁘게 떨어져요. 사이즈도 딱 맞아서 빛 샘이 없습니다." },
-  { id: "r7", name: "오○○", area: "경기 구리", product: "콤비블라인드", rating: 5, date: "2026.04", src: REVIEW_PHOTO, text: "이사 날짜에 맞춰서 시공해 주셨어요. 채광 조절이 편하고 아이들 방에도 잘 어울립니다." },
-  { id: "r8", name: "윤○○", area: "서울 송파구", product: "트리플쉐이드", rating: 5, date: "2026.03", src: REVIEW_PHOTO, text: "거실 전체를 트리플쉐이드로 바꿨는데 분위기가 확 고급스러워졌어요. 설명도 친절하셨습니다." },
-  { id: "r9", name: "장○○", area: "경기 하남", product: "린넨커튼 + 쉬폰", rating: 5, date: "2026.03", src: REVIEW_PHOTO, text: "전원주택 큰 창이라 걱정했는데 원단 추천부터 시공까지 완벽했어요. 주변에도 소개했습니다." },
-  { id: "r10", name: "서○○", area: "강원 춘천", product: "전동커튼", rating: 5, date: "2026.02", src: REVIEW_PHOTO, text: "높은 창이라 전동으로 했는데 리모컨 세팅까지 다 해주시고 A/S 안내도 확실해서 안심됩니다." },
+  {
+    id: "r1",
+    name: "장*민",
+    area: "양평 전원주택",
+    product: "린넨 로만쉐이드 + 린넨 나비주름",
+    rating: 5,
+    src: "/images/products/roman-shade/roman-shade-3.webp",
+    text: "전원주택이라 거실 창이 커서 고민했는데, 오른쪽창은 린넨 로만쉐이드로하고 왼쪽창은 같은 원단의 나비주름 커튼으로 맞춰주셔서 너무 예뻐요. 집 분위기와도 너무 잘 어울리고 상담부터 시공까지 꼼꼼해서 만족합니다.",
+  },
+  {
+    id: "r2",
+    name: "한*정",
+    area: "송파 아파트",
+    product: "생활암막겉지 + 쉬폰커튼",
+    rating: 5,
+    src: "/images/review/review-02.webp",
+    text: "거실 분위기에 맞춰 생활암막과 쉬폰커튼으로 시공했는데 너무 깔끔하고 예뻐요. 빛도 은은하게 들어오면서 사생활 보호도 돼서 만족스럽습니다.",
+  },
+  {
+    id: "r3",
+    name: "정*인",
+    area: "강남 아파트",
+    product: "패널커튼",
+    rating: 5,
+    src: "/images/review/review-03.webp",
+    text: "거실 창이 넓어서 패널커튼으로 했는데 공간이 훨씬 깔끔하고 넓어 보여요. 원단도 은은해서 채광은 살리면서 분위기까지 예쁘게 잡혀서 남편한테 커튼하길 잘했다고 칭찬받았어요.",
+  },
+  {
+    id: "r4",
+    name: "김*정",
+    area: "영등포",
+    product: "암막 콤비블라인드",
+    rating: 5,
+    src: "/images/review/review-04.webp",
+    text: "거실에 암막 콤비블라인드로 설치했는데 깔끔하고 분위기에도 잘 어울려요. 빛 조절도 편하고 필요할 때는 암막까지 돼서 실용적이라 다른방도 다 바꾸고 싶어요.",
+  },
+  {
+    id: "r5",
+    name: "김*경",
+    area: "하남시 전원주택",
+    product: "암막커튼 + 쉬폰커튼",
+    rating: 5,
+    src: "/images/review/review-05.webp",
+    text: "전원주택 이사하면서 집전체 맡겼는데 생각했던 것보다 훨씬 고급스럽고 집이 아늑해졌어요. 빛도 확실히 줄어들고 커튼 주름도 너무 예쁘게 잡혀서 만족스러워요.",
+  },
+  {
+    id: "r6",
+    name: "지*선",
+    area: "평택시 아파트",
+    product: "유니슬렛",
+    rating: 5,
+    src: "/images/review/review-06.webp",
+    text: "처음엔 커튼이랑 블라인드 중에 고민했는데 유니슬렛으로 하길 정말 잘한 것 같아요. 거실이 훨씬 깔끔하고 고급스러워 보이고, 햇빛도 원하는 만큼 조절할 수 있어서 너무 만족스럽습니다. 상담부터 시공까지 꼼꼼하게 해주셔서 더 마음에 들었어요. 😊",
+  },
 ];
 // 신뢰 통계 — animate 인 항목만 카운트업, 나머지는 정적 표시 (format: 천 단위 콤마)
 export type TrustStat = { end: number; suffix: string; label: string; format?: boolean; animate?: boolean; highlight?: boolean };

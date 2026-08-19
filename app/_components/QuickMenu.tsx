@@ -77,7 +77,7 @@ export default function QuickMenu() {
         aria-label="카카오톡 문의"
         title="카카오톡 문의"
         onClick={onKakao}
-        className={`wiggle ${btn} bg-[#FEE500] text-[#191919]`}
+        className={`wiggle ${btn} border-2 border-[#FEE500] bg-white/70 text-[#191919] backdrop-blur`}
         style={{ animationDelay: "2.2s" }}
       >
         <KakaoIcon size={30} />

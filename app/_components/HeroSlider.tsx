@@ -4,10 +4,9 @@
 // 헤더가 fixed 투명이므로 섹션이 최상단(top:0)부터 시작한다.
 // 유입 키워드(?kw= / n_keyword)가 있으면 1번 슬라이드 헤드라인·소제목을 지역/상품에 맞게 클라이언트에서 교체(SSR 은 기본 문구).
 import { useCallback, useEffect, useRef, useState } from "react";
-import { HERO_SLIDES, HERO_CTA, HERO_BADGES } from "../_lib/data";
+import { HERO_SLIDES, HERO_BADGES } from "../_lib/data";
 import { getEntryKeyword } from "../_lib/attribution";
 import { matchKeyword } from "../_lib/keywords";
-import { track, EVENTS } from "../_lib/analytics";
 import Image from "next/image";
 import Placeholder from "./Placeholder";
 
@@ -106,9 +105,10 @@ export default function HeroSlider() {
                 <div className="absolute inset-y-0 right-0 w-full md:w-[50%] lg:w-[52%]">
                   <Image src={s.src!} alt="" fill sizes="(min-width:768px) 58vw, 100vw" priority={i === 0} className="object-cover object-[50%_60%]" />
                   {/* 좌측(텍스트 쪽)으로 배경색이 자연스럽게 이어지도록 페이드 */}
-                  <div className="absolute inset-0 bg-linear-to-r from-background via-background/50 to-transparent md:via-background/25 md:to-transparent" />
+                  {/* 좌측을 배경색으로 넓게 페이드 — 텍스트 영역과 자연스럽게 이어지되 사진 본체 색은 유지 */}
+                  <div className="absolute inset-y-0 left-0 w-1/2 bg-linear-to-r from-background via-background/60 to-transparent md:w-2/5" />
                 </div>
-                <div className="absolute inset-0 bg-background/55 md:hidden" />
+                <div className="absolute inset-0 bg-background/45 md:hidden" />
               </>
             ) : (
               <>
@@ -145,36 +145,6 @@ export default function HeroSlider() {
                     {s.sub}
                   </p>
 
-                  {/* CTA: 무료 방문 실측 신청(브라운, 헤더와 동일) / 전화 상담(화이트). 모바일은 글자 폭 기준 작은 버튼 2개 가로 배치. 위(서브카피)·아래(배지) 간격 동일(mt-6) */}
-                  <div className="mt-4 grid w-fit grid-cols-1 gap-2.5 sm:flex sm:items-center sm:gap-4">
-                    <a
-                      href={HERO_CTA.primary.href}
-                      onClick={() => track(EVENTS.CLICK_CTA, { location: "hero" })}
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-base font-semibold text-white shadow-md shadow-black/20 transition hover:-translate-y-0.5 hover:bg-brown hover:shadow-lg active:translate-y-0 sm:px-10 sm:py-5 sm:text-lg"
-                    >
-                      {HERO_CTA.primary.label}
-                      {/* 화살표 아이콘 */}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
-                        <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </a>
-                    <a
-                      href={HERO_CTA.secondary.href}
-                      onClick={() => track(EVENTS.CLICK_CALL, { location: "hero" })}
-                      className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-white px-7 py-3.5 text-base font-semibold text-foreground shadow-md shadow-black/10 transition hover:-translate-y-0.5 hover:bg-surface hover:shadow-lg active:translate-y-0 sm:px-10 sm:py-5 sm:text-lg"
-                    >
-                      {/* 전화 아이콘 */}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-emerald-600" aria-hidden>
-                        <path
-                          d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span className="-translate-y-[1.5px]">{HERO_CTA.secondary.label}</span>
-                    </a>
-                  </div>
-
                   {/* 핵심 배지 3개 (무료 방문 실측 · 100% 맞춤 제작 · 장인 직접 시공) — 첫 화면에서 바로 보이도록 CTA 바로 아래 */}
                   <ul className="mt-6 grid w-fit grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-start" aria-label="핵심 안내">
                     {HERO_BADGES.map((b) => (
@@ -196,8 +166,8 @@ export default function HeroSlider() {
         );
       })}
 
-      {/* 좌우 화살표 (얇은 셰브론) */}
-      {[
+      {/* 좌우 화살표 (얇은 셰브론) — 슬라이드 2개 이상일 때만 */}
+      {total > 1 && [
         { dir: -1, side: "left-4 sm:left-8", label: "이전 슬라이드", path: "M15 5l-7 7 7 7" },
         { dir: 1, side: "right-4 sm:right-8", label: "다음 슬라이드", path: "M9 5l7 7-7 7" },
       ].map((b) => (
@@ -214,7 +184,8 @@ export default function HeroSlider() {
         </button>
       ))}
 
-      {/* 도트 인디케이터: 활성 도트는 길어지고, 그 안에서 진행바가 5초 동안 채워짐  */}
+      {/* 도트 인디케이터: 활성 도트는 길어지고, 그 안에서 진행바가 채워짐 (슬라이드 2개 이상일 때만) */}
+      {total > 1 && (
       <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1">
         {slides.map((s, i) => {
           const active = i === index;
@@ -245,6 +216,7 @@ export default function HeroSlider() {
           );
         })}
       </div>
+      )}
 
       {/* 슬라이더 전용 keyframes (텍스트 페이드업 / 진행바) */}
       <style>{`

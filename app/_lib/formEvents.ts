@@ -17,8 +17,11 @@ export function matchProductOption(product: string, options: readonly string[]):
     .sort((a, b) => b.length - a.length)
     .find((o) => p.includes(norm(o)) || norm(o).includes(p));
   if (partial) return partial;
-  // 대분류로라도 맞춰줌 (예: "우드블라인드" → 알루미늄/콤비 등에 없으면 블라인드 계열 첫 항목)
-  const isBlind = /블라인드|롤스크린|허니콤|콤비|트리플쉐이드|한옥쉐이드/.test(p);
-  const fallback = options.find((o) => (isBlind ? /블라인드|쉐이드/.test(o) : /커튼/.test(o)));
+  // 대분류로라도 맞춰줌 (예: "썬스크린 블라인드" → 목록에 없으면 블라인드 계열 첫 항목)
+  // 블라인드는 "블라인드" 항목을 먼저 찾는다 — /블라인드|쉐이드/ 를 한 번에 찾으면 목록상 앞에 있는 "로만쉐이드"(커튼류)가 걸린다.
+  const isBlind = /블라인드|롤스크린|썬스크린|허니콤|콤비|트리플쉐이드|한옥쉐이드/.test(p);
+  const fallback = isBlind
+    ? (options.find((o) => /블라인드/.test(o)) ?? options.find((o) => /쉐이드/.test(o)))
+    : options.find((o) => /커튼/.test(o));
   return fallback ?? options[options.length - 1]; // 마지막 항목("상담 후 결정")
 }

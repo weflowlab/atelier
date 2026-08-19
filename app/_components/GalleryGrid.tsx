@@ -3,6 +3,7 @@
 // 그리드는 필터 결과 중 최신 MAX_TILES 장만 표시, 타일 클릭 시 라이트박스에서 필터 결과 "전체"를 넘겨봄.
 // 필터 전환 시 페이드아웃 → 필터 교체 → @starting-style 페이드인. 아이템은 항상 마운트, hidden 토글.
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { GALLERY } from "../_lib/data";
 import Placeholder from "./Placeholder";
 import Reveal from "./Reveal";
@@ -97,7 +98,6 @@ export default function GalleryGrid() {
           <p className="eyebrow">GALLERY</p>
           <h2 className="serif mt-3 text-3xl font-medium tracking-tight md:text-4xl">실제 시공 · 작업 포트폴리오</h2>
           <p className="mt-3 text-sm text-muted">지역별 · 공간별로 확인하세요</p>
-          {/* 사진은 실제 시공사진으로 교체 예정 */}
         </Reveal>
 
         {/* 필터 2줄 (지역 / 공간) + 결과 건수 */}
@@ -140,8 +140,19 @@ export default function GalleryGrid() {
                     aria-label={`${item.title} 크게 보기`}
                     className="group relative block h-full w-full overflow-hidden rounded-xl bg-surface text-left"
                   >
-                    <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105">
-                      <Placeholder label={item.title} />
+                    {/* 첫 타일만 md+ 에서 2×2 로 커지므로 sizes 도 따로 준다 */}
+                    <div className="relative h-full w-full transition-transform duration-700 ease-out group-hover:scale-105">
+                      {item.src ? (
+                        <Image
+                          src={item.src}
+                          alt={`${item.title} 시공 사진`}
+                          fill
+                          sizes={item.id === firstVisible ? "(min-width: 768px) 560px, 50vw" : "(min-width: 768px) 280px, 50vw"}
+                          className="object-cover"
+                        />
+                      ) : (
+                        <Placeholder label={item.title} />
+                      )}
                     </div>
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/45 px-4 text-center text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                       <svg

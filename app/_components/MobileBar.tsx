@@ -16,7 +16,7 @@ export default function MobileBar() {
       rel="noopener noreferrer"
       aria-label="카카오톡 문의"
       onClick={() => track(EVENTS.CLICK_KAKAO, { location: "mobilebar" })}
-      className={`wiggle fixed right-3 bottom-[4.75rem] z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#FEE500] text-[#191919] shadow-md transition-[translate] duration-[600ms] ease-in-out md:hidden ${idle ? "translate-x-[calc(100%+1.25rem)] [&]:animate-none" : "translate-x-0"}`}
+      className={`wiggle fixed right-3 bottom-[4.75rem] z-40 flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#FEE500] bg-white/70 text-[#191919] shadow-md backdrop-blur transition-[translate] duration-[600ms] ease-in-out md:hidden ${idle ? "translate-x-[calc(100%+1.25rem)] [&]:animate-none" : "translate-x-0"}`}
     >
       <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
         <path d="M12 3C6.5 3 2 6.5 2 10.8c0 2.7 1.8 5.1 4.5 6.5l-1 3.7c-.1.3.3.6.6.4l4.4-2.9c.5.1 1 .1 1.5.1 5.5 0 10-3.5 10-7.8S17.5 3 12 3z" />
