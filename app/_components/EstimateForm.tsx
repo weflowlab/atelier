@@ -35,16 +35,16 @@ const INITIAL: FormState = {
 type Errors = Partial<Record<"name" | "phone" | "agree", string>>;
 
 // 드롭다운(select) — 기본 화살표 제거(appearance-none) + 오른쪽 커스텀 아래 화살표(인라인 배경 SVG)
-const selectCls = "appearance-none pr-10";
+const selectCls = "appearance-none pr-8 sm:pr-10";
 const selectStyle: React.CSSProperties = {
   backgroundImage:
     "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237d7168' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>\")",
   backgroundRepeat: "no-repeat",
-  backgroundPosition: "right 0.9rem center",
+  backgroundPosition: "right 0.7rem center",
 };
 // 소프트 라운드 인풋 공통 클래스
 const inputCls =
-  "w-full rounded-lg border border-line bg-surface px-4 py-3.5 text-base outline-none transition-colors placeholder:text-muted/70 focus:border-accent aria-[invalid=true]:border-red-400";
+  "w-full rounded-lg border border-line bg-surface px-3 py-3 text-[15px] outline-none sm:px-4 sm:py-3.5 sm:text-base transition-colors placeholder:text-muted/70 focus:border-accent aria-[invalid=true]:border-red-400";
 export default function EstimateForm() {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [errors, setErrors] = useState<Errors>({});
@@ -167,7 +167,7 @@ export default function EstimateForm() {
             ) : (
               <form onSubmit={onSubmit} noValidate className="mt-10 space-y-6">
                 {/* 이름 · 전화번호 (필수) — 시안처럼 한 줄 2칸 */}
-                <div className="grid gap-5 sm:grid-cols-2">
+                <div className="grid grid-cols-2 gap-3 sm:gap-5">
                   <Field label="이름" required error={errors.name} htmlFor="est-name">
                     <input
                       id="est-name"
@@ -195,7 +195,7 @@ export default function EstimateForm() {
                 </div>
 
                 {/* 주소 · 설치장소 — 한 줄 2칸 */}
-                <div className="grid gap-5 sm:grid-cols-2">
+                <div className="grid grid-cols-2 gap-3 sm:gap-5">
                   <Field label="주소" htmlFor="est-address">
                     <input
                       id="est-address"
@@ -224,7 +224,7 @@ export default function EstimateForm() {
                 </div>
 
                 {/* 희망날짜 · 설치제품 — 한 줄 2칸 */}
-                <div className="grid gap-5 sm:grid-cols-2">
+                <div className="grid grid-cols-2 gap-3 sm:gap-5">
                   <Field label="희망날짜" htmlFor="est-date">
                     {/* iOS Safari: 날짜 입력이 내용 폭으로 줄어들고 min 을 무시하는 경우가 있어 폭 강제 + onChange 에서 과거 날짜 차단 */}
                     <input
@@ -377,7 +377,7 @@ function Field({
   children: ReactNode;
 }) {
   // htmlFor 가 없으면(라디오/체크박스 그룹) label 대신 span 사용
-  const labelCls = "mb-2 block text-base font-medium";
+  const labelCls = "mb-1.5 block text-[15px] font-medium sm:mb-2 sm:text-base";
   const inner = (
     <>
       {label}
