@@ -51,7 +51,7 @@ export default function Strengths() {
         {/* 섹션 헤더 */}
         <Reveal className="mx-auto max-w-4xl text-center">
           <p className="eyebrow mb-4">{STRENGTH.eyebrow}</p>
-          <p className="serif text-base text-muted">{STRENGTH.intro}</p>
+          <p className="serif text-base font-bold text-foreground">{STRENGTH.intro}</p>
           {/* 데스크톱에서는 한 줄 유지 */}
           <h2 className="serif mt-3 text-2xl font-semibold leading-snug md:text-4xl md:whitespace-nowrap">
             {/* 모바일: "…전문가가 직접 / 실측·제작·시공합니다" 두 줄, PC: 한 줄 */}

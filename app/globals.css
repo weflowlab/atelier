@@ -57,6 +57,8 @@ body {
 .eyebrow { @apply text-[11px] tracking-[0.35em] uppercase text-muted; }
 /* 세리프 헤드라인 */
 .serif { font-family: var(--font-serif), serif; }
+/* 로고 "Atelier" 필기체 */
+.script { font-family: var(--font-script), cursive; }
 /* 스크롤바 숨김 (가로 캐러셀) */
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }

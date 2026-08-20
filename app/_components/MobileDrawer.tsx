@@ -1,7 +1,6 @@
 "use client";
 // 우측 슬라이드 드로어(웜 베이지 팔레트) — 상단 전화/카카오톡 버튼, NAV 아코디언, 하단 대표번호·운영시간. 모바일/데스크톱 MENU 버튼 공용.
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { NAV, SITE, type NavItem } from "../_lib/data";
 
 type Props = { open: boolean; onClose: () => void };
@@ -56,9 +55,11 @@ export default function MobileDrawer({ open, onClose }: Props) {
       >
         {/* 상단: 워드마크 + 닫기 버튼 */}
         <div className="flex h-20 items-center justify-between border-b border-line px-5">
-          {/* 필기체 로고 — 글리프 특성상 시각적 중심이 위로 쏠려서 살짝 내려 세로 중앙에 맞춤 */}
-          {/* 영문 로고(Atelier / CURTAIN & BLIND) 이미지 */}
-          <Image src="/images/logo/atelier-dark.png" alt={SITE.nameEn} width={472} height={208} className="h-11 w-auto" />
+          {/* 영문 로고 — 헤더와 동일한 필기체 Atelier + 태그라인 */}
+          <span className="flex flex-col items-center text-gold">
+            <span className="script text-[27px] leading-none">{SITE.nameEn}</span>
+            <span className="mt-1 text-[8px] tracking-[0.35em] uppercase">{SITE.tagline}</span>
+          </span>
           <button
             type="button"
             aria-label="메뉴 닫기"

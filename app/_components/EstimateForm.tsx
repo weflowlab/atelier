@@ -203,7 +203,6 @@ export default function EstimateForm() {
                       autoComplete="street-address"
                       value={form.address}
                       onChange={(e) => set("address", e.target.value)}
-                      placeholder="시/구/동까지 입력해주셔도 됩니다"
                       className={inputCls}
                     />
                   </Field>

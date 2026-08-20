@@ -3,11 +3,11 @@
 import IntroSplash from "./_components/IntroSplash";
 import Header from "./_components/Header";
 import HeroSlider from "./_components/HeroSlider";
+import TrustBand from "./_components/TrustBand";
 import PainPoint from "./_components/PainPoint";
 import Strengths from "./_components/Strengths";
 import ProductGrid from "./_components/ProductGrid";
 import ProductCarousel from "./_components/ProductCarousel";
-import PriceGuide from "./_components/PriceGuide";
 import GalleryGrid from "./_components/GalleryGrid";
 import Reviews from "./_components/Reviews";
 import ProcessFaq from "./_components/ProcessFaq";
@@ -31,6 +31,9 @@ export default function Home() {
         {/* ① 메인 — 핵심 문구(무료 방문 실측·맞춤 제작·직접 시공) + 큰 CTA. ?kw= 유입 키워드로 헤드라인 매칭 */}
         <HeroSlider />
 
+        {/* 히어로 직하단 신뢰 밴드 — 월계수 장식 + 경력·누적 시공 */}
+        <TrustBand />
+
         {/* ③ 브랜드 강점 — 신뢰 통계 + 강점 5개 */}
         <Strengths />
 
@@ -40,11 +43,10 @@ export default function Home() {
         {/* ② 문제 제기 & 공감 */}
         <PainPoint />
 
-        {/* ④ 주요 제품 — 대표 4카드 + 커튼/블라인드 캐러셀 + 가격·견적 기준 */}
+        {/* ④ 주요 제품 — 대표 4카드 + 커튼/블라인드 캐러셀 */}
         <ProductGrid />
         <ProductCarousel id="curtain" eyebrow="CURTAIN" title="커튼" subtitle="암막커튼 · 쉬폰커튼 · 린넨커튼 · 로만쉐이드 · 유니슬렛" items={CURTAINS} />
-        <ProductCarousel id="blind" eyebrow="BLIND" title="블라인드" subtitle="트리플쉐이드 · 콤비 · 허니콤 · 한옥쉐이드 · 알루미늄" items={BLINDS} dark />
-        <PriceGuide />
+        <ProductCarousel id="blind" eyebrow="BLIND" title="블라인드" subtitle="트리플쉐이드 · 콤비 · 허니콤 · 우드 · 한옥쉐이드 · 알루미늄" items={BLINDS} dark />
 
         {/* ⑤ 시공 포트폴리오 — 지역별·공간별 필터 그리드 */}
         <GalleryGrid />

@@ -39,8 +39,8 @@ export default function PainPoint() {
             그래서 <span className="underline-draw font-semibold text-accent">커튼장인 아뜰리에</span>는<br className="md:hidden" /> 처음부터 끝까지 직접 합니다.
           </p>
           <a
-            href="#strength"
-            aria-label="브랜드 강점 보기"
+            href="#products"
+            aria-label="주요 제품 안내 보기"
             className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-neutral-400/70 text-foreground/70 transition hover:border-accent hover:text-accent"
           >
             <svg

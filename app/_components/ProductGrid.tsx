@@ -37,13 +37,6 @@ export default function ProductGrid() {
                 <div className="flex flex-col items-center px-5 py-4 text-center">
                   <p className="text-xs tracking-widest text-muted">{item.en}</p>
                   <p className="mt-1 text-base font-medium">{item.ko}</p>
-                  {/* "자세히 보기" — 모바일은 항상 표시, md+ 는 호버 시 표시 */}
-                  <span className="mt-2 inline-flex items-center gap-1 text-xs text-gold transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
-                    자세히 보기
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-                      <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
                 </div>
               </a>
             </Reveal>

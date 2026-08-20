@@ -81,7 +81,7 @@ export default function HeroSlider() {
       id="hero"
       aria-roledescription="carousel"
       aria-label="메인 슬라이드"
-      className="relative min-h-[100svh] w-full overflow-hidden bg-neutral-900 text-white select-none touch-pan-y"
+      className="relative min-h-[72svh] w-full overflow-hidden bg-neutral-900 text-white select-none touch-pan-y md:min-h-[100svh]"
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
       onPointerCancel={() => (startX.current = null)}
@@ -104,11 +104,11 @@ export default function HeroSlider() {
                 <div className="absolute inset-0 bg-linear-to-br from-surface via-background to-[#efe7dc]" />
                 <div className="absolute inset-y-0 right-0 w-full md:w-[50%] lg:w-[52%]">
                   <Image src={s.src!} alt="" fill sizes="(min-width:768px) 58vw, 100vw" priority={i === 0} className="object-cover object-[50%_60%]" />
-                  {/* 좌측(텍스트 쪽)으로 배경색이 자연스럽게 이어지도록 페이드 */}
-                  {/* 좌측을 배경색으로 넓게 페이드 — 텍스트 영역과 자연스럽게 이어지되 사진 본체 색은 유지 */}
-                  <div className="absolute inset-y-0 left-0 w-1/2 bg-linear-to-r from-background via-background/60 to-transparent md:w-2/5" />
+                  {/* 좌측(텍스트 쪽) 경계만 좁게 페이드 — 사진 본체는 원본 색 그대로 유지 */}
+                  <div className="absolute inset-y-0 left-0 hidden w-1/5 bg-linear-to-r from-background via-background/40 to-transparent md:block" />
                 </div>
-                <div className="absolute inset-0 bg-background/45 md:hidden" />
+                {/* 모바일: 문구가 놓이는 상단만 살짝 밝히고 아래는 원본 그대로 */}
+                <div className="absolute inset-0 bg-linear-to-b from-background/60 via-background/25 to-transparent md:hidden" />
               </>
             ) : (
               <>
@@ -129,28 +129,32 @@ export default function HeroSlider() {
                 key={`text-${s.id}-${index}`}
                 className="absolute inset-0 flex items-center animate-[heroText_0.9s_ease_both]"
               >
-                <div className={`mx-auto flex w-full max-w-7xl flex-col items-center px-6 pt-32 pb-24 text-center md:items-start md:pt-36 md:text-left ${split ? "md:px-10 md:pr-0 lg:px-14" : "md:px-16 lg:px-24"}`}>
+                <div className={`mx-auto flex h-full w-full max-w-7xl flex-col items-center px-6 pt-[18svh] pb-[7svh] text-center md:h-auto md:items-start md:pt-36 md:pb-24 md:text-left ${split ? "md:px-10 md:pr-0 lg:px-14" : "md:px-16 lg:px-24"}`}>
                   {/* 영문 소제목 */}
-                  <p className={`mb-5 w-full text-[11px] tracking-[0.35em] uppercase sm:text-xs ${split ? "text-muted" : "text-white/80"}`}>
+                  <p className={`mb-1 w-full text-[11px] tracking-[0.35em] uppercase sm:text-xs md:mb-5 ${split ? "text-gold md:text-muted" : "text-white/80"}`}>
                     {s.eyebrow}
                   </p>
+                  {/* 소제목 아래 골드 다이아 장식 — 모바일 전용 (시안 배치) */}
+                  <span aria-hidden className="mb-1.5 text-[11px] leading-none text-gold md:hidden">✦</span>
                   {/* 메인 카피 (세리프, 줄바꿈 유지) */}
-                  <h1 className={`serif whitespace-pre-line text-3xl font-semibold leading-[1.25] tracking-tight md:leading-[1.15] ${split ? "text-foreground" : "text-white"} md:text-6xl`}>
-                    {s.title}
+                  {/* 모바일: 데이터의 줄바꿈을 무시하고 화면폭 비례(vw) 크기로 한 줄 표시. md+ 는 기존 줄바꿈 유지 */}
+                  <h1 className={`serif text-[4.2vw] font-semibold tracking-tight whitespace-nowrap sm:text-xl md:whitespace-pre-line md:text-6xl md:leading-[1.15] ${split ? "text-foreground" : "text-white"}`}>
+                    <span className="md:hidden">{s.title.replace(/\n/g, " ")}</span>
+                    <span className="hidden md:inline">{s.title}</span>
                   </h1>
-                  {/* 얇은 골드 라인 */}
-                  <span aria-hidden className="mt-5.5 mb-4 block h-px w-12 bg-gold" />
+                  {/* 얇은 골드 라인 — 데스크톱 전용 */}
+                  <span aria-hidden className="mt-5.5 mb-4 hidden h-px w-12 bg-gold md:block" />
                   {/* 서브 카피 */}
-                  <p className={`max-w-xl whitespace-pre-line text-sm leading-relaxed sm:text-base md:whitespace-normal md:text-lg ${split ? "text-muted" : "text-white/80"}`}>
+                  <p className={`mt-4 max-w-xl whitespace-pre-line text-sm leading-relaxed sm:text-base md:mt-0 md:whitespace-normal md:text-lg ${split ? "text-muted" : "text-white/80"}`}>
                     {s.sub}
                   </p>
 
-                  {/* 핵심 배지 3개 (무료 방문 실측 · 100% 맞춤 제작 · 장인 직접 시공) — 첫 화면에서 바로 보이도록 CTA 바로 아래 */}
-                  <ul className="mt-6 grid w-fit grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-start" aria-label="핵심 안내">
+                  {/* 핵심 배지 (무료 방문 실측 · 100% 맞춤 제작) — 모바일은 사진 하단에 흰 알약으로, md+ 는 서브 카피 아래 */}
+                  <ul className="mt-auto grid w-fit grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center sm:justify-start md:mt-6" aria-label="핵심 안내">
                     {HERO_BADGES.map((b) => (
                       <li
                         key={b}
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs ${split ? "border border-line bg-surface/70 text-foreground/80" : "border border-white/40 text-white/90"}`}
+                        className={`inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[13px] md:px-3 md:py-1 md:text-xs ${split ? "bg-white/95 text-foreground/85 shadow-[0_4px_14px_rgba(43,37,33,0.15)] md:border md:border-line md:bg-surface/70 md:shadow-none" : "border border-white/40 text-white/90"}`}
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gold" aria-hidden>
                           <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />

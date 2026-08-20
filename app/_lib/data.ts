@@ -37,7 +37,7 @@ export const REGION_NAMES = REGIONS.map((r) => r.name);
 // ── 상품 키워드 ─────────────────────────────────────────────
 export const PRODUCT_KEYWORDS = [
   "커튼", "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "패널커튼", "유니슬렛커튼",
-  "블라인드", "트리플쉐이드", "콤비블라인드", "허니콤블라인드", "한옥쉐이드", "알루미늄블라인드",
+  "블라인드", "트리플쉐이드", "콤비블라인드", "허니콤블라인드", "우드블라인드", "한옥쉐이드", "알루미늄블라인드",
 ];
 
 // GNB 메뉴 — 섹션 앵커. children 이 있으면 드로어에서 아코디언
@@ -50,7 +50,6 @@ export const NAV: NavItem[] = [
     children: [
       { label: "커튼", href: "#curtain" },
       { label: "블라인드", href: "#blind" },
-      { label: "가격 · 견적 안내", href: "#price" },
     ],
   },
   { label: "시공 포트폴리오", href: "#gallery" },
@@ -58,18 +57,18 @@ export const NAV: NavItem[] = [
   { label: "진행 절차 · FAQ", href: "#process" },
 ];
 
-// ① 히어로 — 첫 화면 핵심 문구: 무료 방문 실측 · 맞춤 제작 · 직접 시공 + 지역/상품 키워드
+// ① 히어로 — 첫 화면 핵심 문구: 무료 방문 실측 · 맞춤 제작 + 지역/상품 키워드
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string; layout?: "split" };
 export const HERO_SLIDES: Slide[] = [
   // 단일 히어로 — 밝은 배경 + 우측 사진(split) 레이아웃
-  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "공간을 빛나게 하는\n커튼의 가치", sub: "수년의 경험과 장인의 시공으로\n디테일이 다른 커튼을 만듭니다.", src: "/images/hero/hero-living.webp", layout: "split" },
+  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "더 좋은 원단, 더 섬세한 시공,\n더 합리적인 가격", sub: "17년의 경험을 바탕으로\n공간에 맞는 1:1 맞춤 커튼을 제안합니다.", src: "/images/hero/hero-living.jpg", layout: "split" },
 ];
 export const HERO_CTA = {
   primary: { label: "무료 방문 실측 신청", href: "#estimate" },
   secondary: { label: "전화 상담", href: "tel:18332523" },
 };
-// 히어로 CTA 아래 핵심 배지 3개
-export const HERO_BADGES = ["무료 방문 실측", "100% 맞춤 제작", "장인 직접 시공", "추가 비용 없음"];
+// 히어로 CTA 아래 핵심 배지
+export const HERO_BADGES = ["무료 방문 실측", "100% 맞춤 제작"];
 
 // ② 문제 제기 & 공감
 export const PAIN = {
@@ -91,7 +90,7 @@ export const STRENGTH = {
   title: "믿을 수 있는 전문가가 직접 실측·제작·시공합니다", // 실제 렌더는 Strengths.tsx 에서 모바일 줄바꿈 포함해 직접 출력
   items: [
     { icon: "fabric", title: "엄선된 원단", desc: "프리미엄 원단만을\n엄선하여 사용" },
-    { icon: "sewing", title: "장인의 시공", desc: "수년의 경력을 가진\n전문가가 직접 시공" },
+    { icon: "sewing", title: "전문가 맞춤 시공", desc: "수년의 경력을 가진\n전문가가 직접 시공" },
     { icon: "tape", title: "100% 맞춤 제작", desc: "공간과 취향을 고려한\n1:1 맞춤 제작", highlight: true },
     { icon: "calendar", title: "무료 방문 실측", desc: "직접 방문해 실측하고\n투명한 견적 안내", highlight: true },
     { icon: "shield", title: "완벽한 마감", desc: "디테일한 마감으로\n오래도록 아름답게" },
@@ -133,7 +132,9 @@ export const CURTAINS: ProductCard[] = build([
 export const BLINDS: ProductCard[] = build([
   ["triple-shade", "트리플쉐이드", "부드러운 채광 조절", 15],
   ["combi", "암막 콤비블라인드", "빛 차단 · 채광 조절", 8],
-  ["honeycomb", "허니콤 블라인드", "단열 · 아이방/침실", 4],
+  // 0번이 대표 사진(신규)
+  ["honeycomb", "허니콤 블라인드", "단열 · 아이방/침실", 5, [0, 1, 2, 3, 4]],
+  ["wood", "우드 블라인드", "원목 감성 · 채광 조절", 1],
   ["hanok", "한옥 쉐이드 블라인드", "우드 감성 · 채광 조절", 12], // 13번 사진 제외
   ["aluminum", "알루미늄 25mm 블라인드", "습기 강함 · 주방/욕실", 16],
 ]);
@@ -289,12 +290,13 @@ export const PRODUCT_TYPE_OPTIONS = [
   "트리플쉐이드",
   "암막 콤비블라인드",
   "허니콤 블라인드",
+  "우드 블라인드",
   "한옥 쉐이드 블라인드",
   "알루미늄 25mm 블라인드",
   "상담 후 결정",
 ];
 // 상품 키워드 매칭용 목록 (폼 표시 X)
 export const PRODUCT_OPTIONS = [
-  "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "패널커튼", "유니슬렛커튼", "트리플쉐이드", "콤비블라인드", "허니콤블라인드", "한옥쉐이드", "알루미늄블라인드", "상담 후 결정",
+  "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "패널커튼", "유니슬렛커튼", "트리플쉐이드", "콤비블라인드", "허니콤블라인드", "우드블라인드", "한옥쉐이드", "알루미늄블라인드", "상담 후 결정",
 ];
 export const FORM_SUCCESS = "성공적으로 접수되었습니다. 빠른 시간 내에 연락드리겠습니다.";
