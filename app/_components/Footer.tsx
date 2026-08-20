@@ -51,9 +51,7 @@ export default function Footer() {
             <div>
               <Image src="/images/logo/wordmark-dark.png" alt={`${SITE.nameKo} ${SITE.nameEn}`} width={880} height={208} className="h-11 w-auto md:h-14" />
               {/* 명함 시안과 동일하게 영문 표기 */}
-              <p className="serif mt-4 flex items-baseline gap-1.5 text-xl font-semibold tracking-wide">
-                Curtain <span className="script text-[1.4em] font-normal leading-none">Atelier</span>
-              </p>
+              <p className="serif mt-4 text-xl font-semibold tracking-wide">Curtain Atelier</p>
               <p className="mt-1.5 text-[10px] tracking-[0.3em] text-muted uppercase">Curtain &amp; Blind Specialist</p>
               {/* 정보 행 — 명함 시안처럼 원형 아이콘 + 항목 */}
               <ul className="mt-5 space-y-2.5 text-xs leading-relaxed text-muted">
