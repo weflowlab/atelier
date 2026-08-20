@@ -15,8 +15,14 @@ const alexBrush = Alex_Brush({ variable: "--font-script", subsets: ["latin"], we
 const TITLE = `ATELIER | ${SITE.bizName}`; // 브라우저 탭 제목: "ATELIER | 커튼장인 아뜰리에"
 const DESC = "커튼·블라인드 전문. 믿을 수 있는 전문가가 직접 실측·제작·시공합니다.";
 
+// siteUrl 이 아직 placeholder 면 Vercel 프로덕션 도메인으로 대체 (og:image 절대 URL 이 실제 도메인을 가리키도록)
+const BASE_URL =
+  SITE.siteUrl.includes("example.com") && process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : SITE.siteUrl;
+
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.siteUrl),
+  metadataBase: new URL(BASE_URL),
   title: TITLE,
   description: DESC,
   keywords: [...REGION_NAMES.map((r) => `${r} 커튼`), ...REGION_NAMES.map((r) => `${r} 블라인드`), ...PRODUCT_KEYWORDS],

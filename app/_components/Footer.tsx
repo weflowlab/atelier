@@ -57,10 +57,11 @@ export default function Footer() {
               <p className="mt-1.5 text-[10px] tracking-[0.3em] text-muted uppercase">Curtain &amp; Blind Specialist</p>
               {/* 정보 행 — 명함 시안처럼 원형 아이콘 + 항목 */}
               <ul className="mt-5 space-y-2.5 text-xs leading-relaxed text-muted">
-                <li className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
+                <li className="flex items-center gap-x-2.5">
                   <InfoIcon name="person" />
                   <span>CEO Kim Yongjae</span>
-                  <span aria-hidden className="mx-1 text-line">|</span>
+                </li>
+                <li className="flex items-center gap-x-2.5">
                   <InfoIcon name="phone" />
                   <span>Tel {SITE.tels.join(" / ")}</span>
                 </li>
