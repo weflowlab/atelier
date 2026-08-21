@@ -75,7 +75,7 @@ export default function Header() {
               priority
               className="h-12 w-12 mix-blend-multiply md:h-14 md:w-14"
             />
-            <span className="flex flex-col items-center leading-none text-gold">
+            <span className="flex flex-col items-center leading-none text-[#8f6b3d]">
               <span className="serif flex items-baseline gap-1.5 text-lg font-semibold tracking-wide md:text-[21px]">
                 {SITE.nameKo} <span className="script text-[1.45em] font-normal leading-none">{SITE.nameEn}</span>
               </span>

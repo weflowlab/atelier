@@ -61,14 +61,14 @@ export const NAV: NavItem[] = [
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string; layout?: "split" };
 export const HERO_SLIDES: Slide[] = [
   // 단일 히어로 — 밝은 배경 + 우측 사진(split) 레이아웃
-  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "더 좋은 원단, 더 섬세한 시공,\n더 합리적인 가격", sub: "17년의 경험을 바탕으로\n공간에 맞는 1:1 맞춤 커튼을 제안합니다.", src: "/images/hero/hero-living.jpg", layout: "split" },
+  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "더 좋은 원단, 더 섬세한 시공,\n자체 공장 운영", sub: "", src: "/images/hero/hero-living.jpg", layout: "split" },
 ];
 export const HERO_CTA = {
   primary: { label: "무료 방문 실측 신청", href: "#estimate" },
   secondary: { label: "전화 상담", href: "tel:18332523" },
 };
 // 히어로 CTA 아래 핵심 배지
-export const HERO_BADGES = ["무료 방문 실측", "100% 맞춤 제작"];
+export const HERO_BADGES = ["무료 방문 실측", "자체 공장 운영"];
 
 // ② 문제 제기 & 공감
 export const PAIN = {
@@ -79,6 +79,13 @@ export const PAIN = {
     { title: "암막? 쉬폰? 린넨?", desc: "종류가 많아 우리 집 거실·침실에 어떤 커튼·블라인드가 맞는지 고르기 어렵습니다." },
     { title: "시공이 불안해요", desc: "설치 후 처짐·틀어짐, 연락이 끊기는 업체 때문에 걱정됩니다." },
     { title: "가격이 불투명해요", desc: "방문 전에는 견적을 알 수 없고 추가 비용이 붙을까 불안합니다." },
+  ],
+  // 마무리 문구 + '커튼장인 아뜰리에가 다른 이유' 4가지
+  reasons: [
+    { no: "01", title: "자체 공장 운영", desc: "중간 유통과정을 줄이고 직접 제작·관리" },
+    { no: "02", title: "자체 수제제작", desc: "공간과 창에 맞춰 섬세하게 완성" },
+    { no: "03", title: "17년 경력의 장인", desc: "오랜 경험과 노하우를 바탕으로 한 전문 시공" },
+    { no: "04", title: "무료 방문 실측", desc: "전문가가 직접 실측하고 공간에 맞는 제품 제안" },
   ],
 };
 

@@ -12,6 +12,21 @@ import Placeholder from "./Placeholder";
 
 const INTERVAL = 4000; // 자동재생 간격(ms)
 
+// 메인 카피에서 "자체 공장 운영"만 더 크고 굵게 강조. joinLines=true 면 줄바꿈을 공백으로(모바일 한 줄).
+const EMPH = "자체 공장 운영";
+function renderTitle(title: string, joinLines: boolean) {
+  const t = joinLines ? title.replace(/\n/g, " ") : title;
+  if (!t.includes(EMPH)) return t;
+  const [before, after] = t.split(EMPH);
+  return (
+    <>
+      {before}
+      <span className="text-[1.2em] font-bold">{EMPH}</span>
+      {after}
+    </>
+  );
+}
+
 export default function HeroSlider() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false); // 탭 비활성 시 true (호버 시에는 계속 재생)
@@ -138,23 +153,25 @@ export default function HeroSlider() {
                   <span aria-hidden className="mb-1.5 text-[11px] leading-none text-gold md:hidden">✦</span>
                   {/* 메인 카피 (세리프, 줄바꿈 유지) */}
                   {/* 모바일: 데이터의 줄바꿈을 무시하고 화면폭 비례(vw) 크기로 한 줄 표시. md+ 는 기존 줄바꿈 유지 */}
-                  <h1 className={`serif text-[4.2vw] font-semibold tracking-tight whitespace-nowrap sm:text-xl md:whitespace-pre-line md:text-6xl md:leading-[1.15] ${split ? "text-foreground" : "text-white"}`}>
-                    <span className="md:hidden">{s.title.replace(/\n/g, " ")}</span>
-                    <span className="hidden md:inline">{s.title}</span>
+                  <h1 className={`serif text-[3.8vw] font-semibold tracking-tight whitespace-nowrap sm:text-xl md:whitespace-pre-line md:text-6xl md:leading-[1.15] ${split ? "text-foreground" : "text-white"}`}>
+                    <span className="md:hidden">{renderTitle(s.title, true)}</span>
+                    <span className="hidden md:inline">{renderTitle(s.title, false)}</span>
                   </h1>
                   {/* 얇은 골드 라인 — 데스크톱 전용 */}
                   <span aria-hidden className="mt-5.5 mb-4 hidden h-px w-12 bg-gold md:block" />
-                  {/* 서브 카피 */}
-                  <p className={`mt-4 max-w-xl whitespace-pre-line text-sm leading-relaxed sm:text-base md:mt-0 md:whitespace-normal md:text-lg ${split ? "text-muted" : "text-white/80"}`}>
-                    {s.sub}
-                  </p>
+                  {/* 서브 카피 (비어 있으면 생략) */}
+                  {s.sub && (
+                    <p className={`mt-4 max-w-xl whitespace-pre-line text-sm leading-relaxed sm:text-base md:mt-0 md:whitespace-normal md:text-lg ${split ? "text-muted" : "text-white/80"}`}>
+                      {s.sub}
+                    </p>
+                  )}
 
                   {/* 핵심 배지 (무료 방문 실측 · 100% 맞춤 제작) — 모바일은 사진 하단에 흰 알약으로, md+ 는 서브 카피 아래 */}
                   <ul className="mt-auto grid w-fit grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center sm:justify-start md:mt-6" aria-label="핵심 안내">
                     {HERO_BADGES.map((b) => (
                       <li
                         key={b}
-                        className={`inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[13px] md:px-3 md:py-1 md:text-xs ${split ? "bg-white/95 text-foreground/85 shadow-[0_4px_14px_rgba(43,37,33,0.15)] md:border md:border-line md:bg-surface/70 md:shadow-none" : "border border-white/40 text-white/90"}`}
+                        className={`inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold md:px-3 md:py-1 md:text-xs ${split ? "bg-white/95 text-foreground shadow-[0_4px_14px_rgba(43,37,33,0.15)] md:border md:border-line md:bg-surface/70 md:shadow-none" : "border border-white/40 text-white"}`}
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gold" aria-hidden>
                           <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />

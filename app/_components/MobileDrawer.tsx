@@ -124,10 +124,13 @@ export default function MobileDrawer({ open, onClose }: Props) {
           </ul>
         </nav>
 
-        {/* 하단: 대표번호 + 운영시간 */}
+        {/* 하단: 전화번호 2개(휴대폰 먼저) + 운영시간 */}
         <div className="border-t border-line px-5 py-4">
           <p className="eyebrow">{SITE.tagline}</p>
-          <a href={SITE.telHref} className="mt-1 block text-[19px] font-medium tracking-tight hover:text-brown">
+          <a href="tel:01041262209" className="mt-1 block text-[19px] font-medium tracking-tight hover:text-brown">
+            010-4126-2209
+          </a>
+          <a href={SITE.telHref} className="block text-[19px] font-medium tracking-tight hover:text-brown">
             {SITE.tels[0]}
           </a>
           <p className="mt-1 text-[10px] tracking-wider text-muted">{SITE.hours}</p>

@@ -33,29 +33,24 @@ export default function PainPoint() {
           ))}
         </ul>
 
-        {/* 마무리 한 줄 + 다음 섹션(브랜드 강점)으로 이어지는 화살표 */}
-        <Reveal delay={400} className="mt-14 flex flex-col items-center gap-8 text-center md:mt-20">
+        {/* 마무리 문구 + '커튼장인 아뜰리에가 다른 이유' 4가지 */}
+        <Reveal delay={400} className="mt-14 flex flex-col items-center gap-10 text-center md:mt-20">
           <p className="serif text-xl font-medium leading-relaxed md:text-3xl">
-            그래서 <span className="underline-draw font-semibold text-accent">커튼장인 아뜰리에</span>는<br className="md:hidden" /> 처음부터 끝까지 직접 합니다.
+            더 좋은 원단 · 더 섬세한 제작 ·<br className="md:hidden" /> 더 정확한 시공
+            <br />
+            <span className="underline-draw font-semibold text-accent">커튼장인 아뜰리에</span>는 제작부터 시공까지 직접 책임집니다.
           </p>
-          <a
-            href="#products"
-            aria-label="주요 제품 안내 보기"
-            className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-neutral-400/70 text-foreground/70 transition hover:border-accent hover:text-accent"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              className="transition-transform group-hover:translate-y-0.5"
-              aria-hidden
-            >
-              <path d="M12 5v14M6 13l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </a>
+          <ul className="grid w-full max-w-4xl grid-cols-1 gap-x-8 gap-y-7 text-left sm:grid-cols-2">
+            {PAIN.reasons.map((r) => (
+              <li key={r.no} className="flex items-start gap-4">
+                <span className="serif text-2xl font-semibold leading-none text-gold md:text-3xl">{r.no}</span>
+                <div>
+                  <h3 className="text-base font-bold md:text-lg">{r.title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted md:text-[15px]">{r.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </Reveal>
       </div>
     </section>

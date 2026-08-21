@@ -26,9 +26,9 @@ export default function MobileBar() {
       aria-label="빠른 문의"
       className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 bg-surface md:hidden"
     >
-      {/* 바로전화 — 흰 배경 + 초록 전화기 */}
+      {/* 바로전화 — 흰 배경 + 초록 전화기 (모바일 바는 휴대폰 번호로 연결) */}
       <a
-        href={SITE.telHref}
+        href="tel:01041262209"
         onClick={() => track(EVENTS.CLICK_CALL, { location: "mobilebar" })}
         className="flex min-h-14 items-center justify-center gap-2 bg-white px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-[15px] font-semibold text-foreground active:bg-surface"
       >
