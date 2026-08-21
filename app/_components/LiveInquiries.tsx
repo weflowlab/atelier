@@ -31,7 +31,7 @@ const POOL: Entry[] = [
   { region: "의정부시 민락동", name: "송*미", inquiry: "알루미늄 블라인드 문의" },
   { region: "강남구 역삼동", name: "전*우", inquiry: "린넨커튼 문의" },
   { region: "부천시 중동", name: "홍*란", inquiry: "블라인드 견적 문의" },
-  { region: "남양주시 별내동", name: "유*찬", inquiry: "거실 커튼 문의" },
+  { region: "강서구 마곡동", name: "유*찬", inquiry: "거실 커튼 문의" },
   { region: "수원시 영통구", name: "문*정", inquiry: "블라인드 상담 문의" },
   { region: "성동구 옥수동", name: "양*식", inquiry: "암막커튼 문의" },
   { region: "김포시 장기동", name: "손*혜", inquiry: "커튼 · 블라인드 견적 문의" },
