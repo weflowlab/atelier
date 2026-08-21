@@ -43,7 +43,7 @@ export const PRODUCT_KEYWORDS = [
 // GNB 메뉴 — 섹션 앵커. children 이 있으면 드로어에서 아코디언
 export type NavItem = { label: string; href: string; children?: NavItem[] };
 export const NAV: NavItem[] = [
-  { label: "브랜드 강점", href: "#pain" }, // 문제 제기(#pain)부터 읽히도록
+  { label: "브랜드 강점", href: "#difference" }, // '더 좋은 원단…' 마무리 문구부터 보이도록
   {
     label: "주요 제품 안내",
     href: "#products",
