@@ -38,6 +38,11 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
+  // 검색엔진 소유 확인 (구글 서치 콘솔 · 네이버 서치어드바이저)
+  verification: {
+    google: "Gn4m-qMMToeoKP46jwWJfQkD_XJjuQlYqag3V5rPHXc",
+    other: { "naver-site-verification": "87253ad8f3318652549d5b9a814e06cd3b094962" },
+  },
 };
 
 // 검색엔진용 지역 비즈니스 구조화 데이터
