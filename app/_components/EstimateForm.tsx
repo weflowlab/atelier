@@ -331,25 +331,23 @@ export default function EstimateForm() {
                   )}
                 </div>
 
-                {/* 대체 연락 수단 — 전화/카카오 클릭 전환 추적 */}
+                {/* 대체 연락 수단 — 전화 (휴대폰 · 대표번호) */}
                 <p className="text-center text-sm text-muted md:text-base">
                   또는 전화{" "}
                   <a
-                    href={SITE.telHref}
+                    href="tel:01041262209"
                     onClick={() => track(EVENTS.CLICK_CALL, { location: "form" })}
                     className="underline underline-offset-4 transition-colors hover:text-foreground"
                   >
-                    {SITE.tels[0]}
+                    010-4126-2209
                   </a>{" "}
                   ·{" "}
                   <a
-                    href={SITE.kakaoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => track(EVENTS.CLICK_KAKAO, { location: "form" })}
+                    href="tel:18332523"
+                    onClick={() => track(EVENTS.CLICK_CALL, { location: "form" })}
                     className="underline underline-offset-4 transition-colors hover:text-foreground"
                   >
-                    카카오톡 문의
+                    1833-2523
                   </a>
                 </p>
               </form>

@@ -2,6 +2,7 @@
 import { STRENGTH, TRUST, type Strength } from "../_lib/data";
 import Reveal from "./Reveal";
 import CountUp from "./CountUp";
+import LiveInquiries from "./LiveInquiries";
 
 // 아이콘 키 → 시안에서 추출한 마스크 PNG (CSS mask 로 currentColor 색을 입혀 다크/라이트 카드 모두 대응).
 // calendar(무료 방문 실측)만 시안에 없어 인라인 SVG 유지.
@@ -85,6 +86,11 @@ export default function Strengths() {
             </li>
           ))}
         </ul>
+      </Reveal>
+
+      {/* 실시간 상담 문의 보드 (연출용) — 신뢰 통계 바로 아래 */}
+      <Reveal delay={150} className="mx-auto mt-6 max-w-7xl px-4 md:mt-8 md:px-10">
+        <LiveInquiries />
       </Reveal>
 
       <div className="mx-auto max-w-7xl px-6 md:px-10">

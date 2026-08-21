@@ -40,14 +40,17 @@ export default function PainPoint() {
             <br />
             <span className="underline-draw font-semibold text-accent">커튼장인 아뜰리에</span>는 제작부터 시공까지 직접 책임집니다.
           </p>
-          <ul className="grid w-full max-w-4xl grid-cols-1 gap-x-8 gap-y-7 text-left sm:grid-cols-2">
+          {/* 위 고민 카드와 같은 카드 형식의 2×2(모바일 1열, lg 4열) 그리드 */}
+          <ul className="grid w-full grid-cols-1 gap-5 text-left sm:grid-cols-2 lg:grid-cols-4">
             {PAIN.reasons.map((r) => (
-              <li key={r.no} className="flex items-start gap-4">
-                <span className="serif text-2xl font-semibold leading-none text-gold md:text-3xl">{r.no}</span>
-                <div>
-                  <h3 className="text-base font-bold md:text-lg">{r.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted md:text-[15px]">{r.desc}</p>
-                </div>
+              <li key={r.no} className="h-full">
+                <article className="flex h-full flex-col rounded-2xl border border-line bg-background p-7 transition hover:-translate-y-1 hover:shadow-md">
+                  <span className="serif mb-6 inline-flex h-9 w-9 items-center justify-center rounded-full border border-accent/30 text-xs tracking-wider text-accent">
+                    {r.no}
+                  </span>
+                  <h3 className="text-lg font-semibold">{r.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{r.desc}</p>
+                </article>
               </li>
             ))}
           </ul>

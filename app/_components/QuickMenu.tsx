@@ -1,18 +1,9 @@
 "use client";
-// 고정 퀵메뉴(PC 전용) — 우하단 원형 아이콘 버튼 3개(무료 방문 실측 / 전화 / 카카오톡), 순서대로 번갈아 흔들림. 모바일은 MobileBar.
-// 클릭 시 전환 이벤트(track) 전송. tel/외부 링크는 기본 이동 유지(preventDefault 없음).
+// 고정 퀵메뉴(PC 전용) — 우하단 원형 아이콘 버튼 2개(무료 방문 실측 / 전화), 순서대로 번갈아 흔들림. 모바일은 MobileBar.
+// 클릭 시 전환 이벤트(track) 전송. tel 링크는 기본 이동 유지(preventDefault 없음).
 import { useEffect, useState } from "react";
 import { SITE } from "../_lib/data";
 import { track, EVENTS } from "../_lib/analytics";
-
-// 카카오톡 말풍선 아이콘
-function KakaoIcon({ size = 24 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M12 3C6.5 3 2 6.5 2 10.8c0 2.7 1.8 5.1 4.5 6.5l-1 3.7c-.1.3.3.6.6.4l4.4-2.9c.5.1 1 .1 1.5.1 5.5 0 10-3.5 10-7.8S17.5 3 12 3z" />
-    </svg>
-  );
-}
 
 // 전화기 아이콘 (초록 — 통화 버튼 관습색)
 function PhoneIcon({ size = 22 }: { size?: number }) {
@@ -37,7 +28,6 @@ function VisitIcon({ size = 24 }: { size?: number }) {
 
 // 클릭 트래킹 핸들러 (위치 공통: quickmenu)
 const onCall = () => track(EVENTS.CLICK_CALL, { location: "quickmenu" });
-const onKakao = () => track(EVENTS.CLICK_KAKAO, { location: "quickmenu" });
 const onCta = () => track(EVENTS.CLICK_CTA, { location: "quickmenu" });
 
 export default function QuickMenu() {
@@ -60,7 +50,7 @@ export default function QuickMenu() {
         lifted ? "bottom-22" : "bottom-3"
       }`}
     >
-      {/* 세 버튼이 순서대로 번갈아 흔들리도록 딜레이 분산 (3.3s 주기 / 3 → 0 / 1.1 / 2.2s) */}
+      {/* 버튼이 순서대로 번갈아 흔들리도록 딜레이 분산 */}
       {/* 무료 방문 실측 — 브라운 원형(체크 달력 아이콘, 헤더 버튼과 동일 색) */}
       <a href="#estimate" aria-label="무료 방문 실측 신청" title="무료 방문 실측 신청" onClick={onCta} className={`wiggle ${btn} bg-accent text-white`}>
         <VisitIcon size={26} />
@@ -68,19 +58,6 @@ export default function QuickMenu() {
       {/* 전화 — 화이트 */}
       <a href={SITE.telHref} aria-label="전화 연결" title="전화 연결" onClick={onCall} className={`wiggle ${btn} border border-line bg-white text-foreground`} style={{ animationDelay: "1.1s" }}>
         <PhoneIcon size={27} />
-      </a>
-      {/* 카카오톡 */}
-      <a
-        href={SITE.kakaoUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="카카오톡 문의"
-        title="카카오톡 문의"
-        onClick={onKakao}
-        className={`wiggle ${btn} border-2 border-[#FEE500] bg-white/70 text-[#191919] backdrop-blur`}
-        style={{ animationDelay: "2.2s" }}
-      >
-        <KakaoIcon size={30} />
       </a>
     </nav>
   );

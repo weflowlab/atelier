@@ -8,7 +8,7 @@ export const SITE = {
   tagline: "CURTAIN & BLIND",
   bizName: "커튼장인 아뜰리에",
   tels: ["1833-2523", "010-4126-2209"], // 첫 번째가 대표번호
-  telHref: "tel:18332523",
+  telHref: "tel:01041262209",
   kakaoUrl: "https://open.kakao.com/o/sYZyueoi",
   hours: "MON - SUN : 08:00 AM ~ 12:00 AM",
   holiday: "Holidays Available",
@@ -65,7 +65,7 @@ export const HERO_SLIDES: Slide[] = [
 ];
 export const HERO_CTA = {
   primary: { label: "무료 방문 실측 신청", href: "#estimate" },
-  secondary: { label: "전화 상담", href: "tel:18332523" },
+  secondary: { label: "전화 상담", href: "tel:01041262209" },
 };
 // 히어로 CTA 아래 핵심 배지
 export const HERO_BADGES = ["무료 방문 실측", "자체 공장 운영"];
@@ -255,7 +255,7 @@ export const TRUST: TrustStat[] = [
 
 // ⑦ 진행 절차 + FAQ
 export const PROCESS = [
-  { step: "01", title: "상담 신청", desc: "전화·카카오톡·신청폼으로\n편하게 문의" },
+  { step: "01", title: "상담 신청", desc: "전화·신청폼으로\n편하게 문의" },
   { step: "02", title: "무료 방문 실측", desc: "확인 전화 후 방문해\n실측 및 원단 상담" },
   { step: "03", title: "견적 확정", desc: "투명한 견적서 안내,\n추가 비용 없음" },
   { step: "04", title: "맞춤 제작", desc: "실측 사이즈에 맞춰\n장인이 직접 제작" },
@@ -278,7 +278,7 @@ export const FAQ: FaqItem[] = [
   { q: "제작·시공까지 얼마나 걸리나요?", a: "실측 후 보통 3~7일 내 제작이 완료되며, 시공은 당일 마무리됩니다. 원단·수량에 따라 달라질 수 있습니다." },
   { q: "암막커튼과 쉬폰커튼, 무엇을 골라야 하나요?", a: "안방은 암막을, 거실은 쉬폰 또는 린넨에 생활암막 또는 비암막 겉지를 조합해 많이 선택하십니다. 방문 실측 시 원단 샘플을 보여드리며 공간에 맞게 추천드립니다." },
   { q: "기존 커튼/블라인드 철거도 해주시나요?", a: "※ 기존 커튼·블라인드 철거는 가능하나, 철거 제품의 폐기·처분은 불가합니다." },
-  { q: "A/S는 어떻게 받나요?", a: "시공 후 문제가 생기면 대표번호 또는 카카오톡으로 연락 주시면 신속히 방문해 드립니다." },
+  { q: "A/S는 어떻게 받나요?", a: "시공 후 문제가 생기면 대표번호로 연락 주시면 신속히 방문해 드립니다." },
 ];
 
 // ⑧ 신청 폼 — 필수: 성함/연락처/설치지역, 선택: 원하는 상품/문의내용
