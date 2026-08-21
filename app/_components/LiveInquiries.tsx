@@ -111,7 +111,7 @@ export default function LiveInquiries() {
               </svg>
               <span className="truncate font-semibold">{r.region}</span>
             </span>
-            <span className="w-[4.8rem] shrink-0 text-muted md:w-24">{r.name} 고객님</span>
+            <span className="w-12 shrink-0 text-muted md:w-16">{r.name}</span>
             <span className="min-w-0 flex-1 truncate text-foreground/80">{r.inquiry}</span>
             <span className="shrink-0 text-xs text-muted">{r.age === 0 ? "방금 전" : `${r.age}분 전`}</span>
           </li>

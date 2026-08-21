@@ -34,7 +34,8 @@ export default function PainPoint() {
         </ul>
 
         {/* 마무리 문구 + '커튼장인 아뜰리에가 다른 이유' 4가지 */}
-        <Reveal delay={400} className="mt-14 flex flex-col items-center gap-10 text-center md:mt-20">
+        {/* 문구 ↔ 카드 간격은 위 '이런 고민' 헤더 ↔ 카드 간격(mt-12/md:mt-16)과 동일하게 */}
+        <Reveal delay={400} className="mt-14 flex flex-col items-center gap-12 text-center md:mt-20 md:gap-16">
           <p className="serif text-xl font-medium leading-relaxed md:text-3xl">
             더 좋은 원단 · 더 섬세한 제작 ·<br className="md:hidden" /> 더 정확한 시공
             <br />
