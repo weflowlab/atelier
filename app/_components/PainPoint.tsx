@@ -77,7 +77,7 @@ export default function PainPoint() {
               <li key={r.no} className="h-full">
                 <article className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface p-7 transition hover:-translate-y-1 hover:shadow-md">
                   {/* 우상단 워터마크 아이콘 — 크게, 아주 흐리게 */}
-                  <svg width="76" height="76" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="absolute -right-2 -top-2 text-gold/20" aria-hidden>
+                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="absolute right-0.5 top-0.5 text-gold/20" aria-hidden>
                     {REASON_ICONS[r.icon]}
                   </svg>
                   <span className="serif mb-6 inline-flex h-9 w-9 items-center justify-center rounded-full border border-accent/30 text-xs tracking-wider text-accent">

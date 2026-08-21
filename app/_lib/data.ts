@@ -18,7 +18,7 @@ export const SITE = {
   bizNo: "205-08-14385",
   careerYears: 17,
   totalProjects: 12350, // 누적 시공 건수
-  siteUrl: "https://example.com",            // TODO: 실제 도메인 (sitemap/JSON-LD 용)
+  siteUrl: "https://ateliercurtain.kr",      // 실제 도메인 (OG/sitemap/JSON-LD 용)
   serviceAreaLabel: "서울 · 경기 · 인천 전 지역, 강원 일부(춘천·화천)",
 };
 
