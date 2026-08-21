@@ -4,44 +4,46 @@
 import { useEffect, useRef, useState } from "react";
 
 type Entry = { region: string; name: string; inquiry: string };
-type Row = Entry & { id: number; age: number }; // age: 분 단위 (0 = 방금 전)
+type Row = Entry & { id: number };
 
-// 연출용 풀 30명 — 지역(실제 서비스 지역) × 마스킹 이름 × 상품 문의
+// 표시 시간 — 행 위치별 고정 라벨 (위에서부터)
+const AGE_LABELS = ["방금 전", "1분 전", "3분 전", "8분 전", "10분 전"];
+
+// 연출용 풀 30명 — 서울·경기·인천·강원 지역 × 마스킹 이름 × 상품 문의
 const POOL: Entry[] = [
-  { region: "남양주시 다산동", name: "정*진", inquiry: "거실 커튼 문의" },
-  { region: "남양주시 별내동", name: "김*수", inquiry: "블라인드 상담 문의" },
-  { region: "하남시 덕풍동", name: "이*영", inquiry: "암막커튼 문의" },
-  { region: "구리시 인창동", name: "박*희", inquiry: "커튼 · 블라인드 견적 문의" },
-  { region: "송파구 잠실동", name: "최*민", inquiry: "거실 커튼 문의" },
-  { region: "남양주시 호평동", name: "강*아", inquiry: "쉬폰커튼 문의" },
-  { region: "남양주시 진접읍", name: "조*현", inquiry: "침실 암막커튼 문의" },
-  { region: "구리시 갈매동", name: "윤*서", inquiry: "우드 블라인드 문의" },
-  { region: "하남시 미사동", name: "장*호", inquiry: "무료 방문 실측 신청" },
-  { region: "남양주시 평내동", name: "임*경", inquiry: "콤비블라인드 문의" },
-  { region: "노원구 상계동", name: "한*울", inquiry: "로만쉐이드 문의" },
-  { region: "남양주시 오남읍", name: "오*빈", inquiry: "아파트 입주 커튼 문의" },
-  { region: "의정부시 민락동", name: "서*연", inquiry: "거실 커튼 문의" },
-  { region: "남양주시 와부읍", name: "신*재", inquiry: "허니콤 블라인드 문의" },
-  { region: "구리시 수택동", name: "권*지", inquiry: "암막커튼 문의" },
-  { region: "중랑구 신내동", name: "황*태", inquiry: "블라인드 상담 문의" },
-  { region: "남양주시 화도읍", name: "안*솔", inquiry: "린넨커튼 문의" },
-  { region: "송파구 문정동", name: "송*미", inquiry: "커튼 · 블라인드 견적 문의" },
-  { region: "남양주시 다산동", name: "전*우", inquiry: "트리플쉐이드 문의" },
-  { region: "구리시 교문동", name: "홍*란", inquiry: "무료 방문 실측 신청" },
-  { region: "남양주시 별내동", name: "유*찬", inquiry: "거실 쉬폰커튼 문의" },
-  { region: "하남시 망월동", name: "문*정", inquiry: "안방 암막커튼 문의" },
-  { region: "남양주시 퇴계원읍", name: "양*식", inquiry: "우드 블라인드 문의" },
-  { region: "광진구 자양동", name: "손*혜", inquiry: "커튼 교체 문의" },
-  { region: "남양주시 진건읍", name: "배*준", inquiry: "전원주택 커튼 문의" },
-  { region: "구리시 인창동", name: "백*하", inquiry: "알루미늄 블라인드 문의" },
-  { region: "남양주시 호평동", name: "허*영", inquiry: "아파트 입주 커튼 문의" },
-  { region: "성남시 분당구", name: "남*규", inquiry: "거실 커튼 문의" },
-  { region: "남양주시 다산동", name: "심*아", inquiry: "블라인드 견적 문의" },
-  { region: "강동구 고덕동", name: "노*원", inquiry: "암막커튼 문의" },
+  { region: "서울시 영등포구", name: "정*진", inquiry: "거실 커튼 문의" },
+  { region: "송파구 문정동", name: "김*수", inquiry: "블라인드 상담 문의" },
+  { region: "강동구 천호동", name: "이*영", inquiry: "암막커튼 문의" },
+  { region: "노원구 상계동", name: "박*희", inquiry: "커튼 · 블라인드 견적 문의" },
+  { region: "강원도 춘천시", name: "최*민", inquiry: "쉬폰커튼 문의" },
+  { region: "마포구 망원동", name: "강*아", inquiry: "침실 암막커튼 문의" },
+  { region: "남양주시 다산동", name: "조*현", inquiry: "우드 블라인드 문의" },
+  { region: "성남시 분당구", name: "윤*서", inquiry: "로만쉐이드 문의" },
+  { region: "광진구 자양동", name: "장*호", inquiry: "무료 방문 실측 신청" },
+  { region: "하남시 미사동", name: "임*경", inquiry: "콤비블라인드 문의" },
+  { region: "구리시 인창동", name: "한*울", inquiry: "아파트 입주 커튼 문의" },
+  { region: "은평구 응암동", name: "오*빈", inquiry: "허니콤 블라인드 문의" },
+  { region: "고양시 일산동구", name: "서*연", inquiry: "거실 쉬폰커튼 문의" },
+  { region: "중랑구 신내동", name: "신*재", inquiry: "안방 암막커튼 문의" },
+  { region: "인천시 송도동", name: "권*지", inquiry: "트리플쉐이드 문의" },
+  { region: "용인시 수지구", name: "황*태", inquiry: "커튼 교체 문의" },
+  { region: "서초구 방배동", name: "안*솔", inquiry: "전원주택 커튼 문의" },
+  { region: "의정부시 민락동", name: "송*미", inquiry: "알루미늄 블라인드 문의" },
+  { region: "강남구 역삼동", name: "전*우", inquiry: "린넨커튼 문의" },
+  { region: "부천시 중동", name: "홍*란", inquiry: "블라인드 견적 문의" },
+  { region: "남양주시 별내동", name: "유*찬", inquiry: "거실 커튼 문의" },
+  { region: "수원시 영통구", name: "문*정", inquiry: "블라인드 상담 문의" },
+  { region: "성동구 옥수동", name: "양*식", inquiry: "암막커튼 문의" },
+  { region: "김포시 장기동", name: "손*혜", inquiry: "커튼 · 블라인드 견적 문의" },
+  { region: "파주시 운정동", name: "배*준", inquiry: "쉬폰커튼 문의" },
+  { region: "동대문구 전농동", name: "백*하", inquiry: "침실 암막커튼 문의" },
+  { region: "강원도 화천군", name: "허*영", inquiry: "우드 블라인드 문의" },
+  { region: "양주시 옥정동", name: "남*규", inquiry: "로만쉐이드 문의" },
+  { region: "인천시 청라동", name: "심*아", inquiry: "무료 방문 실측 신청" },
+  { region: "광명시 철산동", name: "노*원", inquiry: "콤비블라인드 문의" },
 ];
 
-const INITIAL_AGES = [0, 1, 2, 3, 4];
-const INITIAL: Row[] = POOL.slice(0, 5).map((e, i) => ({ ...e, id: i, age: INITIAL_AGES[i] }));
+const INITIAL: Row[] = POOL.slice(0, 5).map((e, i) => ({ ...e, id: i }));
 
 export default function LiveInquiries() {
   const [rows, setRows] = useState<Row[]>(INITIAL);
@@ -57,10 +59,7 @@ export default function LiveInquiries() {
         setRows((prev) => {
           const entry = POOL[poolIdx.current % POOL.length];
           poolIdx.current++;
-          return [
-            { ...entry, id: nextId.current++, age: 0 },
-            ...prev.map((r) => ({ ...r, age: r.age + 1 })),
-          ].slice(0, 5);
+          return [{ ...entry, id: nextId.current++ }, ...prev].slice(0, 5);
         });
         setSpinning(true);
         setTimeout(() => setSpinning(false), 700);
@@ -81,7 +80,7 @@ export default function LiveInquiries() {
             <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
           </span>
           <span className="tracking-[0.12em] text-red-500">LIVE</span>
-          실시간 상담 문의
+          지역 커튼 블라인드 문의
         </p>
         <p className="flex items-center gap-1.5 text-[11px] text-muted md:text-xs">
           방금 전 업데이트
@@ -113,7 +112,7 @@ export default function LiveInquiries() {
             </span>
             <span className="w-12 shrink-0 text-muted md:w-16">{r.name}</span>
             <span className="min-w-0 flex-1 truncate text-foreground/80">{r.inquiry}</span>
-            <span className="shrink-0 text-xs text-muted">{r.age === 0 ? "방금 전" : `${r.age}분 전`}</span>
+            <span className="shrink-0 text-xs text-muted">{AGE_LABELS[i]}</span>
           </li>
         ))}
       </ul>

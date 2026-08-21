@@ -15,7 +15,7 @@ export const SITE = {
   owner: "김용재",
   address: "경기도 남양주시 경춘로 1786 1층",
   bizAddress: "사업자주소 입력 예정",          // TODO
-  bizNo: "180-17-02995",
+  bizNo: "205-08-14385",
   careerYears: 17,
   totalProjects: 12350, // 누적 시공 건수
   siteUrl: "https://example.com",            // TODO: 실제 도메인 (sitemap/JSON-LD 용)
@@ -80,12 +80,12 @@ export const PAIN = {
     { title: "시공이 불안해요", desc: "설치 후 처짐·틀어짐, 연락이 끊기는 업체 때문에 걱정됩니다." },
     { title: "가격이 불투명해요", desc: "방문 전에는 견적을 알 수 없고 추가 비용이 붙을까 불안합니다." },
   ],
-  // 마무리 문구 + '커튼장인 아뜰리에가 다른 이유' 4가지
+  // 마무리 문구 + '커튼장인 아뜰리에가 다른 이유' 4가지 (icon: 카드 우상단 흐린 아이콘)
   reasons: [
-    { no: "01", title: "자체 공장 운영", desc: "중간 유통과정을 줄이고 직접 제작·관리" },
-    { no: "02", title: "자체 수제제작", desc: "공간과 창에 맞춰 섬세하게 완성" },
-    { no: "03", title: "17년 경력의 장인", desc: "오랜 경험과 노하우를 바탕으로 한 전문 시공" },
-    { no: "04", title: "무료 방문 실측", desc: "전문가가 직접 실측하고 공간에 맞는 제품 제안" },
+    { no: "01", title: "자체 공장 운영", desc: "중간 유통과정을 줄이고\n직접 제작·관리", icon: "factory" },
+    { no: "02", title: "자체 수제제작", desc: "공간과 창에 맞춰 섬세하게 완성", icon: "scissors" },
+    { no: "03", title: "17년 경력의 장인", desc: "오랜 경험과 노하우를 바탕으로 한 전문 시공", icon: "award" },
+    { no: "04", title: "무료 방문 실측", desc: "전문가가 직접 실측하고\n공간에 맞는 제품 제안", icon: "ruler" },
   ],
 };
 

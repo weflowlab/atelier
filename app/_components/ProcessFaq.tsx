@@ -1,11 +1,23 @@
 "use client";
-// ⑦ 진행 절차 + FAQ 섹션 (#process / #faq) — 5단계 절차 + 신청 CTA, 그 아래 FAQ 아코디언(한 번에 하나만 열림) + 전화/카카오톡 CTA.
-import { useState } from "react";
+// ⑦ 진행 절차 + FAQ 섹션 (#process / #faq) — 5단계 절차 + 신청 CTA, 그 아래 FAQ 아코디언(한 번에 하나만 열림) + 전화 CTA.
+// FAQ 는 관리자 페이지(/admin)에서 등록한 DB 목록을 우선 사용, 없거나 실패하면 data.ts 기본 목록.
+import { useEffect, useState } from "react";
 import { FAQ, PROCESS, SITE } from "../_lib/data";
 import Reveal from "./Reveal";
 
 export default function ProcessFaq() {
   const [open, setOpen] = useState<number | null>(0); // 열린 FAQ 인덱스 (첫 항목 기본 오픈)
+  const [faqs, setFaqs] = useState(FAQ); // 첫 페인트는 기본 목록(SEO/즉시 표시) → DB 로드 후 교체
+
+  useEffect(() => {
+    fetch("/api/faqs")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((rows: { question: string; answer: string }[]) => {
+        if (Array.isArray(rows) && rows.length)
+          setFaqs(rows.map((f) => ({ q: f.question, a: f.answer })));
+      })
+      .catch(() => {}); // DB 미설정/오류 시 기본 목록 유지
+  }, []);
 
   // FAQ 토글: 같은 항목 클릭 시 닫힘, 다른 항목 클릭 시 교체
   const toggle = (i: number) => setOpen((cur) => (cur === i ? null : i));
@@ -58,7 +70,7 @@ export default function ProcessFaq() {
           {/* 아코디언 — 한 번에 하나만 열림, grid-rows 0fr↔1fr 로 높이 애니메이션 */}
           <Reveal delay={100}>
             <ul className="mt-10 border-t border-line">
-              {FAQ.map((f, i) => {
+              {faqs.map((f, i) => {
                 const isOpen = open === i;
                 return (
                   <li key={f.q} className="border-b border-line">

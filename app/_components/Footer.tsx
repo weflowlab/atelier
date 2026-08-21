@@ -57,11 +57,12 @@ export default function Footer() {
               <ul className="mt-5 space-y-2.5 text-xs leading-relaxed text-muted">
                 <li className="flex items-center gap-x-2.5">
                   <InfoIcon name="person" />
-                  <span>CEO Kim Yongjae</span>
+                  <span>Gamsung Curtain</span>
                 </li>
                 <li className="flex items-center gap-x-2.5">
                   <InfoIcon name="phone" />
-                  <span>Tel {SITE.tels.join(" / ")}</span>
+                  {/* 휴대폰 번호를 앞에 */}
+                  <span>Tel {[...SITE.tels].reverse().join(" / ")}</span>
                 </li>
                 <li className="flex items-center gap-x-2.5">
                   <InfoIcon name="doc" />
