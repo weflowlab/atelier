@@ -1,0 +1,271 @@
+/* 관리자 전용 스타일 — 랜딩(웜 베이지 / 브라운 무드)의 디자인 언어에 맞춘 라이트 테마.
+   토큰은 .admin-scope 안으로만 한정한다.
+
+   랜딩에서 가져온 값:
+     페이지 #f4efe7 · 카드 #faf7f2 · 텍스트 #2b2521 → #7d7168
+     주 버튼 = 딥 브라운(#5b4636) + 흰 글씨 + rounded-full (헤더 CTA 와 동일)
+   폰트는 지정하지 않는다 → 루트 레이아웃의 Noto Sans 스택을 그대로 상속(랜딩과 동일). */
+
+.admin-scope {
+  /* ── 표면 ── */
+  --bg: #f4efe7;
+  --bg-secondary: #f4efe7;
+  --surface: #faf7f2;
+  --surface-hover: rgba(43, 37, 33, 0.03);
+  --surface-sunken: #ffffff;
+
+  /* ── 테두리 ── */
+  --border: rgba(43, 37, 33, 0.12);
+  --border-strong: rgba(43, 37, 33, 0.2);
+  --border-subtle: rgba(43, 37, 33, 0.07);
+
+  /* ── 텍스트 ── */
+  --text: #2b2521;
+  --text-secondary: #574f47;
+  --text-muted: #7d7168;
+
+  /* ── 액센트: 랜딩의 주 버튼 딥 브라운 ── */
+  --accent: #5b4636;
+  --accent-fg: #ffffff;
+  --accent-hover: #8a6d55;
+  --accent-light: rgba(91, 70, 54, 0.1);
+
+  /* ── 상태색: 라이트 배경에서 읽히는 톤 ── */
+  --amber: #b45309;
+  --amber-bg: rgba(180, 83, 9, 0.1);
+  --amber-border: rgba(180, 83, 9, 0.3);
+  --emerald: #047857;
+  --emerald-bg: rgba(4, 120, 87, 0.09);
+  --emerald-border: rgba(4, 120, 87, 0.3);
+  --danger: #dc2626;
+  --danger-border: rgba(220, 38, 38, 0.35);
+
+  --radius-md: 12px;
+  --radius-xl: 16px;
+
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 타이포 ── */
+.admin-scope .title-2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--text);
+}
+.admin-scope .title-3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  color: var(--text);
+}
+.admin-scope .subhead {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.admin-scope .footnote {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+.admin-scope .caption-1 {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+.admin-scope .emphasized {
+  font-weight: 700;
+}
+.admin-scope .semibold {
+  font-weight: 600;
+}
+.admin-scope .medium {
+  font-weight: 500;
+}
+.admin-scope .c-accent {
+  color: var(--text-secondary);
+  letter-spacing: 0.35em; /* 랜딩의 eyebrow 스타일 */
+  text-transform: uppercase;
+}
+
+/* ── 폼: 흰 입력면 + 브라운 계열 테두리 ── */
+.admin-scope .form-input {
+  width: 100%;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--text);
+  font-family: inherit;
+  transition: border-color 0.15s;
+  outline: none;
+}
+.admin-scope .form-input:focus {
+  border-color: var(--accent);
+}
+.admin-scope .form-input::placeholder {
+  color: var(--text-muted);
+}
+.admin-scope textarea.form-input {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+.admin-scope select.form-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237d7168' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.25rem;
+  cursor: pointer;
+}
+
+/* ── 주 버튼: 랜딩의 '무료 방문 실측 신청' 과 동일 ── */
+.admin-scope .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.15s, opacity 0.15s;
+  border: none;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.admin-scope .btn-primary:hover {
+  background: var(--accent-hover);
+}
+.admin-scope .btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── 레이아웃 ── */
+.admin-wrap {
+  display: flex;
+  flex-direction: row;
+}
+.admin-sidebar {
+  width: 264px;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100vh;
+  overflow-y: auto;
+}
+.admin-stat-card {
+  transition: border-color 0.15s ease;
+}
+.admin-stat-card:hover {
+  border-color: var(--border-strong) !important;
+}
+.admin-row td {
+  transition: background 0.12s ease;
+}
+.admin-row:hover td {
+  background: var(--surface-hover);
+}
+/* 탭마다 카드 수가 다르다 — auto-fit 은 빈 트랙을 접으므로 카드 수에 맞춰 균등 분할된다. */
+.stat-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+.spin {
+  animation: admin-spin 0.8s linear infinite;
+}
+@keyframes admin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.detail-dl {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+/* 통계·유입 탭 레이아웃 */
+.analytics-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+@media (max-width: 900px) {
+  .analytics-2col {
+    grid-template-columns: 1fr;
+  }
+}
+/* 지표 카드 3개 — auto-fit 이라 개수가 바뀌어도 균등 분할된다 */
+.traffic-metric-grid {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+/* 가로 스크롤은 그대로 두고 스크롤바만 숨긴다 (날짜별 방문자 차트). */
+.admin-scope .no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.admin-scope .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+@media (max-width: 900px) {
+  .traffic-metric-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-wrap {
+    flex-direction: column;
+  }
+  .admin-sidebar {
+    display: none !important;
+  }
+  .admin-mobile-header {
+    display: flex !important;
+  }
+  .admin-overlay {
+    display: block !important;
+  }
+  .admin-drawer {
+    display: flex !important;
+  }
+  .stat-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin-main {
+    padding: 1.25rem 1rem 5rem !important;
+  }
+  .refresh-label {
+    display: none;
+  }
+  .admin-refresh-btn {
+    padding: 0.35rem 0.6rem !important;
+  }
+  /* 모바일: 16px 미만이면 iOS Safari 가 자동 줌인 → 16px 고정 */
+  .admin-scope .form-input {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-dl {
+    grid-template-columns: 1fr;
+  }
+}

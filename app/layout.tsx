@@ -5,6 +5,7 @@ import "./globals.css";
 import { SITE, REGION_NAMES, PRODUCT_KEYWORDS } from "./_lib/data";
 import TrackingScripts from "./_components/TrackingScripts";
 import AttributionCapture from "./_components/AttributionCapture";
+import PageTracker from "./_components/PageTracker";
 
 const notoSans = Noto_Sans_KR({ variable: "--font-noto-sans", subsets: ["latin"], weight: ["400", "500", "700"] });
 const notoSerif = Noto_Serif_KR({ variable: "--font-noto-serif", subsets: ["latin"], weight: ["400", "600"] });
@@ -72,6 +73,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <TrackingScripts />
         <AttributionCapture />
+        {/* 관리자 '유입 관리' 집계용 방문 추적 (커스텀 도메인에서만 기록) */}
+        <PageTracker />
       </body>
     </html>
   );

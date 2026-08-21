@@ -1,8 +1,9 @@
 "use server";
 // 상담 신청(DB 수집) 서버 액션.
-// 검증 → 유입 정보(파워링크 키워드/UTM) 포함해 lead 객체 구성 → 웹훅(선택) 전송.
+// 검증 → 유입 정보(파워링크 키워드/UTM) 포함해 lead 객체 구성 → Neon DB 저장 + 웹훅(선택) 전송.
 // LEAD_WEBHOOK_URL 환경변수에 Slack/Make/Zapier/Apps Script(구글시트) 웹훅을 넣으면 그대로 POST 됨.
 import type { Attribution } from "../_lib/attribution";
+import { inquiryStore } from "@/lib/store";
 
 export type LeadInput = {
   name: string;
@@ -42,7 +43,25 @@ export async function submitLead(input: LeadInput): Promise<LeadResult> {
     page: input.page ?? "",
   };
 
-  // TODO: 실제 저장소 연결 (DB / 구글시트 / CRM). 우선 웹훅 + 서버 로그.
+  // Neon DB 저장 — 관리자 페이지 '상담 관리'에 표시된다.
+  // DB 미설정/장애 시에도 접수는 성공 처리(웹훅·로그로 백업)해 고객을 놓치지 않는다.
+  try {
+    await inquiryStore.create({
+      name: lead.name,
+      phone: lead.phone,
+      note: lead.message,
+      address: lead.address,
+      hopeDate: lead.date,
+      places: lead.places.join(", "),
+      products: lead.products.join(", "),
+      keyword: lead.keyword,
+      source: lead.source,
+      agree: true,
+    });
+  } catch (e) {
+    console.error("[lead db] insert failed", e);
+  }
+
   const webhook = process.env.LEAD_WEBHOOK_URL;
   if (webhook) {
     try {
