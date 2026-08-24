@@ -1159,7 +1159,10 @@ function FaqManager({
                 flexWrap: "wrap",
               }}
             >
-              <div style={{ minWidth: 0, flex: 1 }}>
+              {/* flex-basis 를 16rem 으로 줘야 모바일에서 버튼 줄이 아래로 내려간다.
+                  basis 0(flex:1)이면 줄바꿈 판정 폭이 0이라 버튼(약 330px)이 같은 줄에 남고
+                  본문이 한 글자 폭까지 찌그러진다. minWidth:0 은 줄바꿈 후 더 좁은 화면 대응. */}
+              <div style={{ minWidth: 0, flex: "1 1 16rem" }}>
                 <div
                   style={{
                     display: "flex",
@@ -1219,6 +1222,7 @@ function FaqManager({
                   display: "flex",
                   gap: "0.4rem",
                   flexShrink: 0,
+                  flexWrap: "wrap", // 아주 좁은 화면에서 버튼 줄이 카드 밖으로 넘치지 않도록
                   alignItems: "center",
                 }}
               >

@@ -61,12 +61,8 @@ export const NAV: NavItem[] = [
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string; layout?: "split" };
 export const HERO_SLIDES: Slide[] = [
   // 단일 히어로 — 밝은 배경 + 우측 사진(split) 레이아웃
-  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "더 좋은 원단, 더 섬세한 시공,\n자체 공장 운영", sub: "", src: "/images/hero/hero-living.jpg", layout: "split" },
+  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "더 좋은 원단, 더 섬세한 시공,\n자체 공장 운영", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
 ];
-export const HERO_CTA = {
-  primary: { label: "무료 방문 실측 신청", href: "#estimate" },
-  secondary: { label: "전화 상담", href: "tel:01041262209" },
-};
 // 히어로 CTA 아래 핵심 배지
 export const HERO_BADGES = ["무료 방문 실측", "자체 공장 운영"];
 
@@ -145,25 +141,6 @@ export const BLINDS: ProductCard[] = build([
   ["hanok", "한옥 쉐이드 블라인드", "우드 감성 · 채광 조절", 12], // 13번 사진 제외
   ["aluminum", "알루미늄 25mm 블라인드", "습기 강함 · 주방/욕실", 16],
 ]);
-
-// ④-2 견적 기준 안내 (가격 미표기)
-export const PRICE_GUIDE = {
-  eyebrow: "PRICE GUIDE",
-  title: "견적 기준 안내",
-  // 안내문: [0] 첫 줄 / [1]+[2] 둘째 줄 (모바일에서는 [1] 뒤에서 한 번 더 줄바꿈)
-  note: ["모든 제품은 원단·사이즈·옵션에 따라 견적이 달라집니다.", "무료 방문 실측 후 확정 견적을 안내드리며", "추가 비용은 없습니다."],
-  // 가격은 표기하지 않음(고객 요청) — 대표 상품과 실측 기준만 안내
-  rows: [
-    { product: "암막커튼", basis: "거실창(가로 약 4m) 기준", tag: "인기" },
-    { product: "생활암막 + 쉬폰 속지", basis: "거실창(가로 약 4m) 기준" },
-    { product: "쉬폰커튼", basis: "거실창(가로 약 4m) 기준" },
-    { product: "유니슬렛 커튼", basis: "거실창(가로 약 4m) 기준" },
-    { product: "로만쉐이드", basis: "창 1개(가로 약 1.5m) 기준" },
-    { product: "트리플쉐이드", basis: "창 1개(가로 약 1.5m) 기준" },
-    { product: "암막 콤비블라인드", basis: "창 1개(가로 약 1.5m) 기준", tag: "가성비" },
-    { product: "알루미늄 25mm 블라인드", basis: "주방창(가로 약 1.5m) 기준" },
-  ],  includes: ["무료 방문 실측", "맞춤 제작", "직접 시공 · 설치", "기존 제품 철거"],
-};
 
 // ⑤ 시공 포트폴리오 — 지역별 · 공간별 구분
 // 실제 시공 사진 (public/images/gallery/gallery-NN.webp). 순서·지역·공간은 고객님이 전달한 원본 파일명 기준.
@@ -282,7 +259,6 @@ export const FAQ: FaqItem[] = [
 ];
 
 // ⑧ 신청 폼 — 필수: 성함/연락처/설치지역, 선택: 원하는 상품/문의내용
-export const REGION_OPTIONS = ["서울", "경기", "인천", "강원(춘천·화천)", "기타 지역"];
 // 설치 장소 (드롭다운, 선택)
 export const PLACE_OPTIONS = ["아파트/주거", "회사/사무실", "상업공간(식당/카페)", "기타"];
 // 설치 제품 (드롭다운, 선택) — 폼은 크게 커튼/블라인드만 고름 (세부 제품은 상담 시)
@@ -301,9 +277,5 @@ export const PRODUCT_TYPE_OPTIONS = [
   "한옥 쉐이드 블라인드",
   "알루미늄 25mm 블라인드",
   "상담 후 결정",
-];
-// 상품 키워드 매칭용 목록 (폼 표시 X)
-export const PRODUCT_OPTIONS = [
-  "암막커튼", "쉬폰커튼", "린넨커튼", "로만쉐이드", "패널커튼", "유니슬렛커튼", "트리플쉐이드", "콤비블라인드", "허니콤블라인드", "우드블라인드", "한옥쉐이드", "알루미늄블라인드", "상담 후 결정",
 ];
 export const FORM_SUCCESS = "성공적으로 접수되었습니다. 빠른 시간 내에 연락드리겠습니다.";

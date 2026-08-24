@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { HERO_SLIDES, HERO_BADGES } from "../_lib/data";
 import { getEntryKeyword } from "../_lib/attribution";
 import { matchKeyword } from "../_lib/keywords";
+import { track, EVENTS } from "../_lib/analytics";
 import Image from "next/image";
 import Placeholder from "./Placeholder";
 
@@ -180,6 +181,19 @@ export default function HeroSlider() {
                       </li>
                     ))}
                   </ul>
+
+                  {/* 히어로 CTA — PC 전용. 모바일은 하단 고정 MobileBar 가 같은 역할을 하므로 중복 노출하지 않는다.
+                      배지 아래에 두어 "헤드라인 → 신뢰 근거 → 행동" 순서로 읽히게 한다. */}
+                  <a
+                    href="#estimate"
+                    onClick={() => track(EVENTS.CLICK_CTA, { location: "hero" })}
+                    className="group mt-9 hidden h-13 items-center gap-2.5 rounded-full bg-accent pr-6 pl-7 text-[15px] font-semibold text-white shadow-[0_10px_28px_-8px_rgba(91,70,54,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brown hover:shadow-[0_14px_32px_-8px_rgba(91,70,54,0.6)] md:inline-flex"
+                  >
+                    무료 방문 실측 신청
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </a>
                 </div>
               </div>
             )}
