@@ -148,7 +148,7 @@ export default function HeroSlider() {
               >
                 <div className={`mx-auto flex h-full w-full max-w-7xl flex-col items-center px-6 pt-[18svh] pb-[7svh] text-center md:h-auto md:items-start md:pt-36 md:pb-24 md:text-left ${split ? "md:px-10 md:pr-0 lg:px-14" : "md:px-16 lg:px-24"}`}>
                   {/* 소제목 — "고객만족도 1위" 신뢰 문구. 광고 심사용으로 잘 보이게 크고 굵게 */}
-                  <p className={`mb-1 w-full text-lg font-bold tracking-[0.08em] sm:text-xl md:mb-4 md:text-2xl ${split ? "text-accent" : "text-white"}`}>
+                  <p className={`serif mb-1 w-full text-lg font-bold tracking-[0.08em] sm:text-xl md:mb-4 md:text-2xl ${split ? "text-accent" : "text-white"}`}>
                     {s.eyebrow}
                   </p>
                   {/* 소제목 아래 골드 다이아 장식 — 모바일 전용 (시안 배치) */}
