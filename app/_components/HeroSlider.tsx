@@ -44,7 +44,8 @@ export default function HeroSlider() {
     const kw = getEntryKeyword() || new URLSearchParams(window.location.search).get("kw");
     const m = matchKeyword(kw);
     if (!m.headline) return;
-    const eyebrow = `${m.region ?? "남양주"} ${m.product ?? "커튼 · 블라인드"}`;
+    // 광고 심사·신뢰 문구 "고객만족도 1위"는 키워드 개인화 시에도 항상 유지
+    const eyebrow = `고객만족도 1위 · ${m.region ?? "남양주"} ${m.product ?? "커튼 · 블라인드"}`;
     // URL/sessionStorage(외부 상태) → 클라이언트 전용 동기화. SSR 은 기본 문구 유지
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSlides((prev) => prev.map((s, i) => (i === 0 ? { ...s, title: m.headline!, eyebrow } : s)));
@@ -146,8 +147,8 @@ export default function HeroSlider() {
                 className="absolute inset-0 flex items-center animate-[heroText_0.9s_ease_both]"
               >
                 <div className={`mx-auto flex h-full w-full max-w-7xl flex-col items-center px-6 pt-[18svh] pb-[7svh] text-center md:h-auto md:items-start md:pt-36 md:pb-24 md:text-left ${split ? "md:px-10 md:pr-0 lg:px-14" : "md:px-16 lg:px-24"}`}>
-                  {/* 영문 소제목 */}
-                  <p className={`mb-1 w-full text-[11px] tracking-[0.35em] uppercase sm:text-xs md:mb-5 ${split ? "text-gold md:text-muted" : "text-white/80"}`}>
+                  {/* 소제목 — "고객만족도 1위" 신뢰 문구. 광고 심사용으로 잘 보이게 크고 굵게 */}
+                  <p className={`mb-1 w-full text-lg font-bold tracking-[0.08em] sm:text-xl md:mb-4 md:text-2xl ${split ? "text-accent" : "text-white"}`}>
                     {s.eyebrow}
                   </p>
                   {/* 소제목 아래 골드 다이아 장식 — 모바일 전용 (시안 배치) */}

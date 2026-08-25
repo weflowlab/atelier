@@ -61,7 +61,7 @@ export const NAV: NavItem[] = [
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string; layout?: "split" };
 export const HERO_SLIDES: Slide[] = [
   // 단일 히어로 — 밝은 배경 + 우측 사진(split) 레이아웃
-  { id: 1, eyebrow: "ATELIER CURTAIN & BLIND", title: "더 좋은 원단, 더 섬세한 시공,\n자체 공장 운영", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
+  { id: 1, eyebrow: "고객만족도 1위", title: "더 좋은 원단, 더 섬세한 시공,\n자체 공장 운영", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
 ];
 // 히어로 CTA 아래 핵심 배지
 export const HERO_BADGES = ["무료 방문 실측", "자체 공장 운영"];
