@@ -56,10 +56,6 @@ export default function Footer() {
               {/* 정보 행 — 명함 시안처럼 원형 아이콘 + 항목 */}
               <ul className="mt-5 space-y-2.5 text-xs leading-relaxed text-muted">
                 <li className="flex items-center gap-x-2.5">
-                  <InfoIcon name="person" />
-                  <span>Gamsung Curtain</span>
-                </li>
-                <li className="flex items-center gap-x-2.5">
                   <InfoIcon name="phone" />
                   {/* 휴대폰 번호를 앞에 */}
                   <span>Tel {[...SITE.tels].reverse().join(" / ")}</span>
