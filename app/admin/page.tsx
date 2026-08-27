@@ -628,7 +628,7 @@ function InquiryTable({
                             ["주소", row.address || "-"],
                             ["희망 날짜", row.hopeDate || "-"],
                             ["유입 키워드", row.keyword || "-"],
-                            ["출처", row.source || "web"],
+                            ["출처", leadSourceLabel(row.source)],
                             ["개인정보 동의", row.agree ? "동의" : "-"],
                           ].map(([label, value]) => (
                             <div key={String(label)}>
@@ -1321,6 +1321,26 @@ const SOURCE_ALIAS: Record<string, string> = {
 function normSource(s: string): string {
   const k = (s || "direct").toLowerCase();
   return SOURCE_ALIAS[k] || k;
+}
+// 문의 상세의 "출처" 표기 — 네이버 광고는 매체 코드(숫자 n_media)로 저장되므로
+// 숫자면 네이버 광고로, 나머지는 아는 채널만 한글로 바꾼다. 키워드는 별도 줄에 있으니 여기선 채널만.
+const LEAD_SOURCE_KO: Record<string, string> = {
+  naver: "네이버",
+  google: "구글",
+  instagram: "인스타그램",
+  facebook: "페이스북",
+  youtube: "유튜브",
+  kakao: "카카오",
+  band: "밴드",
+  twitter: "트위터(X)",
+};
+function leadSourceLabel(s: string): string {
+  const k = (s || "").trim();
+  if (!k || k === "web") return "웹";
+  if (k === "direct") return "직접 유입";
+  if (/^\d+$/.test(k)) return "네이버 광고";
+  const norm = normSource(k);
+  return LEAD_SOURCE_KO[norm] || k;
 }
 const DEVICE_KO: Record<string, string> = {
   mobile: "모바일",
