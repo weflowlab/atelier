@@ -25,13 +25,16 @@ export async function GET() {
     "유입 키워드": i.keyword,
     출처: i.source,
     "개인정보 동의": i.agree ? "동의" : "-",
-    접수일: new Date(i.createdAt).toLocaleString("ko-KR"),
+    // 서버(Vercel)는 UTC 이므로 한국 시간대를 명시해야 관리자 화면과 같은 시각이 나온다
+    접수일: new Date(i.createdAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }),
   }));
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "상담문의");
   const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
-  const filename = `커튼장인_상담문의_${new Date().toISOString().slice(0, 10)}.xlsx`;
+  // 파일명 날짜도 한국 기준 (UTC 그대로 쓰면 오전 9시 전엔 전날 날짜가 붙는다)
+  const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" }); // YYYY-MM-DD
+  const filename = `커튼장인_상담문의_${today}.xlsx`;
 
   return new NextResponse(buf, {
     headers: {
