@@ -114,5 +114,7 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 }
 
 /* ── 인트로 스플래시: 첫 방문에만 노출 (재방문·모션최소화는 layout 의 인라인 스크립트가 data-intro="seen" 부여) ── */
-html:not([data-intro="seen"]) body { overflow: hidden; }
+/* 스크롤 잠금은 인트로 요소(#intro-splash)가 실제로 있는 페이지(메인)에서만.
+   관리자 등 인트로가 없는 페이지에서 새 세션으로 바로 진입하면 잠금을 풀 주체가 없어 스크롤이 막히던 버그 방지 */
+html:not([data-intro="seen"]) body:has(#intro-splash) { overflow: hidden; }
 html[data-intro="seen"] #intro-splash { display: none; }
