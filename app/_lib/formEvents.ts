@@ -17,6 +17,10 @@ export function matchProductOption(product: string, options: readonly string[]):
     .sort((a, b) => b.length - a.length)
     .find((o) => p.includes(norm(o)) || norm(o).includes(p));
   if (partial) return partial;
+  // 접미사(커튼/블라인드)를 뗀 어간으로 시작하는 옵션 (예: "생활암막커튼" → "생활암막 + 쉬폰 속지", "린넨커튼" → "자수 린넨 속지커튼")
+  const stem = p.replace(/(커튼|블라인드)$/, "");
+  const byStem = stem && stem !== p ? options.find((o) => norm(o).includes(stem)) : undefined;
+  if (byStem) return byStem;
   // 대분류로라도 맞춰줌 (예: "썬스크린 블라인드" → 목록에 없으면 블라인드 계열 첫 항목)
   // 블라인드는 "블라인드" 항목을 먼저 찾는다 — /블라인드|쉐이드/ 를 한 번에 찾으면 목록상 앞에 있는 "로만쉐이드"(커튼류)가 걸린다.
   const isBlind = /블라인드|롤스크린|썬스크린|허니콤|콤비|트리플쉐이드|한옥쉐이드/.test(p);

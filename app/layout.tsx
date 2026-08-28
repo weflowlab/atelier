@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR, Noto_Serif_KR, Alex_Brush } from "next/font/google";
 import "./globals.css";
-import { SITE, REGION_NAMES, PRODUCT_KEYWORDS } from "./_lib/data";
+import { SITE, SERVICE_AREAS, PRODUCT_KEYWORDS } from "./_lib/data";
 import TrackingScripts from "./_components/TrackingScripts";
 import AttributionCapture from "./_components/AttributionCapture";
 import PageTracker from "./_components/PageTracker";
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: TITLE,
   description: DESC,
-  keywords: [...REGION_NAMES.map((r) => `${r} 커튼`), ...REGION_NAMES.map((r) => `${r} 블라인드`), ...PRODUCT_KEYWORDS],
+  keywords: [...SERVICE_AREAS.map((r) => `${r} 커튼`), ...SERVICE_AREAS.map((r) => `${r} 블라인드`), ...PRODUCT_KEYWORDS],
   openGraph: {
     title: TITLE,
     description: DESC,
@@ -55,7 +55,14 @@ const jsonLd = {
   url: SITE.siteUrl,
   telephone: SITE.tels[0],
   address: { "@type": "PostalAddress", addressRegion: "경기도", addressLocality: "남양주시", streetAddress: SITE.address, addressCountry: "KR" },
-  areaServed: REGION_NAMES.map((name) => ({ "@type": "City", name })),
+  // FAQ 안내와 동일: 서울 · 경기 · 인천 전 지역, 강원 일부(춘천·화천)
+  areaServed: [
+    { "@type": "AdministrativeArea", name: "서울특별시" },
+    { "@type": "AdministrativeArea", name: "경기도" },
+    { "@type": "AdministrativeArea", name: "인천광역시" },
+    { "@type": "City", name: "춘천시" },
+    { "@type": "City", name: "화천군" },
+  ],
   openingHours: "Mo-Su 08:00-24:00",
   makesOffer: PRODUCT_KEYWORDS.map((p) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: `${p} 맞춤 제작·시공` } })),
 };
