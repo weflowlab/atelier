@@ -1,13 +1,32 @@
 "use client";
 // 실시간 상담 문의 보드 (연출용 데이터) — 신뢰 통계 아래 배치.
-// 8~15초 간격으로 풀(30명)에서 다음 문의가 맨 위로 슬라이드 인, 기존 행은 시간이 밀려 내려가고 마지막 행 제거.
+// 8~15초 간격으로 풀(30명)에서 무작위 순서로 다음 문의가 맨 위로 슬라이드 인, 기존 행은 밀려 내려가고 마지막 행 제거.
+// 시간 라벨은 행마다 제각각(서로 겹치지 않는 분 단위)이며, 새 행이 들어올 때 불규칙하게 벌어지고 1분마다 실제로 1씩 늘어난다.
 import { useEffect, useRef, useState } from "react";
 
 type Entry = { region: string; name: string; inquiry: string };
-type Row = Entry & { id: number };
+type Row = Entry & { id: number; pool: number; minutes: number }; // pool: POOL 인덱스 / minutes: 'N분 전' (0 = 방금 전)
 
-// 표시 시간 — 행 위치별 고정 라벨 (위에서부터)
-const AGE_LABELS = ["방금 전", "1분 전", "3분 전", "8분 전", "10분 전"];
+const VISIBLE = 5; // 동시에 보이는 행 수
+const INITIAL_MINUTES = [1, 8, 13, 17, 26]; // 첫 화면 시간 (위에서부터, 전부 다르게)
+
+function ageLabel(m: number) {
+  if (m <= 0) return "방금 전";
+  if (m < 60) return `${m}분 전`;
+  return `${Math.floor(m / 60)}시간 전`;
+}
+
+// 2~9분 사이 불규칙한 간격 — 행마다 다르게 벌어지도록
+const randomGap = () => 2 + Math.floor(Math.random() * 8);
+
+function shuffle<T>(arr: T[]) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 // 연출용 풀 30명 — 서울·경기·인천·강원 지역 × 마스킹 이름 × 상품 문의
 const POOL: Entry[] = [
@@ -43,13 +62,14 @@ const POOL: Entry[] = [
   { region: "광명시 철산동", name: "노*원", inquiry: "콤비블라인드 문의" },
 ];
 
-const INITIAL: Row[] = POOL.slice(0, 5).map((e, i) => ({ ...e, id: i }));
+// 첫 화면은 SSR 과 동일해야 하므로 고정 (풀 앞 5명) — 무작위 순서는 마운트 이후부터
+const INITIAL: Row[] = POOL.slice(0, VISIBLE).map((e, i) => ({ ...e, id: i, pool: i, minutes: INITIAL_MINUTES[i] }));
 
 export default function LiveInquiries() {
   const [rows, setRows] = useState<Row[]>(INITIAL);
   const [spinning, setSpinning] = useState(false);
-  const poolIdx = useRef(5); // 다음에 등장할 풀 인덱스 (순환)
-  const nextId = useRef(5);
+  const queue = useRef<number[]>([]); // 무작위로 섞은 풀 인덱스 큐 — 30명을 다 쓰면 다시 섞는다
+  const nextId = useRef(VISIBLE);
 
   // 8~15초 랜덤 간격으로 새 문의 삽입 (탭 비활성 시 정지)
   useEffect(() => {
@@ -57,9 +77,23 @@ export default function LiveInquiries() {
     const tick = () => {
       if (!document.hidden) {
         setRows((prev) => {
-          const entry = POOL[poolIdx.current % POOL.length];
-          poolIdx.current++;
-          return [{ ...entry, id: nextId.current++ }, ...prev].slice(0, 5);
+          // 현재 보이는 사람은 제외하고 큐에서 다음 사람을 뽑는다 (같은 사람이 연달아 안 나오게)
+          const shown = new Set(prev.map((r) => r.pool));
+          let idx: number | undefined;
+          for (let guard = 0; guard < 3 && idx === undefined; guard++) {
+            if (queue.current.length === 0) queue.current = shuffle(POOL.map((_, i) => i));
+            const pos = queue.current.findIndex((i) => !shown.has(i));
+            if (pos >= 0) idx = queue.current.splice(pos, 1)[0];
+            else queue.current = [];
+          }
+          const pool = idx ?? 0;
+          // 새 행은 '방금 전', 기존 행은 위 행보다 2~9분씩 불규칙하게 뒤로 밀려 전부 다른 시간이 되게
+          const next: Row[] = [{ ...POOL[pool], id: nextId.current++, pool, minutes: 0 }];
+          for (const r of prev) {
+            const above = next[next.length - 1].minutes;
+            next.push({ ...r, minutes: Math.max(above + randomGap(), r.minutes + 1) });
+          }
+          return next.slice(0, VISIBLE);
         });
         setSpinning(true);
         setTimeout(() => setSpinning(false), 700);
@@ -68,6 +102,12 @@ export default function LiveInquiries() {
     };
     timer = setTimeout(tick, 6000);
     return () => clearTimeout(timer);
+  }, []);
+
+  // 1분마다 모든 행의 시간이 실제로 1분씩 흐른다 ('방금 전' → '1분 전' → …)
+  useEffect(() => {
+    const t = setInterval(() => setRows((prev) => prev.map((r) => ({ ...r, minutes: r.minutes + 1 }))), 60_000);
+    return () => clearInterval(t);
   }, []);
 
   return (
@@ -112,7 +152,7 @@ export default function LiveInquiries() {
             </span>
             <span className="w-12 shrink-0 text-muted md:w-16">{r.name}</span>
             <span className="min-w-0 flex-1 truncate text-foreground/80">{r.inquiry}</span>
-            <span className="shrink-0 text-xs text-muted">{AGE_LABELS[i]}</span>
+            <span className="shrink-0 text-xs text-muted">{ageLabel(r.minutes)}</span>
           </li>
         ))}
       </ul>
