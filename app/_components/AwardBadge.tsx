@@ -32,6 +32,19 @@ function Leaf({ x, y, rot, L }: { x: number; y: number; rot: number; L: number }
   );
 }
 
+// 반짝이(샤인) — 4방향 다이아 별. 각자 다른 딜레이로 숨쉬듯 깜빡인다
+function Sparkle({ x, y, s, delay }: { x: number; y: number; s: number; delay: number }) {
+  const k = s * 0.18;
+  return (
+    <path
+      d={`M0 ${-s} Q ${k} ${-k} ${s} 0 Q ${k} ${k} 0 ${s} Q ${-k} ${k} ${-s} 0 Q ${-k} ${-k} 0 ${-s} Z`}
+      fill="currentColor"
+      transform={`translate(${x} ${y})`}
+      style={{ animation: `badgeTwinkle 2.4s ease-in-out ${delay}s infinite` }}
+    />
+  );
+}
+
 // 한쪽(오른쪽) 가지 — 줄기 호 + 잎 쌍 + 끝 잎. 왼쪽은 scale(-1,1) 미러.
 function Branch() {
   const [sx, sy] = pt(174);
@@ -92,7 +105,18 @@ export default function AwardBadge({ className = "" }: { className?: string }) {
         <text x="70" y="105" textAnchor="middle" fontSize="38" fontWeight="700" fill="currentColor" className="serif">
           1위
         </text>
+        {/* 반짝이(샤인) — 리스 주변에서 번갈아 깜빡임 */}
+        <Sparkle x={25} y={28} s={5} delay={0} />
+        <Sparkle x={117} y={35} s={4} delay={0.9} />
+        <Sparkle x={16} y={90} s={3.4} delay={1.6} />
+        <Sparkle x={124} y={98} s={3} delay={0.5} />
       </svg>
+      <style>{`
+        @keyframes badgeTwinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="badgeTwinkle"] { animation: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

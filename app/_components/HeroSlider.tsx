@@ -146,7 +146,7 @@ export default function HeroSlider() {
                 key={`text-${s.id}-${index}`}
                 className="absolute inset-0 flex items-center animate-[heroText_0.9s_ease_both]"
               >
-                <div className={`mx-auto flex h-full w-full max-w-7xl flex-col items-center px-6 pt-[18svh] pb-[7svh] text-center md:h-auto md:items-start md:pt-32 md:pb-24 md:text-left ${split ? "md:px-10 md:pr-0 lg:px-14" : "md:px-16 lg:px-24"}`}>
+                <div className={`mx-auto flex h-full w-full max-w-7xl flex-col items-center px-6 pt-[18svh] pb-[7svh] text-center md:h-auto md:items-start md:pt-24 md:pb-24 md:text-left ${split ? "md:px-10 md:pr-0 lg:px-14" : "md:px-16 lg:px-24"}`}>
                   {/* 어워드 배지 (고객만족도 1위) — 데스크톱은 텍스트 컬럼 맨 위(좌상단) 인라인 */}
                   {/* 리스 잎 끝 기준 SVG 내부 여백(약 8.6%)만큼 왼쪽으로 당겨 아래 문구 시작선과 맞춘다 */}
                   <AwardBadge className="mb-6 hidden w-28 md:-ml-2.5 md:mt-20 md:block lg:-ml-3 lg:w-32" />
@@ -207,7 +207,7 @@ export default function HeroSlider() {
 
       {/* 어워드 배지 (고객만족도 1위) — 모바일은 히어로 좌상단 오버레이 */}
       {/* 헤더(100px) 에 가리지 않도록 그 아래에서 시작 */}
-      <AwardBadge className="absolute left-4 top-[7.25rem] z-20 w-[84px] md:hidden" />
+      <AwardBadge className="absolute left-3 top-[5.5rem] z-20 w-[84px] md:hidden" />
 
       {/* 좌우 화살표 (얇은 셰브론) — 슬라이드 2개 이상일 때만 */}
       {total > 1 && [
