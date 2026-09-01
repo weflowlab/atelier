@@ -65,22 +65,16 @@ export default function Header() {
             scrolled ? "h-20" : "h-[var(--header-h)]"
           }`}
         >
-          {/* 로고 — 금색 원형 엠블럼(흰 배경은 multiply 로 베이지에 자연 합성) + 금색 워드마크 텍스트 */}
-          <a href="#top" aria-label={`${SITE.bizName} 홈으로`} className="flex items-center gap-2.5 md:gap-3">
+          {/* 로고 — 고객 전달 골드 워드마크 통이미지 (엠블럼 원 안 문구 제거 버전, 투명 배경) */}
+          <a href="#top" aria-label={`${SITE.bizName} 홈으로`} className="flex items-center">
             <Image
-              src="/images/logo/emblem-gold.png"
-              alt={`${SITE.nameKo} ${SITE.nameEn}`}
-              width={400}
-              height={400}
+              src="/images/logo/wordmark-gold.png"
+              alt={`${SITE.nameKo} ${SITE.nameEn} ${SITE.tagline}`}
+              width={800}
+              height={184}
               priority
-              className="h-12 w-12 mix-blend-multiply md:h-14 md:w-14"
+              className="h-10 w-auto md:h-[3.25rem]"
             />
-            <span className="flex flex-col items-center leading-none text-[#8f6b3d]">
-              <span className="serif flex items-baseline gap-1.5 text-lg font-semibold tracking-wide md:text-[21px]">
-                {SITE.nameKo} <span className="script text-[1.45em] font-normal leading-none">{SITE.nameEn}</span>
-              </span>
-              <span className="mt-1.5 text-[8px] tracking-[0.35em] md:text-[9px]">{SITE.tagline}</span>
-            </span>
           </a>
 
           {/* 데스크톱 GNB — 로고/버튼 폭과 무관하게 헤더 정중앙에 절대 배치. children 있으면 hover 드롭다운 */}

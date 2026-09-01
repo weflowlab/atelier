@@ -1,6 +1,8 @@
 "use client";
 // 실시간 상담 문의 보드 (연출용 데이터) — 신뢰 통계 아래 배치.
-// 8~15초 간격으로 풀(30명)에서 무작위 순서로 다음 문의가 맨 위로 슬라이드 인, 기존 행은 밀려 내려가고 마지막 행 제거.
+// 3~7초 랜덤 간격으로 풀(30명)에서 무작위 순서로 새 문의가 위에서 아래로 밀고 들어오고(수직 슬라이드),
+// 밀려난 마지막 행은 페이드아웃. 새 행은 1초쯤 옅은 골드로 반짝여 시선을 끈다.
+// 목록 높이는 5행으로 고정(--row-h × 5)이라 새 행이 들어와도 페이지가 위아래로 흔들리지 않는다.
 // 시간 라벨은 행마다 제각각(서로 겹치지 않는 분 단위)이며, 새 행이 들어올 때 불규칙하게 벌어지고 1분마다 실제로 1씩 늘어난다.
 import { useEffect, useRef, useState } from "react";
 
@@ -71,9 +73,11 @@ export default function LiveInquiries() {
   const queue = useRef<number[]>([]); // 무작위로 섞은 풀 인덱스 큐 — 30명을 다 쓰면 다시 섞는다
   const nextId = useRef(VISIBLE);
 
-  // 8~15초 랜덤 간격으로 새 문의 삽입 (탭 비활성 시 정지)
+  // 3~7초 랜덤 간격으로 새 문의 삽입 (탭 비활성 시 정지).
+  // 삽입 직후에는 6행(새 행 + 기존 5행)을 유지해 마지막 행이 페이드아웃할 자리를 주고, 애니메이션이 끝나면 5행으로 정리한다.
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
+    let trim: ReturnType<typeof setTimeout>;
     const tick = () => {
       if (!document.hidden) {
         setRows((prev) => {
@@ -93,15 +97,21 @@ export default function LiveInquiries() {
             const above = next[next.length - 1].minutes;
             next.push({ ...r, minutes: Math.max(above + randomGap(), r.minutes + 1) });
           }
-          return next.slice(0, VISIBLE);
+          return next.slice(0, VISIBLE + 1);
         });
         setSpinning(true);
         setTimeout(() => setSpinning(false), 700);
+        // 슬라이드다운·페이드아웃이 끝난 뒤 밀려난 마지막 행 제거
+        clearTimeout(trim);
+        trim = setTimeout(() => setRows((prev) => prev.slice(0, VISIBLE)), 700);
       }
-      timer = setTimeout(tick, 8000 + Math.random() * 7000);
+      timer = setTimeout(tick, 3000 + Math.random() * 4000);
     };
-    timer = setTimeout(tick, 6000);
-    return () => clearTimeout(timer);
+    timer = setTimeout(tick, 3500);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(trim);
+    };
   }, []);
 
   // 1분마다 모든 행의 시간이 실제로 1분씩 흐른다 ('방금 전' → '1분 전' → …)
@@ -134,13 +144,21 @@ export default function LiveInquiries() {
         </p>
       </div>
 
-      {/* 목록 — 지역 / 이름(마스킹) 고객님 / 문의 내용 / 시간 */}
-      <ul aria-label="실시간 상담 문의 목록">
+      {/* 목록 — 지역 / 이름(마스킹) 고객님 / 문의 내용 / 시간.
+          높이를 5행으로 고정(overflow-hidden)해 새 행이 들어와도 아래 콘텐츠가 밀리지 않는다 */}
+      <ul
+        aria-label="실시간 상담 문의 목록"
+        className="h-[calc(var(--row-h)*5)] overflow-hidden [--row-h:46px] md:[--row-h:52px]"
+      >
         {rows.map((r, i) => (
           <li
             key={r.id}
-            className={`flex items-center gap-3 border-t border-line/70 px-5 py-3 text-[13px] md:gap-6 md:px-6 md:py-3.5 md:text-sm ${
-              i === 0 ? "animate-[liveRowIn_0.5s_ease]" : ""
+            className={`flex h-[var(--row-h)] items-center gap-3 overflow-hidden border-t border-line/70 px-5 text-[13px] md:gap-6 md:px-6 md:text-sm ${
+              i === 0
+                ? "animate-[liveRowGrow_0.55s_ease_both,liveRowFlash_1.1s_ease-out_both]"
+                : i >= 5
+                  ? "animate-[liveRowOut_0.6s_ease_both]"
+                  : "transition-opacity"
             }`}
           >
             <span className="flex w-[7.4rem] shrink-0 items-center gap-1.5 md:w-36">
@@ -158,9 +176,14 @@ export default function LiveInquiries() {
       </ul>
 
       <style>{`
-        @keyframes liveRowIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+        /* 새 행: 높이 0 → 한 행 높이로 자라며 아래 행들을 부드럽게 밀어내림 (수직 슬라이드다운) */
+        @keyframes liveRowGrow { from { height: 0; opacity: 0.35; } to { height: var(--row-h); opacity: 1; } }
+        /* 새 행: 등장 순간 옅은 골드로 1초쯤 반짝인 뒤 원래 배경으로 */
+        @keyframes liveRowFlash { 0% { background-color: rgba(184,151,107,0.28); } 100% { background-color: transparent; } }
+        /* 밀려난 마지막 행: 창 밖으로 내려가며 페이드아웃 */
+        @keyframes liveRowOut { to { opacity: 0; } }
         @media (prefers-reduced-motion: reduce) {
-          [class*="liveRowIn"] { animation: none !important; }
+          [class*="liveRow"] { animation: none !important; }
         }
       `}</style>
     </div>
