@@ -12,24 +12,22 @@ import Image from "next/image";
 import Placeholder from "./Placeholder";
 import AwardBadge from "./AwardBadge";
 
-const INTERVAL = 4000; // 자동재생 간격(ms)
+const INTERVAL = 4000; // 자동재생 간격(ms) — 문구 3종이 순차 전환
 
-// 메인 카피에서 "자체 공장 운영"만 더 크고 굵게 강조. joinLines=true 면 줄바꿈을 공백으로(모바일 한 줄).
-const EMPH = "자체 공장 운영";
-function renderTitle(title: string, joinLines: boolean) {
-  const t = joinLines ? title.replace(/\n/g, " ") : title;
-  if (!t.includes(EMPH)) return t;
-  const [before, after] = t.split(EMPH);
-  return (
-    <>
-      {before}
-      <span className="text-[1.2em] font-bold">{EMPH}</span>
-      {after}
-    </>
+// 메인 카피의 **문구** 마커를 주황 강조로 렌더 (레퍼런스의 포인트 컬러 강조와 동일)
+function renderTitle(title: string) {
+  return title.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
+    seg.startsWith("**") && seg.endsWith("**") ? (
+      <span key={i} className="text-orange">
+        {seg.slice(2, -2)}
+      </span>
+    ) : (
+      seg
+    ),
   );
 }
 
-export default function HeroSlider() {
+export default function HeroSlider({ panel }: { panel?: React.ReactNode }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false); // 탭 비활성 시 true (호버 시에는 계속 재생)
   const [reduced, setReduced] = useState(false); // prefers-reduced-motion
@@ -98,7 +96,7 @@ export default function HeroSlider() {
       id="hero"
       aria-roledescription="carousel"
       aria-label="메인 슬라이드"
-      className="relative min-h-[72svh] w-full overflow-hidden bg-neutral-900 text-white select-none touch-pan-y md:min-h-[100svh]"
+      className="relative min-h-[calc(100svh-3.5rem-env(safe-area-inset-bottom))] w-full overflow-hidden bg-neutral-900 text-white select-none touch-pan-y md:min-h-[100svh]"
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
       onPointerCancel={() => (startX.current = null)}
@@ -117,15 +115,18 @@ export default function HeroSlider() {
           >
             {split ? (
               // split: 밝은 베이지 배경 + 우측 사진 (모바일은 사진이 배경, 위에 밝은 그라데이션)
+              // PC 사진은 살짝 블러 + 옅은 베일로 한 톤 흐리게 눌러 문구가 도드라지게
               <>
                 <div className="absolute inset-0 bg-linear-to-br from-surface via-background to-[#efe7dc]" />
-                <div className="absolute inset-y-0 right-0 w-full md:w-[50%] lg:w-[52%]">
-                  <Image src={s.src!} alt="" fill sizes="(min-width:768px) 58vw, 100vw" priority={i === 0} className="object-cover object-[50%_60%]" />
-                  {/* 좌측(텍스트 쪽) 경계만 좁게 페이드 — 사진 본체는 원본 색 그대로 유지 */}
-                  <div className="absolute inset-y-0 left-0 hidden w-1/5 bg-linear-to-r from-background via-background/40 to-transparent md:block" />
+                {/* overflow-hidden: 블러·확대된 사진이 컨테이너 밖(베이지 쪽)으로 번져 세로 라인이 생기는 것 방지 */}
+                <div className="absolute inset-y-0 right-0 w-full overflow-hidden md:w-[50%] lg:w-[52%]">
+                  <Image src={s.src!} alt="" fill sizes="(min-width:768px) 58vw, 100vw" priority={i === 0} className="scale-[1.04] object-cover object-[50%_60%] blur-[1.5px] brightness-[1.08] md:brightness-100" />
+                  <div className="absolute inset-0 hidden bg-background/10 md:block" />
+                  {/* 좌측(텍스트 쪽) 경계를 넓게 페이드 — 베이지에서 사진으로 이음새 없이 넘어가게 */}
+                  <div className="absolute inset-y-0 left-0 hidden w-1/3 bg-linear-to-r from-background via-background/50 to-transparent md:block" />
                 </div>
-                {/* 모바일: 문구가 놓이는 상단만 살짝 밝히고 아래는 원본 그대로 */}
-                <div className="absolute inset-0 bg-linear-to-b from-background/60 via-background/25 to-transparent md:hidden" />
+                {/* 모바일: 시안처럼 문구가 놓이는 상단을 밝은 화이트 워시로 눌러 글자가 사진 디테일과 경쟁하지 않게 */}
+                <div className="absolute inset-0 bg-linear-to-b from-white/25 via-white/10 to-transparent md:hidden" />
               </>
             ) : (
               <>
@@ -146,22 +147,31 @@ export default function HeroSlider() {
                 key={`text-${s.id}-${index}`}
                 className="absolute inset-0 flex items-center animate-[heroText_0.9s_ease_both]"
               >
-                <div className={`mx-auto flex h-full w-full max-w-7xl flex-col items-center px-6 pt-[18svh] pb-[7svh] text-center md:h-auto md:items-start md:pt-24 md:pb-24 md:text-left ${split ? "md:px-10 md:pr-0 lg:px-14" : "md:px-16 lg:px-24"}`}>
-                  {/* 어워드 배지 (고객만족도 1위) — 데스크톱은 텍스트 컬럼 맨 위(좌상단) 인라인 */}
+                <div className={`mx-auto flex h-full w-full max-w-7xl flex-col items-start px-6 pt-32 pb-6 text-left md:h-auto md:pt-20 md:pb-24 ${split ? "md:px-10 md:pr-0 lg:px-14 lg:pr-[470px] xl:pr-[510px]" : "md:px-16 lg:px-24"}`}>
+                  {/* 어워드 배지 (고객만족도 1위) — 모바일·PC 모두 텍스트 컬럼 맨 위(좌상단), 바로 아래에 문구가 이어진다 */}
                   {/* 리스 잎 끝 기준 SVG 내부 여백(약 8.6%)만큼 왼쪽으로 당겨 아래 문구 시작선과 맞춘다 */}
-                  <AwardBadge className="mb-6 hidden w-28 md:-ml-2.5 md:mt-20 md:block lg:-ml-3 lg:w-32" />
-                  {/* 소제목 — 핵심 강점 문구. 잘 보이게 크고 굵게 */}
-                  <p className={`serif mb-1 w-full text-lg font-bold tracking-[0.08em] sm:text-xl md:mb-4 md:text-2xl ${split ? "text-accent" : "text-white"}`}>
+                  <AwardBadge className="-ml-1.5 mb-5 w-[86px] md:-ml-2.5 md:mt-14 md:mb-6 md:w-28 lg:-ml-3 lg:w-32" />
+                  {/* 소제목 — 핵심 강점 문구. 모바일은 시안처럼 흰 고딕, PC 는 세리프 브라운 */}
+                  <p className={`serif mb-2 w-full text-lg font-semibold tracking-[0.02em] max-md:[font-family:var(--font-noto-sans)] sm:text-xl md:mb-4 md:text-2xl md:font-bold md:tracking-[0.08em] ${split ? "text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.45)] md:text-accent md:[text-shadow:none]" : "text-white"}`}>
                     {s.eyebrow}
                   </p>
-                  {/* 소제목 아래 골드 다이아 장식 — 모바일 전용 (시안 배치) */}
-                  <span aria-hidden className="mb-1.5 text-[11px] leading-none text-gold md:hidden">✦</span>
-                  {/* 메인 카피 (세리프, 줄바꿈 유지) */}
-                  {/* 모바일: 데이터의 줄바꿈을 무시하고 화면폭 비례(vw) 크기로 한 줄 표시. md+ 는 기존 줄바꿈 유지 */}
-                  <h1 className={`serif text-[3.8vw] font-semibold tracking-tight whitespace-nowrap sm:text-xl md:whitespace-pre-line md:text-6xl md:leading-[1.15] ${split ? "text-foreground" : "text-white"}`}>
-                    <span className="md:hidden">{renderTitle(s.title, true)}</span>
-                    <span className="hidden md:inline">{renderTitle(s.title, false)}</span>
+                  {/* 메인 카피 — 모바일은 시안처럼 흰 고딕 볼드 + 주황 강조, PC 는 세리프 (줄바꿈 유지) */}
+                  <h1 className={`serif text-[7vw] font-bold tracking-tight whitespace-pre-line leading-[1.32] max-md:[font-family:var(--font-noto-sans)] sm:text-3xl md:text-5xl md:font-semibold md:leading-[1.15] xl:text-6xl ${split ? "text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.35)] md:text-foreground md:[text-shadow:none]" : "text-white"}`}>
+                    {renderTitle(s.title)}
                   </h1>
+                  {/* 인디케이터 — 모바일 전용: 문구 바로 아래 좌측 정렬 (시안 배치) */}
+                  <div className="mt-6 flex items-center gap-1.5 md:hidden" aria-label="슬라이드 선택">
+                    {slides.map((sl, di) => (
+                      <button
+                        key={sl.id}
+                        type="button"
+                        aria-label={`${di + 1}번 슬라이드`}
+                        aria-current={di === index}
+                        onClick={() => setIndex(di)}
+                        className={`h-[3.5px] transition-colors duration-150 ${di === index ? "w-10 bg-white" : "w-4 bg-white/50"}`}
+                      />
+                    ))}
+                  </div>
                   {/* 얇은 골드 라인 — 데스크톱 전용 */}
                   <span aria-hidden className="mt-5.5 mb-4 hidden h-px w-12 bg-gold md:block" />
                   {/* 서브 카피 (비어 있으면 생략) */}
@@ -172,7 +182,7 @@ export default function HeroSlider() {
                   )}
 
                   {/* 핵심 배지 (무료 방문 실측 · 100% 맞춤 제작) — 모바일은 사진 하단에 흰 알약으로, md+ 는 서브 카피 아래 */}
-                  <ul className="mt-auto grid w-fit grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center sm:justify-start md:mt-6" aria-label="핵심 안내">
+                  <ul className="mt-auto mb-7 grid w-fit grid-cols-2 gap-2.5 self-center sm:flex sm:flex-wrap sm:items-center sm:justify-start md:mt-6 md:mb-0 md:self-start" aria-label="핵심 안내">
                     {HERO_BADGES.map((b) => (
                       <li
                         key={b}
@@ -186,12 +196,11 @@ export default function HeroSlider() {
                     ))}
                   </ul>
 
-                  {/* 히어로 CTA — PC 전용. 모바일은 하단 고정 MobileBar 가 같은 역할을 하므로 중복 노출하지 않는다.
-                      배지 아래에 두어 "헤드라인 → 신뢰 근거 → 행동" 순서로 읽히게 한다. */}
+                  {/* 히어로 CTA — 태블릿(md) 전용. 모바일은 하단 MobileBar, lg+ 는 우측 폼 패널이 그 역할을 대신한다 */}
                   <a
                     href="#estimate"
                     onClick={() => track(EVENTS.CLICK_CTA, { location: "hero" })}
-                    className="group mt-9 hidden h-13 items-center gap-2.5 rounded-full bg-accent pr-6 pl-7 text-[15px] font-semibold text-white shadow-[0_10px_28px_-8px_rgba(91,70,54,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brown hover:shadow-[0_14px_32px_-8px_rgba(91,70,54,0.6)] md:inline-flex"
+                    className={`group mt-9 hidden h-13 items-center gap-2.5 rounded-full bg-orange pr-6 pl-7 text-[15px] font-semibold text-white shadow-[0_10px_28px_-8px_rgba(232,102,60,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#cf5630] hover:shadow-[0_14px_32px_-8px_rgba(232,102,60,0.6)] md:inline-flex ${panel ? "lg:hidden" : ""}`}
                   >
                     무료 방문 실측 신청
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
@@ -205,31 +214,21 @@ export default function HeroSlider() {
         );
       })}
 
-      {/* 어워드 배지 (고객만족도 1위) — 모바일은 히어로 좌상단 오버레이 */}
-      {/* 헤더(100px) 에 가리지 않도록 그 아래에서 시작 */}
-      <AwardBadge className="absolute left-3 top-[5.5rem] z-20 w-[84px] md:hidden" />
+      {/* PC 우측 패널 — 신청 폼 카드 (참고 시안 배치). 모바일은 하단 폼 섹션 사용 */}
+      {panel && (
+        <div className="pointer-events-none absolute inset-0 z-30 hidden lg:block">
+          {/* 텍스트와 같은 max-w-7xl 컨테이너 안에서 우측 정렬 — 우측 여백이 좌측 컨텐츠 시작 여백과 동일해진다 */}
+          <div className="mx-auto flex h-full max-w-7xl items-center justify-end px-10 pt-14 lg:px-14">
+            <div className="pointer-events-auto">{panel}</div>
+          </div>
+        </div>
+      )}
 
-      {/* 좌우 화살표 (얇은 셰브론) — 슬라이드 2개 이상일 때만 */}
-      {total > 1 && [
-        { dir: -1, side: "left-4 sm:left-8", label: "이전 슬라이드", path: "M15 5l-7 7 7 7" },
-        { dir: 1, side: "right-4 sm:right-8", label: "다음 슬라이드", path: "M9 5l7 7-7 7" },
-      ].map((b) => (
-        <button
-          key={b.dir}
-          type="button"
-          aria-label={b.label}
-          onClick={() => go(b.dir)}
-          className={`absolute top-1/2 ${b.side} z-20 hidden -translate-y-1/2 p-3 transition sm:block ${lightBg ? "text-foreground/40 hover:text-foreground" : "text-white/70 hover:text-white"}`}
-        >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-            <path d={b.path} strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-      ))}
-
+      {/* 좌우 화살표 (얇은 셰브론) — 슬라이드 2개 이상일 때만. 우측 폼 패널이 있으면 PC 에선 숨김 */}
       {/* 도트 인디케이터: 활성 도트는 길어지고, 그 안에서 진행바가 채워짐 (슬라이드 2개 이상일 때만) */}
+      {/* 하단 중앙 인디케이터 — PC 전용 (모바일은 문구 아래 인라인 인디케이터 사용) */}
       {total > 1 && (
-      <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1">
+      <div className="absolute bottom-8 left-1/2 z-20 hidden -translate-x-1/2 items-center gap-1 md:flex">
         {slides.map((s, i) => {
           const active = i === index;
           return (
@@ -242,29 +241,23 @@ export default function HeroSlider() {
               // 클릭 영역 확보: 보이는 바는 3px 이지만 버튼은 상하 12px 패딩으로 누르기 쉽게
               className="group flex items-center px-1 py-3"
             >
+              {/* 직사각형 바 — 진행(채워짐) 없이 활성 바만 띡 띡 즉시 전환 */}
               <span
-                className={`relative block h-[3px] overflow-hidden rounded-full transition-all duration-500 ${
-                  lightBg ? "bg-foreground/25" : "bg-white/40"
-                } ${active ? "w-10" : `w-2 ${lightBg ? "group-hover:bg-foreground/50" : "group-hover:bg-white/80"} group-hover:w-4`}`}
-              >
-                {active && !paused && !reduced && (
-                  <span
-                    key={`bar-${index}`}
-                    className="absolute inset-y-0 left-0 bg-gold animate-[heroBar_4s_linear_forwards]"
-                  />
-                )}
-                {active && (paused || reduced) && <span className="absolute inset-0 bg-gold" />}
-              </span>
+                className={`block h-[3px] transition-colors duration-150 ${
+                  active
+                    ? `w-10 ${lightBg ? "bg-foreground/80" : "bg-white"}`
+                    : `w-4 ${lightBg ? "bg-foreground/25 group-hover:bg-foreground/50" : "bg-white/40 group-hover:bg-white/80"}`
+                }`}
+              />
             </button>
           );
         })}
       </div>
       )}
 
-      {/* 슬라이더 전용 keyframes (텍스트 페이드업 / 진행바) */}
+      {/* 슬라이더 전용 keyframes (텍스트 페이드업) */}
       <style>{`
         @keyframes heroText { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-        @keyframes heroBar { from { width: 0 } to { width: 100% } }
         @media (prefers-reduced-motion: reduce) {
           #hero [class*="animate-["] { animation: none !important; }
         }

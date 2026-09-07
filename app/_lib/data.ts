@@ -73,8 +73,10 @@ export const NAV: NavItem[] = [
 // ① 히어로 — 첫 화면 핵심 문구: 무료 방문 실측 · 맞춤 제작 + 지역/상품 키워드
 export type Slide = { id: number; eyebrow: string; title: string; sub: string; src?: string; layout?: "split" };
 export const HERO_SLIDES: Slide[] = [
-  // 단일 히어로 — 밝은 배경 + 우측 사진(split) 레이아웃
-  { id: 1, eyebrow: "합리적인 가격", title: "더 높은 퀄리티, 더 섬세한 시공,\n자체 공장 운영", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
+  // 문구 3개가 순차 전환 — 밝은 배경(사진 전체 + 밝은 베일, 이음새 없음), **문구**는 주황 강조
+  { id: 1, eyebrow: "합리적인 가격, 더 높은 퀄리티", title: "커튼·블라인드 하나로\n완성하는 **호텔 감성**", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
+  { id: 2, eyebrow: "17년 경력 · 누적 시공 10,000건+", title: "**자체공장에서 직접 제작**\n섬세한 시공,\n완성도 높은 디테일", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
+  { id: 3, eyebrow: "내 공간에 딱 맞는 100% 맞춤 커튼", title: "커튼장인 아뜰리에의\n**무료 방문 실측** 서비스", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
 ];
 // 히어로 CTA 아래 핵심 배지
 export const HERO_BADGES = ["무료 방문 실측", "자체 공장 운영"];
@@ -273,7 +275,8 @@ export const FAQ: FaqItem[] = [
 
 // ⑧ 신청 폼 — 필수: 성함/연락처/설치지역, 선택: 원하는 상품/문의내용
 // 설치 장소 (드롭다운, 선택)
-export const PLACE_OPTIONS = ["아파트/주거", "회사/사무실", "상업공간(식당/카페)", "기타"];
+// 설치 장소 (단계형 폼 2단계, 중복 선택 가능)
+export const PLACE_OPTIONS = ["거실", "침실", "아이방", "사무실/상업공간"];
 // 설치 제품 (드롭다운, 선택) — 폼은 크게 커튼/블라인드만 고름 (세부 제품은 상담 시)
 export const PRODUCT_TYPE_OPTIONS = [
   "암막커튼",

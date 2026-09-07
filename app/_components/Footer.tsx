@@ -49,7 +49,8 @@ export default function Footer() {
         <div className="pb-16 md:pb-0">
           <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-12 md:flex-row md:items-end md:justify-between md:px-8">
             <div>
-              <Image src="/images/logo/wordmark-dark.png" alt={`${SITE.nameKo} ${SITE.nameEn}`} width={880} height={208} className="h-11 w-auto md:h-14" />
+              {/* 고객 전달 골드 워드마크 (헤더와 동일 로고) */}
+              <Image src="/images/logo/wordmark-gold.png" alt={`${SITE.nameKo} ${SITE.nameEn}`} width={745} height={150} className="h-10 w-auto md:h-12" />
               {/* 명함 시안과 동일하게 영문 표기 */}
               <p className="serif mt-4 text-xl font-semibold tracking-wide">Curtain Atelier</p>
               <p className="mt-1.5 text-[10px] tracking-[0.3em] text-muted uppercase">Curtain &amp; Blind Specialist</p>

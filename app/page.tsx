@@ -11,7 +11,7 @@ import ProductCarousel from "./_components/ProductCarousel";
 import GalleryGrid from "./_components/GalleryGrid";
 import Reviews from "./_components/Reviews";
 import ProcessFaq from "./_components/ProcessFaq";
-import EstimateForm from "./_components/EstimateForm";
+import EstimateForm, { EstimateWizard } from "./_components/EstimateForm";
 import Footer from "./_components/Footer";
 import QuickMenu from "./_components/QuickMenu";
 import MobileBar from "./_components/MobileBar";
@@ -28,8 +28,17 @@ export default function Home() {
       <Header />
 
       <main id="top" className="flex-1">
-        {/* ① 메인 — 핵심 문구(무료 방문 실측·맞춤 제작·직접 시공) + 큰 CTA. ?kw= 유입 키워드로 헤드라인 매칭 */}
-        <HeroSlider />
+        {/* ① 메인 — 핵심 문구(무료 방문 실측·맞춤 제작·직접 시공) + 큰 CTA. ?kw= 유입 키워드로 헤드라인 매칭.
+            PC 는 우측에 신청 폼 위저드 카드(참고 시안 배치, 하단 폼과 동일 컴포넌트) */}
+        <HeroSlider
+          panel={
+            <EstimateWizard
+              idPrefix="hero"
+              compact
+              className="no-scrollbar h-[36rem] max-h-[calc(100svh-8.5rem)] w-[360px] overflow-y-auto lg:w-[430px]"
+            />
+          }
+        />
 
         {/* 히어로 직하단 신뢰 밴드 — 월계수 장식 + 경력·누적 시공 */}
         <TrustBand />

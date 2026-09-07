@@ -1,16 +1,14 @@
 "use client";
 // 상단 고정 헤더 — 히어로 위에서는 투명(흰 글자), 스크롤 시 베이지 배경/블러/그림자/축소. 스크롤이 멈추면 위로 숨고 움직이면 다시 내려옴. 워드마크 로고 + 데스크톱 드롭다운 + 견적 CTA + MENU 드로어.
 import { useCallback, useEffect, useState } from "react";
-import { HERO_SLIDES, NAV, SITE } from "../_lib/data";
+import { NAV, SITE } from "../_lib/data";
 import { track, EVENTS } from "../_lib/analytics";
 import Image from "next/image";
 import MobileDrawer from "./MobileDrawer";
 
-// 첫 히어로 슬라이드가 밝은 배경(split)이면 최상단에서도 솔리드 헤더로 시작
-const HERO_IS_LIGHT = HERO_SLIDES[0]?.layout === "split";
-
+// 히어로가 밝은 배경(split)이라 글자는 항상 어두운 색 — PC 는 최상단에서 투명, 스크롤 시 솔리드 (모바일은 항상 솔리드)
 export default function Header() {
-  const [scrolled, setScrolled] = useState(HERO_IS_LIGHT);
+  const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false); // 스크롤이 멈추면 위로 숨김, 움직이면 다시 표시
   const [hover, setHover] = useState(false);   // 헤더 위에 마우스가 있으면 숨기지 않음
   const [nearTop, setNearTop] = useState(false); // 마우스가 화면 상단 근처(80px)로 오면 헤더 다시 표시 (PC)
@@ -23,7 +21,7 @@ export default function Header() {
     let timer: ReturnType<typeof setTimeout> | null = null;
     const onScroll = () => {
       const y = window.scrollY;
-      setScrolled(HERO_IS_LIGHT || y > 10);
+      setScrolled(y > 10);
       setHidden(false);
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
@@ -57,7 +55,7 @@ export default function Header() {
         } ${
           scrolled
             ? "bg-background/95 text-foreground shadow-[0_2px_16px_rgba(43,37,33,0.08)] backdrop-blur"
-            : "bg-transparent text-white"
+            : "bg-background/95 text-foreground shadow-[0_2px_16px_rgba(43,37,33,0.08)] backdrop-blur md:bg-transparent md:shadow-none md:backdrop-blur-none"
         }`}
       >
         <div
@@ -70,8 +68,8 @@ export default function Header() {
             <Image
               src="/images/logo/wordmark-gold.png"
               alt={`${SITE.nameKo} ${SITE.nameEn} ${SITE.tagline}`}
-              width={800}
-              height={184}
+              width={745}
+              height={150}
               priority
               className="h-10 w-auto md:h-[3.25rem]"
             />
@@ -112,10 +110,11 @@ export default function Header() {
 
           {/* 우측 액션: 무료 방문 실측 CTA(md+, 클릭 트래킹) + MENU 햄버거 */}
           <div className="flex items-center gap-2 md:gap-4">
+            {/* PC 는 히어로 우측 폼으로 부드럽게 이동 (#top) */}
             <a
-              href="#estimate"
+              href="#top"
               onClick={() => track(EVENTS.CLICK_CTA, { location: "header" })}
-              className="hidden items-center rounded-full bg-accent px-4 py-2 text-[13px] font-bold tracking-wide text-white shadow-sm transition-transform duration-200 hover:scale-105 hover:bg-brown md:inline-flex"
+              className="hidden items-center rounded-full bg-orange px-4 py-2 text-[13px] font-bold tracking-wide text-white shadow-sm transition-transform duration-200 hover:scale-105 hover:bg-[#cf5630] md:inline-flex"
             >
               무료 방문 실측 신청
             </a>

@@ -21,11 +21,11 @@ export default function MobileBar() {
         </svg>
         <span className="-translate-y-[0.5px]">바로전화</span>
       </a>
-      {/* 무료상담신청 — 브라운 배경 (헤더/폼 버튼과 동일 색) */}
+      {/* 무료상담신청 — 주황 배경 (히어로 강조 문구와 동일한 포인트 컬러) */}
       <a
         href="#estimate"
         onClick={() => track(EVENTS.CLICK_CTA, { location: "mobilebar" })}
-        className="flex min-h-14 items-center justify-center gap-2 bg-accent px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-[15px] font-semibold text-white active:bg-brown"
+        className="flex min-h-14 items-center justify-center gap-2 bg-orange px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-[15px] font-semibold text-white active:bg-[#cf5630]"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M8 2v4M16 2v4" />

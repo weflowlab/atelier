@@ -52,7 +52,8 @@ export default function QuickMenu() {
     >
       {/* 버튼이 순서대로 번갈아 흔들리도록 딜레이 분산 */}
       {/* 무료 방문 실측 — 브라운 원형(체크 달력 아이콘, 헤더 버튼과 동일 색) */}
-      <a href="#estimate" aria-label="무료 방문 실측 신청" title="무료 방문 실측 신청" onClick={onCta} className={`wiggle ${btn} bg-accent text-white`}>
+      {/* PC 퀵메뉴 — 히어로 우측 폼으로 부드럽게 이동 */}
+      <a href="#top" aria-label="무료 방문 실측 신청" title="무료 방문 실측 신청" onClick={onCta} className={`wiggle ${btn} bg-orange text-white`}>
         <VisitIcon size={26} />
       </a>
       {/* 전화 — 화이트 */}

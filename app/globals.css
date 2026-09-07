@@ -11,6 +11,7 @@
   --brown: #8a6d55;        /* CTA 브라운 */
   --olive: #4a4a3b;        /* CTA 올리브 */
   --gold: #b8976b;         /* 포인트 골드 */
+  --orange: #e8663c;       /* 히어로 강조 문구 · 모바일 상담 CTA (레퍼런스 주황) */
   --header-h: 100px;       /* 헤더 높이 — 스크롤 시 축소(h-20) */
 }
 
@@ -24,6 +25,7 @@
   --color-brown: var(--brown);
   --color-olive: var(--olive);
   --color-gold: var(--gold);
+  --color-orange: var(--orange);
   --font-sans: var(--font-noto-sans);
   --font-serif: var(--font-noto-serif);   /* 한글 세리프 (헤드라인) */
 }
