@@ -306,7 +306,7 @@ export function EstimateWizard({
                           const v = e.target.value;
                           set("date", v && today && v < today ? today : v); // 오늘 이전이면 오늘로 보정
                         }}
-                        className="mt-1.5 block min-h-[2.5rem] w-full min-w-full appearance-none bg-transparent text-center text-lg outline-none [color-scheme:light] [&::-webkit-date-and-time-value]:min-h-[1.5rem] [&::-webkit-date-and-time-value]:text-center"
+                        className="mt-1.5 block min-h-[2.5rem] w-full min-w-full bg-transparent text-center text-lg outline-none [color-scheme:light] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-date-and-time-value]:min-h-[1.5rem] [&::-webkit-date-and-time-value]:text-center"
                       />
                     </div>
                     <p className="mt-4 text-sm text-muted">정확한 일정은 담당자와 상담 후 확정됩니다.</p>

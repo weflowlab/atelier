@@ -128,7 +128,7 @@ export default function HeroSlider({ panel }: { panel?: React.ReactNode }) {
                 {/* 모바일: 글씨가 놓이는 상단 영역만 부분 블러 (아래 경계는 마스크로 부드럽게 페이드, 사진 나머지는 원본) */}
                 <div className="absolute inset-x-0 top-0 h-[78%] backdrop-blur-[1.5px] [mask-image:linear-gradient(to_bottom,black_68%,transparent)] md:hidden" />
                 {/* 모바일: 배지·문구가 놓이는 좌측 영역만 은은하게 어두운 타원 스팟 (가장자리는 자연스럽게 사라짐) */}
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_58%_46%_at_30%_36%,rgba(0,0,0,0.46),transparent_73%)] md:hidden" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_58%_46%_at_30%_36%,rgba(0,0,0,0.38),transparent_72%)] md:hidden" />
               </>
             ) : (
               <>
@@ -154,11 +154,11 @@ export default function HeroSlider({ panel }: { panel?: React.ReactNode }) {
                   {/* 리스 잎 끝 기준 SVG 내부 여백(약 8.6%)만큼 왼쪽으로 당겨 아래 문구 시작선과 맞춘다 */}
                   <AwardBadge className="-ml-1.5 mb-5 w-[86px] md:-ml-2.5 md:mt-14 md:mb-6 md:w-28 lg:-ml-3 lg:w-32" />
                   {/* 소제목 — 핵심 강점 문구. 모바일은 시안처럼 흰 고딕, PC 는 세리프 브라운 */}
-                  <p className={`serif mb-2 w-full text-lg font-bold tracking-[0.02em] max-md:[-webkit-text-stroke:0.3px_#fff] max-md:[font-family:var(--font-noto-sans)] sm:text-xl md:mb-4 md:text-2xl md:tracking-[0.08em] ${split ? "text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.45),0_2px_16px_rgba(0,0,0,0.4)] md:text-accent md:[text-shadow:none]" : "text-white"}`}>
+                  <p className={`serif mb-2 w-full text-lg font-bold tracking-[0.02em] max-md:[-webkit-text-stroke:0.3px_#fff] max-md:[font-family:var(--font-noto-sans)] sm:text-xl md:mb-4 md:text-2xl md:tracking-[0.08em] ${split ? "text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.32),0_2px_14px_rgba(0,0,0,0.28)] md:text-accent md:[text-shadow:none]" : "text-white"}`}>
                     {s.eyebrow}
                   </p>
                   {/* 메인 카피 — 모바일은 시안처럼 흰 고딕 볼드 + 주황 강조, PC 는 세리프 (줄바꿈 유지) */}
-                  <h1 className={`serif text-[7vw] font-bold tracking-tight whitespace-pre-line leading-[1.32] max-md:[-webkit-text-stroke:0.5px_currentColor] max-md:[font-family:var(--font-noto-sans)] sm:text-3xl md:text-5xl md:font-semibold md:leading-[1.15] xl:text-6xl ${split ? "text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.5),0_4px_24px_rgba(0,0,0,0.4)] md:text-foreground md:[text-shadow:none]" : "text-white"}`}>
+                  <h1 className={`serif text-[7vw] font-bold tracking-tight whitespace-pre-line leading-[1.32] max-md:[-webkit-text-stroke:0.5px_currentColor] max-md:[font-family:var(--font-noto-sans)] sm:text-3xl md:text-5xl md:font-semibold md:leading-[1.15] xl:text-6xl ${split ? "text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.36),0_4px_20px_rgba(0,0,0,0.28)] md:text-foreground md:[text-shadow:none]" : "text-white"}`}>
                     {renderTitle(s.title)}
                   </h1>
                   {/* 인디케이터 — 모바일 전용: 문구 바로 아래 좌측 정렬 (시안 배치) */}
