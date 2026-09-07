@@ -1,6 +1,6 @@
 "use client";
 // 무료 방문 실측 신청 폼 섹션 (#estimate) — 4단계 위저드 (참고 시안 구조).
-// ① 안내 → ② 설치 장소(중복 선택) → ③ 설치 희망 날짜 → ④ 연락받을 정보(성함·연락처·주소·추가 문의·동의).
+// ① 안내 → ② 설치 장소(중복 선택) → ③ 방문 희망 날짜 → ④ 연락받을 정보(성함·연락처·주소·추가 문의·동의).
 // 유입 키워드/라이트박스로 제품 프리필(숨은 필드) → 검증 → submitLead 서버 액션 → 성공 패널 + 전환 이벤트(track) 전송.
 import { useEffect, useRef, useState, useTransition, type FormEvent, type ReactNode } from "react";
 import { FORM_SUCCESS, PLACE_OPTIONS, PRODUCT_TYPE_OPTIONS } from "../_lib/data";
@@ -284,7 +284,7 @@ export function EstimateWizard({
                   </div>
                 )}
 
-                {/* ③ 설치 희망 날짜 */}
+                {/* ③ 방문 희망 날짜 */}
                 {step === 2 && (
                   <div key="s2" className="mt-10 animate-[estStep_0.35s_ease] text-center">
                     <StepIcon>
@@ -293,7 +293,7 @@ export function EstimateWizard({
                       <path d="M3 10h18" />
                     </StepIcon>
                     <p className="mt-6 text-sm text-muted">편한 날짜를 선택해 주세요</p>
-                    <h2 className="serif mt-2 text-3xl font-semibold tracking-tight">설치 희망 날짜</h2>
+                    <h2 className="serif mt-2 text-3xl font-semibold tracking-tight">방문 희망 날짜</h2>
                     <div className="mt-8 rounded-2xl border border-line bg-surface px-4 py-4 text-left">
                       <label htmlFor={`${idPrefix}-date`} className="block text-sm text-muted">희망 날짜</label>
                       {/* iOS Safari: 날짜 입력이 내용 폭으로 줄어들고 min 을 무시하는 경우가 있어 폭 강제 + onChange 에서 과거 날짜 차단 */}
