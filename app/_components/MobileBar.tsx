@@ -23,7 +23,7 @@ export default function MobileBar() {
       </a>
       {/* 무료상담신청 — 주황 배경 (히어로 강조 문구와 동일한 포인트 컬러) */}
       <a
-        href="#estimate"
+        href="#estimate-card"
         onClick={() => track(EVENTS.CLICK_CTA, { location: "mobilebar" })}
         className="flex min-h-14 items-center justify-center gap-2 bg-orange px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-[15px] font-semibold text-white active:bg-[#cf5630]"
       >
