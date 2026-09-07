@@ -202,7 +202,7 @@ export default function HeroSlider({ panel }: { panel?: React.ReactNode }) {
                   <a
                     href="#estimate"
                     onClick={() => track(EVENTS.CLICK_CTA, { location: "hero" })}
-                    className={`group mt-9 hidden h-13 items-center gap-2.5 rounded-full bg-orange pr-6 pl-7 text-[15px] font-semibold text-white shadow-[0_10px_28px_-8px_rgba(232,102,60,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#cf5630] hover:shadow-[0_14px_32px_-8px_rgba(232,102,60,0.6)] md:inline-flex ${panel ? "lg:hidden" : ""}`}
+                    className={`group mt-9 hidden h-13 items-center gap-2.5 rounded-full bg-orange pr-6 pl-7 text-[15px] font-semibold text-white shadow-[0_10px_28px_-8px_rgba(227,125,86,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#c96540] hover:shadow-[0_14px_32px_-8px_rgba(227,125,86,0.6)] md:inline-flex ${panel ? "lg:hidden" : ""}`}
                   >
                     무료 방문 실측 신청
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">

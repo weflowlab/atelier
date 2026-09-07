@@ -25,7 +25,7 @@ export default function MobileBar() {
       <a
         href="#estimate-card"
         onClick={() => track(EVENTS.CLICK_CTA, { location: "mobilebar" })}
-        className="flex min-h-14 items-center justify-center gap-2 bg-orange px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-[15px] font-semibold text-white active:bg-[#cf5630]"
+        className="flex min-h-14 items-center justify-center gap-2 bg-orange px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-[15px] font-semibold text-white active:bg-[#c96540]"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M8 2v4M16 2v4" />

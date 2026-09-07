@@ -114,7 +114,7 @@ export default function Header() {
             <a
               href="#top"
               onClick={() => track(EVENTS.CLICK_CTA, { location: "header" })}
-              className="hidden items-center rounded-full bg-orange px-4 py-2 text-[13px] font-bold tracking-wide text-white shadow-sm transition-transform duration-200 hover:scale-105 hover:bg-[#cf5630] md:inline-flex"
+              className="hidden items-center rounded-full bg-orange px-4 py-2 text-[13px] font-bold tracking-wide text-white shadow-sm transition-transform duration-200 hover:scale-105 hover:bg-[#c96540] md:inline-flex"
             >
               무료 방문 실측 신청
             </a>

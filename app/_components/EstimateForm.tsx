@@ -42,7 +42,7 @@ const inputCls =
   "w-full rounded-xl border border-line bg-surface px-3 py-3 text-[15px] outline-none sm:px-4 sm:py-3.5 sm:text-base transition-colors placeholder:text-muted/70 focus:border-orange aria-[invalid=true]:border-red-400";
 // 주황 메인 버튼 / 이전(고스트) 버튼
 const btnOrange =
-  "flex h-14 items-center justify-center gap-2 rounded-2xl bg-orange text-base font-semibold text-white transition-colors hover:bg-[#cf5630] disabled:cursor-not-allowed disabled:bg-line disabled:text-muted";
+  "flex h-14 items-center justify-center gap-2 rounded-2xl bg-orange text-base font-semibold text-white transition-colors hover:bg-[#c96540] disabled:cursor-not-allowed disabled:bg-line disabled:text-muted";
 const btnGhost =
   "flex h-14 items-center justify-center rounded-2xl border border-line bg-surface px-5 text-base font-medium text-muted transition-colors hover:text-foreground";
 
