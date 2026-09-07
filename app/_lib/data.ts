@@ -75,7 +75,7 @@ export type Slide = { id: number; eyebrow: string; title: string; sub: string; s
 export const HERO_SLIDES: Slide[] = [
   // 문구 3개가 순차 전환 — 밝은 배경(사진 전체 + 밝은 베일, 이음새 없음), **문구**는 주황 강조
   { id: 1, eyebrow: "합리적인 가격, 더 높은 퀄리티", title: "커튼·블라인드 하나로\n완성하는 **호텔 감성**", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
-  { id: 2, eyebrow: "17년 경력 · 누적 시공 10,000건+", title: "**자체공장에서 직접 제작**\n섬세한 시공,\n완성도 높은 디테일", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
+  { id: 2, eyebrow: "17년 경력 · 누적 시공 10,000건+", title: "**자체공장 직접 제작**\n섬세한 시공,\n완성도 높은 디테일", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
   { id: 3, eyebrow: "내 공간에 딱 맞는 100% 맞춤 커튼", title: "커튼장인 아뜰리에의\n**무료 방문 실측** 서비스", sub: "", src: "/images/hero/hero-living.webp", layout: "split" },
 ];
 // 히어로 CTA 아래 핵심 배지

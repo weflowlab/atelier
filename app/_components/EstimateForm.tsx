@@ -294,27 +294,29 @@ export function EstimateWizard({
                     </StepIcon>
                     <p className="mt-6 text-sm text-muted">편한 날짜를 선택해 주세요</p>
                     <h2 className="serif mt-2 text-3xl font-semibold tracking-tight">방문 희망 날짜</h2>
-                    <div className="relative mt-8 rounded-2xl border border-line bg-surface px-4 py-4 text-left">
+                    <div className="mt-8 rounded-2xl border border-line bg-surface px-4 py-4 text-left">
                       <label htmlFor={`${idPrefix}-date`} className="block text-sm text-muted">희망 날짜</label>
                       {/* iOS Safari: 날짜 입력이 내용 폭으로 줄어들고 min 을 무시하는 경우가 있어 폭 강제 + onChange 에서 과거 날짜 차단.
-                          모바일은 브라우저 기본 달력 아이콘이 없으므로 아래에 아이콘을 직접 그리고(장식), 기본 아이콘은 입력 전체로 늘려 투명 처리 */}
-                      <input
-                        id={`${idPrefix}-date`}
-                        type="date"
-                        value={form.date}
-                        min={today}
-                        onChange={(e) => {
-                          const v = e.target.value;
-                          set("date", v && today && v < today ? today : v); // 오늘 이전이면 오늘로 보정
-                        }}
-                        className="relative mt-1.5 block min-h-[2.5rem] w-full min-w-full bg-transparent text-center text-lg outline-none [color-scheme:light] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-date-and-time-value]:min-h-[1.5rem] [&::-webkit-date-and-time-value]:text-center"
-                      />
-                      {/* 달력 아이콘 — 모든 브라우저에서 동일하게 보이는 장식 (클릭은 입력이 받음) */}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="pointer-events-none absolute right-4 bottom-[1.6rem] text-orange">
-                        <path d="M8 2v4M16 2v4" />
-                        <rect width="18" height="18" x="3" y="4" rx="2" />
-                        <path d="M3 10h18" />
-                      </svg>
+                          모바일은 브라우저 기본 달력 아이콘이 없으므로 입력 줄 기준으로 아이콘을 직접 그리고(장식), 기본 아이콘은 입력 전체로 늘려 투명 처리 */}
+                      <div className="relative mt-1.5">
+                        <input
+                          id={`${idPrefix}-date`}
+                          type="date"
+                          value={form.date}
+                          min={today}
+                          onChange={(e) => {
+                            const v = e.target.value;
+                            set("date", v && today && v < today ? today : v); // 오늘 이전이면 오늘로 보정
+                          }}
+                          className="block min-h-[2.5rem] w-full min-w-full bg-transparent text-center text-lg outline-none [color-scheme:light] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-date-and-time-value]:min-h-[1.5rem] [&::-webkit-date-and-time-value]:text-center"
+                        />
+                        {/* 달력 아이콘 — 입력 줄에 세로 중앙 정렬 (클릭은 입력이 받음) */}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="pointer-events-none absolute top-1/2 right-0 -translate-y-1/2 text-orange">
+                          <path d="M8 2v4M16 2v4" />
+                          <rect width="18" height="18" x="3" y="4" rx="2" />
+                          <path d="M3 10h18" />
+                        </svg>
+                      </div>
                     </div>
                     <p className="mt-4 text-sm text-muted">정확한 일정은 담당자와 상담 후 확정됩니다.</p>
                     <div className="mt-10 flex gap-3">

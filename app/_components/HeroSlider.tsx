@@ -18,7 +18,7 @@ const INTERVAL = 4000; // 자동재생 간격(ms) — 문구 3종이 순차 전�
 function renderTitle(title: string) {
   return title.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
     seg.startsWith("**") && seg.endsWith("**") ? (
-      <span key={i} className="text-orange">
+      <span key={i} className="text-orange [text-shadow:none]">
         {seg.slice(2, -2)}
       </span>
     ) : (
