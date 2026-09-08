@@ -10,20 +10,26 @@ export const EVENTS = {
 } as const;
 type EventName = (typeof EVENTS)[keyof typeof EVENTS];
 
-// 네이버 전환 유형: 1 구매, 2 회원가입, 3 장바구니, 4 신청/예약, 5 기타
-const NAVER_CNV: Partial<Record<EventName, string>> = {
-  generate_lead: "4",
-  click_call: "5",
-  click_kakao: "5",
+// 네이버 전환 유형(신규 wcs.trans 방식): sale 구매, sign_up 회원가입, cart 장바구니, lead 신청완료, custom001~005 기타
+// 광고 대행사가 전달한 '신청완료(lead)' 스크립트와 동일한 형식 — 폼 접수 완료가 핵심 전환.
+const NAVER_CONV: Partial<Record<EventName, string>> = {
+  generate_lead: "lead",
+  click_call: "custom001",
+  click_kakao: "custom002",
 };
 
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
     dataLayer?: unknown[];
-    wcs?: { cnv: (type: string, value: string) => unknown };
+    wcs?: {
+      cnv: (type: string, value: string) => unknown;
+      inflow?: () => void;
+      trans?: (conv: { type: string; value?: string; items?: unknown[] }) => void;
+    };
     wcs_do?: (nasa?: Record<string, unknown>) => void;
     wcs_add?: Record<string, string>;
+    _nasa?: Record<string, unknown>;
   }
 }
 
@@ -38,11 +44,14 @@ export function track(event: EventName, params: Record<string, string | number |
     else (window.dataLayer ||= []).push({ event, ...payload });
   } catch {}
 
-  // 네이버 프리미엄 로그분석 전환
+  // 네이버 프리미엄 로그분석 전환 — 대행사 전달 스크립트와 동일: wcs.trans({ type: 'lead' })
   try {
-    const type = NAVER_CNV[event];
-    if (type && window.wcs && window.wcs_do) {
-      window.wcs_do({ cnv: window.wcs.cnv(type, "0") });
+    const type = NAVER_CONV[event];
+    if (type && window.wcs) {
+      window.wcs_add = window.wcs_add || {};
+      if (process.env.NEXT_PUBLIC_NAVER_WCS_ID) window.wcs_add["wa"] = process.env.NEXT_PUBLIC_NAVER_WCS_ID;
+      if (window.wcs.trans) window.wcs.trans({ type });
+      else if (window.wcs_do) window.wcs_do({ cnv: window.wcs.cnv(type === "lead" ? "4" : "5", "0") }); // 구버전 wcslog.js 대비
     }
   } catch {}
 

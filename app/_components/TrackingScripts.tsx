@@ -40,14 +40,21 @@ export default function TrackingScripts() {
         </>
       )}
       {wcs && (
-        <>
-          <Script src="https://wcs.naver.net/wcslog.js" strategy="afterInteractive" />
-          <Script id="naver-wcs-init" strategy="afterInteractive">{`
-            if (!window.wcs_add) window.wcs_add = {};
-            window.wcs_add["wa"] = "${wcs}";
-            if (window.wcs) { window.wcs_do(); }
-          `}</Script>
-        </>
+        /* 네이버 공통 스크립트 — 광고 대행사 전달본과 동일 (inflow: 광고 유입 경로 기록, wcs_do: 페이지뷰).
+           wcslog.js 로드 완료 후(onLoad) 실행해야 window.wcs 가 확실히 존재한다. */
+        <Script
+          src="https://wcs.naver.net/wcslog.js"
+          strategy="afterInteractive"
+          onLoad={() => {
+            window.wcs_add = window.wcs_add || {};
+            window.wcs_add["wa"] = wcs;
+            window._nasa = window._nasa || {};
+            if (window.wcs && window.wcs_do) {
+              window.wcs.inflow?.();
+              window.wcs_do(window._nasa);
+            }
+          }}
+        />
       )}
     </>
   );
