@@ -2112,8 +2112,7 @@ export default function AdminPage() {
     if (authed) load();
   }, [authed, load]);
 
-  // 유입 관리 탭 진입 시 + 기간 변경 시 방문 데이터 로드
-  // (행이 많아 20초 폴링에서는 제외하고, 이 탭에서만 불러온다)
+  // 유입 관리 탭 진입 시 + 기간 변경 시 방문 데이터 로드 (행이 많아 이 탭에서만 불러온다)
   useEffect(() => {
     if (!authed || tab !== "traffic") return;
     const days = PERIODS.find((p) => p.key === trafficPeriod)?.days ?? null;
@@ -2128,20 +2127,8 @@ export default function AdminPage() {
       .finally(() => setPvLoading(false));
   }, [authed, tab, trafficPeriod]);
 
-  // 자동 갱신: 20초 폴링 + 탭 재포커스 시 (조용히 갱신)
-  useEffect(() => {
-    if (!authed) return;
-    const tick = () => {
-      if (pending.current === 0) load(true);
-    };
-    const id = setInterval(tick, 20000);
-    const onFocus = tick;
-    window.addEventListener("focus", onFocus);
-    return () => {
-      clearInterval(id);
-      window.removeEventListener("focus", onFocus);
-    };
-  }, [authed, load]);
+  // 자동 갱신 없음 — 탭만 열어둬도 20초마다 DB 를 쳐 Neon 무료 컴퓨트 한도를 소진했던 폴링·포커스 갱신을 제거.
+  // 최신 데이터는 페이지 새로고침 또는 화면의 '새로고침' 버튼으로만 불러온다. (변경 요청 후 서버 상태 동기화는 mutate 에서 유지)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
