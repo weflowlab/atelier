@@ -24,6 +24,14 @@ export default function TrackingScripts() {
         }}
       />
       <Script src="https://cdn.smlog.co.kr/core/smart.js" charSet="utf-8" strategy="afterInteractive" />
+      {/* 미래아이엔씨 공통 스크립트 — 광고 대행사(미래아이엔씨) 로그 분석.
+          adkey 자체가 계정 식별자라 별도 전환추적 ID 를 넣지 않는다 (대행사 안내).
+          대행사 가이드는 </body> 직전 삽입이지만, afterInteractive 가 같은 자리에 넣는 것과 같다. */}
+      <Script
+        src="https://log1.toup.net/mirae_log_chat_common.js?adkey=tkvhk"
+        charSet="UTF-8"
+        strategy="afterInteractive"
+      />
       <noscript>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={`https://${SMLOG_SERVER}.smlog.co.kr/smart_bda.php?_account=${SMLOG_ACCOUNT.replace("UHPT-", "")}`} alt="" style={{ display: "none", width: 0, height: 0 }} />
