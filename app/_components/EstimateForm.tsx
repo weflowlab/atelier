@@ -156,6 +156,14 @@ export function EstimateWizard({
       attribution: getAttribution(),
       page: window.location.href,
     };
+    const finish = (leadId: string) => {
+      track(EVENTS.LEAD_SUBMIT, { products: payload.products.join(","), lead_id: leadId });
+      setDone(true);
+      setForm(INITIAL);
+      setErrors({});
+      setPrivacyOpen(false);
+      setStep(0);
+    };
     startTransition(async () => {
       try {
         const res = await submitLead(payload);
@@ -163,14 +171,34 @@ export function EstimateWizard({
           setServerError(res.error);
           return;
         }
-        track(EVENTS.LEAD_SUBMIT, { products: payload.products.join(","), lead_id: res.id });
-        setDone(true);
-        setForm(INITIAL);
-        setErrors({});
-        setPrivacyOpen(false);
-        setStep(0);
+        finish(res.id);
       } catch {
-        setServerError("전송 중 오류가 발생했습니다. 잠시 후 다시 시도하거나 전화로 문의해주세요.");
+        // 서버 액션 호출 자체가 실패한 경우 — 배포 직후 옛 화면을 열어 둔 채 누르면 액션을 못 찾고,
+        // 네트워크가 잠깐 끊겨도 여기로 온다. 같은 내용을 REST 경로(/api/inquiries)로 한 번 더 보내 본다.
+        try {
+          const attr = payload.attribution ?? {};
+          const res = await fetch("/api/inquiries", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: payload.name,
+              phone: payload.phone,
+              note: payload.message ?? "",
+              address: payload.address ?? "",
+              hopeDate: payload.date ?? "",
+              places: payload.places,
+              products: payload.products,
+              keyword: attr.n_keyword || attr.utm_term || attr.kw || "",
+              source: attr.n_media || attr.utm_source || "direct",
+              agree: payload.agree,
+            }),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          const item = (await res.json()) as { id?: string };
+          finish(item.id ?? "");
+        } catch {
+          setServerError("접수가 저장되지 않았습니다. 잠시 후 다시 시도하시거나, 아래 번호로 전화 주시면 바로 도와드리겠습니다.");
+        }
       }
     });
   };

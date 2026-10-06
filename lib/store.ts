@@ -66,6 +66,26 @@ function toFaq(row: Record<string, unknown>): Faq {
   };
 }
 
+// 잠깐의 연결 문제(서버리스 DB 가 잠에서 깨는 순간, 네트워크 끊김)는 바로 다시 시도하면 대개 된다.
+// 상담 신청 저장처럼 한 번 놓치면 돌이킬 수 없는 쓰기에만 쓴다.
+// (실패하고 다시 넣는 경우 아주 드물게 같은 신청이 두 번 저장될 수 있다 — 한 건을 잃는 것보다는 낫다)
+const RETRY_DELAYS_MS = [400, 1200];
+async function withRetry<T>(label: string, run: () => Promise<T>): Promise<T> {
+  let lastErr: unknown;
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+    try {
+      return await run();
+    } catch (e) {
+      lastErr = e;
+      console.error(`[db] ${label} 실패 (${attempt + 1}/${RETRY_DELAYS_MS.length + 1})`, e);
+      if (attempt < RETRY_DELAYS_MS.length) {
+        await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
+      }
+    }
+  }
+  throw lastErr;
+}
+
 export const inquiryStore = {
   getAll: async (): Promise<Inquiry[]> => {
     const sql = getSql();
@@ -75,18 +95,20 @@ export const inquiryStore = {
 
   create: async (
     input: Omit<Inquiry, "id" | "status" | "createdAt">,
-  ): Promise<Inquiry> => {
-    const sql = getSql();
-    const rows = await sql`
-      INSERT INTO inquiries
-        (status, name, phone, note, address, hope_date, places, products, keyword, source, agree)
-      VALUES ('pending', ${input.name}, ${input.phone}, ${input.note ?? ""},
-              ${input.address ?? ""}, ${input.hopeDate ?? ""}, ${input.places ?? ""},
-              ${input.products ?? ""}, ${input.keyword ?? ""},
-              ${input.source ?? "web"}, ${input.agree ?? false})
-      RETURNING *`;
-    return toInquiry(rows[0]);
-  },
+  ): Promise<Inquiry> =>
+    withRetry("상담 신청 저장", async () => {
+      const sql = getSql();
+      const rows = await sql`
+        INSERT INTO inquiries
+          (status, name, phone, note, address, hope_date, places, products, keyword, source, agree)
+        VALUES ('pending', ${input.name}, ${input.phone}, ${input.note ?? ""},
+                ${input.address ?? ""}, ${input.hopeDate ?? ""}, ${input.places ?? ""},
+                ${input.products ?? ""}, ${input.keyword ?? ""},
+                ${input.source ?? "web"}, ${input.agree ?? false})
+        RETURNING *`;
+      return toInquiry(rows[0]);
+    }),
+
 
   // 관리자 화면에서 바꾸는 값은 상태뿐이라 status 만 반영한다
   update: async (id: string, patch: Partial<Inquiry>): Promise<Inquiry | null> => {
