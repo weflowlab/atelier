@@ -111,7 +111,7 @@ export function QuickEstimateCard({
               <path d="M5 12.5l4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
-          <p className="mt-6 text-base leading-relaxed font-medium">{FORM_SUCCESS}</p>
+          <p className="mt-6 text-base leading-relaxed font-medium whitespace-pre-line">{FORM_SUCCESS}</p>
           <button
             type="button"
             onClick={() => setDone(false)}

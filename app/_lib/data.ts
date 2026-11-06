@@ -294,4 +294,5 @@ export const PRODUCT_TYPE_OPTIONS = [
   "알루미늄 25mm 블라인드",
   "상담 후 결정",
 ];
-export const FORM_SUCCESS = "성공적으로 접수되었습니다. 빠른 시간 내에 연락드리겠습니다.";
+// 문장 사이에서 줄바꿈 — 렌더하는 쪽에서 whitespace-pre-line 으로 표시
+export const FORM_SUCCESS = "성공적으로 접수되었습니다.\n빠른 시간 내에 연락드리겠습니다.";
