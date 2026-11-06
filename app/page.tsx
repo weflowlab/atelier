@@ -1,5 +1,5 @@
 // 랜딩페이지 조립 파일 — 8섹션 + 가격 안내 (파워링크 유입 최적화).
-// 헤더 → 메인 → 브랜드강점(+신뢰통계) → 고객후기 → 문제제기 → 주요제품(+가격) → 시공포트폴리오 → 진행절차/FAQ → 신청폼 → 푸터
+// 헤더 → 메인(+간편 견적) → 브랜드강점(+신뢰통계) → 고객후기 → 문제제기 → 주요제품(+가격) → 간편 견적 → 시공포트폴리오 → 진행절차/FAQ → 신청폼 → 푸터
 import IntroSplash from "./_components/IntroSplash";
 import Header from "./_components/Header";
 import HeroSlider from "./_components/HeroSlider";
@@ -11,7 +11,8 @@ import ProductCarousel from "./_components/ProductCarousel";
 import GalleryGrid from "./_components/GalleryGrid";
 import Reviews from "./_components/Reviews";
 import ProcessFaq from "./_components/ProcessFaq";
-import EstimateForm, { EstimateWizard } from "./_components/EstimateForm";
+import EstimateForm from "./_components/EstimateForm";
+import QuickEstimateSection, { QuickEstimateCard, QuickEstimateTop } from "./_components/QuickEstimate";
 import Footer from "./_components/Footer";
 import QuickMenu from "./_components/QuickMenu";
 import MobileBar from "./_components/MobileBar";
@@ -29,16 +30,19 @@ export default function Home() {
 
       <main id="top" className="flex-1">
         {/* ① 메인 — 핵심 문구(무료 방문 실측·맞춤 제작·직접 시공) + 큰 CTA. ?kw= 유입 키워드로 헤드라인 매칭.
-            PC 는 우측에 신청 폼 위저드 카드(참고 시안 배치, 하단 폼과 동일 컴포넌트) */}
+            PC 는 우측에 간편 견적 카드(성함·연락처만) — 상세 신청은 하단 4단계 폼 */}
         <HeroSlider
           panel={
-            <EstimateWizard
+            <QuickEstimateCard
               idPrefix="hero"
-              compact
-              className="no-scrollbar h-[36rem] max-h-[calc(100svh-8.5rem)] w-[360px] overflow-y-auto lg:w-[430px]"
+              location="hero"
+              className="no-scrollbar max-h-[calc(100svh-8.5rem)] w-[360px] overflow-y-auto lg:w-[430px]"
             />
           }
         />
+
+        {/* 모바일·태블릿: 히어로에 폼 패널이 없으므로 히어로 바로 아래에 간편 견적 (PC 에선 숨김) */}
+        <QuickEstimateTop />
 
         {/* 히어로 직하단 신뢰 밴드 — 월계수 장식 + 경력·누적 시공 */}
         <TrustBand />
@@ -56,6 +60,9 @@ export default function Home() {
         <ProductGrid />
         <ProductCarousel id="curtain" eyebrow="CURTAIN" title="커튼" subtitle="암막커튼 · 쉬폰커튼 · 린넨커튼 · 로만쉐이드 · 유니슬렛" items={CURTAINS} />
         <ProductCarousel id="blind" eyebrow="BLIND" title="블라인드" subtitle="트리플쉐이드 · 콤비 · 허니콤 · 우드 · 한옥쉐이드 · 알루미늄" items={BLINDS} dark />
+
+        {/* 중간 간편 견적 — 제품을 본 직후 성함·연락처만으로 신청 */}
+        <QuickEstimateSection />
 
         {/* ⑤ 시공 포트폴리오 — 지역별·공간별 필터 그리드 */}
         <GalleryGrid />

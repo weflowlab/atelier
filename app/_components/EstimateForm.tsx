@@ -1,10 +1,10 @@
 "use client";
 // 무료 방문 실측 신청 폼 섹션 (#estimate) — 4단계 위저드 (참고 시안 구조).
 // ① 안내 → ② 설치 장소(중복 선택) → ③ 방문 희망 날짜 → ④ 연락받을 정보(성함·연락처·주소·추가 문의·동의).
-// 유입 키워드/라이트박스로 제품 프리필(숨은 필드) → 검증 → submitLead 서버 액션 → 성공 패널 + 전환 이벤트(track) 전송.
+// 유입 키워드/라이트박스로 제품 프리필(숨은 필드) → 검증 → sendLead(서버 액션, 실패 시 REST 재전송) → 성공 패널 + 전환 이벤트(track) 전송.
 import { useEffect, useRef, useState, useTransition, type FormEvent, type ReactNode } from "react";
 import { FORM_SUCCESS, PLACE_OPTIONS, PRODUCT_TYPE_OPTIONS } from "../_lib/data";
-import { submitLead } from "../_actions/submitLead";
+import { sendLead } from "../_lib/leadClient";
 import { getAttribution, getEntryKeyword } from "../_lib/attribution";
 import { matchKeyword } from "../_lib/keywords";
 import { PRESELECT_EVENT, matchProductOption } from "../_lib/formEvents";
@@ -38,10 +38,10 @@ type Errors = Partial<Record<"name" | "phone" | "agree", string>>;
 const TOTAL_STEPS = 4;
 
 // 소프트 라운드 인풋 공통 클래스
-const inputCls =
+export const inputCls =
   "w-full rounded-xl border border-line bg-surface px-3 py-3 text-[15px] outline-none sm:px-4 sm:py-3.5 sm:text-base transition-colors placeholder:text-muted/70 focus:border-orange aria-[invalid=true]:border-red-400";
 // 주황 메인 버튼 / 이전(고스트) 버튼
-const btnOrange =
+export const btnOrange =
   "flex h-14 items-center justify-center gap-2 rounded-2xl bg-orange text-base font-semibold text-white transition-colors hover:bg-[#c96540] disabled:cursor-not-allowed disabled:bg-line disabled:text-muted";
 const btnGhost =
   "flex h-14 items-center justify-center rounded-2xl border border-line bg-surface px-5 text-base font-medium text-muted transition-colors hover:text-foreground";
@@ -57,7 +57,7 @@ function StepIcon({ children }: { children: ReactNode }) {
   );
 }
 
-// 위저드 카드 본체 — 하단 폼 섹션과 PC 히어로 우측 패널이 같은 컴포넌트를 재사용한다.
+// 위저드 카드 본체 — 하단 폼 섹션에서 쓴다. (히어로 패널과 중간 섹션은 간편 견적 카드 QuickEstimate.tsx)
 // idPrefix: 한 페이지에 두 번 렌더될 때 input id 충돌 방지 / compact: 히어로 패널용 좁은 패딩
 export function EstimateWizard({
   idPrefix = "est",
@@ -71,7 +71,6 @@ export function EstimateWizard({
   const [step, setStep] = useState(0); // 0 안내 · 1 장소 · 2 날짜 · 3 연락처
   const [form, setForm] = useState<FormState>(INITIAL);
   const [errors, setErrors] = useState<Errors>({});
-  const [privacyOpen, setPrivacyOpen] = useState(false); // 개인정보 안내문 펼침 여부
   const [pending, startTransition] = useTransition();     // 서버 액션 전송 중
   const [serverError, setServerError] = useState<string | null>(null); // 서버 응답 오류
   const [done, setDone] = useState(false);                // 접수 완료 상태
@@ -139,7 +138,7 @@ export function EstimateWizard({
     return Object.keys(next).length === 0;
   };
 
-  // 제출: 검증 → 서버 액션(유입 정보 포함) → 성공 시 패널 전환 + 전환 이벤트, 실패 시 버튼 근처 오류 표시
+  // 제출: 검증 → 전송(서버 액션, 실패 시 REST 재전송 — sendLead) → 성공 시 패널 전환 + 전환 이벤트, 실패 시 버튼 근처 오류 표시
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (pending || !validate()) return;
@@ -156,50 +155,17 @@ export function EstimateWizard({
       attribution: getAttribution(),
       page: window.location.href,
     };
-    const finish = (leadId: string) => {
-      track(EVENTS.LEAD_SUBMIT, { products: payload.products.join(","), lead_id: leadId });
+    startTransition(async () => {
+      const res = await sendLead(payload);
+      if (!res.ok) {
+        setServerError(res.error);
+        return;
+      }
+      track(EVENTS.LEAD_SUBMIT, { products: payload.products.join(","), lead_id: res.id });
       setDone(true);
       setForm(INITIAL);
       setErrors({});
-      setPrivacyOpen(false);
       setStep(0);
-    };
-    startTransition(async () => {
-      try {
-        const res = await submitLead(payload);
-        if (!res.ok) {
-          setServerError(res.error);
-          return;
-        }
-        finish(res.id);
-      } catch {
-        // 서버 액션 호출 자체가 실패한 경우 — 배포 직후 옛 화면을 열어 둔 채 누르면 액션을 못 찾고,
-        // 네트워크가 잠깐 끊겨도 여기로 온다. 같은 내용을 REST 경로(/api/inquiries)로 한 번 더 보내 본다.
-        try {
-          const attr = payload.attribution ?? {};
-          const res = await fetch("/api/inquiries", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: payload.name,
-              phone: payload.phone,
-              note: payload.message ?? "",
-              address: payload.address ?? "",
-              hopeDate: payload.date ?? "",
-              places: payload.places,
-              products: payload.products,
-              keyword: attr.n_keyword || attr.utm_term || attr.kw || "",
-              source: attr.n_media || attr.utm_source || "direct",
-              agree: payload.agree,
-            }),
-          });
-          if (!res.ok) throw new Error(String(res.status));
-          const item = (await res.json()) as { id?: string };
-          finish(item.id ?? "");
-        } catch {
-          setServerError("접수가 저장되지 않았습니다. 잠시 후 다시 시도하시거나, 아래 번호로 전화 주시면 바로 도와드리겠습니다.");
-        }
-      }
     });
   };
 
@@ -422,51 +388,12 @@ export function EstimateWizard({
                       </Field>
 
                       {/* 개인정보 수집 및 이용 동의 — 체크 1줄 + "내용 보기" 토글 안내문 */}
-                      <div className="rounded-xl border border-line bg-surface px-4 py-3">
-                        <div className="flex flex-col gap-1.5">
-                          <label className="flex cursor-pointer items-center gap-2 text-[15px] sm:text-base">
-                            <input
-                              type="checkbox"
-                              checked={form.agree}
-                              onChange={(e) => set("agree", e.target.checked)}
-                              className="h-4 w-4 accent-orange"
-                              aria-invalid={!!errors.agree}
-                            />
-                            <span>개인정보 수집 및 이용에 동의합니다. <span className="whitespace-nowrap text-red-500">(필수)</span></span>
-                          </label>
-                          <button
-                            type="button"
-                            onClick={() => setPrivacyOpen((v) => !v)}
-                            aria-expanded={privacyOpen}
-                            aria-controls={`${idPrefix}-privacy`}
-                            className="self-end text-sm text-muted underline underline-offset-4 transition-colors hover:text-foreground"
-                          >
-                            {privacyOpen ? "닫기" : "내용 보기"}
-                          </button>
-                        </div>
-                        {/* grid-rows 트릭으로 높이 애니메이션 (0fr ↔ 1fr) */}
-                        <div
-                          id={`${idPrefix}-privacy`}
-                          className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-                            privacyOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                          }`}
-                        >
-                          <div className="overflow-hidden">
-                            {/* 플레이스홀더 약관 문구 — 실제 개인정보처리방침으로 교체 필요 */}
-                            <div className="mt-3 max-h-32 space-y-2 overflow-auto border-t border-line pt-3 text-sm leading-relaxed text-muted">
-                              <p>
-                                1. 수집 항목 및 목적: 성함, 연락처, 설치 지역, 원하는 상품, 문의 내용을 무료 방문 실측 상담 및 확인 전화
-                                안내를 위해 수집하며, 명시된 목적 외의 용도로 이용하지 않습니다.
-                              </p>
-                              <p>
-                                2. 보유 및 이용 기간: 상담 종료 후 1년까지 보관 후 지체 없이 파기합니다. 동의를 거부하실 수
-                                있으나, 거부 시 신청이 제한될 수 있습니다.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        {errors.agree && <p className="mt-2 text-sm text-red-500">{errors.agree}</p>}
-                      </div>
+                      <PrivacyConsent
+                        id={`${idPrefix}-privacy`}
+                        checked={form.agree}
+                        onChange={(v) => set("agree", v)}
+                        error={errors.agree}
+                      />
 
                       <div className="flex gap-3">
                         <button type="button" onClick={() => goStep(2)} className={btnGhost}>
@@ -489,24 +416,7 @@ export function EstimateWizard({
                       <p className="text-center text-sm text-muted">입력 정보는 방문 상담 안내에만 사용됩니다.</p>
 
                       {/* 대체 연락 수단 — 전화 (휴대폰 · 대표번호) */}
-                      <p className="text-center text-sm text-muted">
-                        또는 전화{" "}
-                        <a
-                          href="tel:01041262209"
-                          onClick={() => track(EVENTS.CLICK_CALL, { location: "form" })}
-                          className="underline underline-offset-4 transition-colors hover:text-foreground"
-                        >
-                          010-4126-2209
-                        </a>{" "}
-                        ·{" "}
-                        <a
-                          href="tel:18332523"
-                          onClick={() => track(EVENTS.CLICK_CALL, { location: "form" })}
-                          className="underline underline-offset-4 transition-colors hover:text-foreground"
-                        >
-                          1833-2523
-                        </a>
-                      </p>
+                      <CallLinks location="form" />
                     </div>
                   </div>
                 )}
@@ -541,7 +451,7 @@ export default function EstimateForm() {
 }
 
 // 라벨 + 입력 영역 (세로 스택) + 인라인 오류
-function Field({
+export function Field({
   label,
   required,
   error,
@@ -571,5 +481,83 @@ function Field({
       {children}
       {error && <p className="mt-1.5 text-sm text-red-500">{error}</p>}
     </div>
+  );
+}
+
+// 개인정보 수집 및 이용 동의 — 체크 1줄 + "내용 보기" 토글 안내문. 4단계 폼과 간편 견적 카드가 같이 쓴다.
+export function PrivacyConsent({
+  id,
+  label = "개인정보 수집 및 이용에 동의합니다.",
+  plain = false,
+  checked,
+  onChange,
+  error,
+}: {
+  id: string; // 안내문 영역 id (aria-controls) — 한 페이지에 여러 번 렌더되므로 폼마다 다르게
+  label?: string; // 체크박스 옆 문구 — 간편 견적 카드는 짧은 문구를 쓴다
+  plain?: boolean; // true 면 테두리 박스 없이 한 줄(좌 체크·우 "내용 보기") — 간편 견적 카드용
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  error?: string;
+}) {
+  const [open, setOpen] = useState(false); // 안내문 펼침 여부
+  return (
+    <div className={plain ? "" : "rounded-xl border border-line bg-surface px-4 py-3"}>
+      <div className={plain ? "flex items-center justify-between gap-3" : "flex flex-col gap-1.5"}>
+        <label className={`flex cursor-pointer items-center gap-2 text-[15px] ${plain ? "" : "sm:text-base"}`}>
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={(e) => onChange(e.target.checked)}
+            className="h-4 w-4 accent-orange"
+            aria-invalid={!!error}
+          />
+          <span>{label} <span className="whitespace-nowrap text-red-500">(필수)</span></span>
+        </label>
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls={id}
+          className={`${plain ? "shrink-0" : "self-end"} text-sm text-muted underline underline-offset-4 transition-colors hover:text-foreground`}
+        >
+          {open ? "닫기" : "내용 보기"}
+        </button>
+      </div>
+      {/* grid-rows 트릭으로 높이 애니메이션 (0fr ↔ 1fr) */}
+      <div id={id} className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+        <div className="overflow-hidden">
+          {/* 플레이스홀더 약관 문구 — 실제 개인정보처리방침으로 교체 필요 */}
+          <div className={`mt-3 space-y-2 border-t border-line pt-3 text-sm leading-relaxed text-muted ${plain ? "" : "max-h-32 overflow-auto"}`}>
+            <p>
+              1. 수집 항목 및 목적: 성함, 연락처, 설치 지역, 원하는 상품, 문의 내용을 무료 방문 실측 상담 및 확인 전화
+              안내를 위해 수집하며, 명시된 목적 외의 용도로 이용하지 않습니다.
+            </p>
+            <p>
+              2. 보유 및 이용 기간: 상담 종료 후 1년까지 보관 후 지체 없이 파기합니다. 동의를 거부하실 수
+              있으나, 거부 시 신청이 제한될 수 있습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+    </div>
+  );
+}
+
+// 대체 연락 수단 — 전화 (휴대폰 · 대표번호). location 은 전화 클릭 전환 이벤트의 위치 구분값
+export function CallLinks({ location }: { location: string }) {
+  const linkCls = "underline underline-offset-4 transition-colors hover:text-foreground";
+  return (
+    <p className="text-center text-sm text-muted">
+      또는 전화{" "}
+      <a href="tel:01041262209" onClick={() => track(EVENTS.CLICK_CALL, { location })} className={linkCls}>
+        010-4126-2209
+      </a>{" "}
+      ·{" "}
+      <a href="tel:18332523" onClick={() => track(EVENTS.CLICK_CALL, { location })} className={linkCls}>
+        1833-2523
+      </a>
+    </p>
   );
 }
